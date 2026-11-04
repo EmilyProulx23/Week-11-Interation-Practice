@@ -16,14 +16,14 @@
       pos: { room: "desk", x: start.x, y: start.y, dir: start.dir },
       stats: { truth: 0, compliance: 0, memory: 0 },
       flags: {}, docs, clues: [], seen: [], summaries: [], notes: [],
-      theo: null, ruth: null, exhibit: null, digest: 0
+      theo: null, ruth: null, exhibit: null, plaque: null, digest: 0
     };
   }
   // Older saves may be missing newer documents or fields.
   function migrate(s) {
     const f = freshState();
     DOC_ORDER.forEach((id) => { if (!s.docs[id]) s.docs[id] = f.docs[id]; });
-    ["ruth", "exhibit"].forEach((k) => { if (!(k in s)) s[k] = null; });
+    ["ruth", "exhibit", "plaque"].forEach((k) => { if (!(k in s)) s[k] = null; });
     return s;
   }
 
@@ -74,6 +74,13 @@
     },
 
     dayDocs: (day) => D.days[day || L.S.day].docs,
+    // Most documents have one original; Theo's poster depends on what he came to believe.
+    original(id) {
+      const d = D.docs[id];
+      if (d.original) return d.original;
+      const b = L.S.theo === "protest" || L.S.theo === "unsure" ? L.S.theo : "consultation";
+      return d.originalBy[b];
+    },
     isFiled: (id) => ["kept", "discarded"].indexOf(L.S.docs[id].status) !== -1,
     inbox: () => DOC_ORDER.filter((id) => L.S.docs[id].status === "inbox"),
     filed: () => DOC_ORDER.filter(L.isFiled),
@@ -95,12 +102,17 @@
       } else if (L.S.day === 2) {
         if (L.filedToday().length >= 2 && !f.ruthDone) return "ruth";
         if (L.allFiled() && f.ruthDone && !f.aideDone) return "aide";
+      } else if (L.S.day === 3) {
+        const serverFiled = ["minutes2", "revlog"].every(L.isFiled);
+        if (serverFiled && !f.theo3Done) return "theo";
+        if (L.allFiled() && f.theo3Done && !f.plaqueDone) return "aide";
       }
       return null;
     },
     canClose() {
       if (!L.allFiled()) return false;
-      return L.S.day === 1 ? !!L.S.flags.theoDone : !!(L.S.flags.ruthDone && L.S.flags.aideDone);
+      const f = L.S.flags;
+      return L.S.day === 1 ? !!f.theoDone : L.S.day === 2 ? !!(f.ruthDone && f.aideDone) : !!f.plaqueDone;
     },
 
     // ---------- clues & discrepancies ----------
@@ -140,6 +152,32 @@
       L.save();
       L.toast("3 documents added to the inbox tray.");
     },
+    openServer() { if (!L.S.flags.serverOpen) { L.S.flags.serverOpen = true; L.save(); L.toast(D.day3.serverOpenToast); } },
+    receiveProject() {
+      L.S.flags.theo3Done = true;
+      L.S.docs.project.status = "inbox";
+      L.spend(D.costs.visitor);
+      L.save();
+      L.toast("Theo's poster is in the inbox tray.");
+      L.afterFiling();
+    },
+    askTheoMom() { if (!L.S.flags.theoMom) { L.S.flags.theoMom = true; L.fx(D.visitors.theo3.momEffects); L.checkDiscrepancies(); L.save(); } },
+    plaqueLocked(o) { const r = L.req(o.requires); return r.length > 0 && !r.some((c) => L.has(L.S.clues, c)); },
+    finishPlaque(optId) {
+      const o = D.visitors.plaque.options.find((x) => x.id === optId);
+      L.S.plaque = optId;
+      L.fx(o.effects);
+      L.S.flags.plaqueDone = true;
+      L.spend(D.costs.visitor);
+      L.save();
+    },
+    // The ending: Truth × Town Memory, with a Compliance epilogue.
+    ending() {
+      const E = D.endings, t = E.thresholds, st = L.S.stats;
+      const key = st.truth >= t.truth ? (st.memory >= t.memory ? "living" : "quiet") : (st.memory >= t.memory ? "smooth" : "blank");
+      const epi = st.compliance >= t.complianceHigh ? "high" : st.compliance <= t.complianceLow ? "low" : "mid";
+      return { key, title: E[key].title, text: E[key].text, epilogue: E.epilogue[epi], theoMom: L.S.flags.theoMom ? E.theoMom : null };
+    },
     takeKey() { L.S.flags.keyTaken = true; L.save(); L.toast(D.day2.keyToast); },
     findDoc(id) {
       const st = L.S.docs[id];
@@ -148,8 +186,10 @@
       st.status = "inbox";
       L.spend(10);
       L.save();
-      const left = L.dayDocs().length - L.foundToday().length;
-      L.toast(`You find the ${D.docs[id].title.toLowerCase()} and take it up to the inbox tray.${left ? ` (${left} box${left === 1 ? "" : "es"} left to search.)` : ""}`);
+      const pool = L.S.day === 3 ? ["minutes2", "revlog"] : L.dayDocs();
+      const left = pool.filter((d) => L.S.docs[d].status === "unreceived").length;
+      const what = L.S.day === 3 ? "" : ` (${left} box${left === 1 ? "" : "es"} left to search.)`;
+      L.toast(`You find the ${D.docs[id].title.toLowerCase()} and take it to the inbox tray.${left ? (what || ` (${left} more to find.)`) : ""}`);
       return true;
     },
     keep(id) { L.S.docs[id].step = "describe"; L.save(); },
@@ -251,12 +291,12 @@
     publicBlocks(id, forTheo) {
       const st = L.S.docs[id], d = D.docs[id];
       const head = { s: "h", t: "“" + L.descOf(id).label + "”" };
-      if (st.circ === "original") return [head].concat(d.original);
+      if (st.circ === "original") return [head].concat(L.original(id));
       const out = [head, { s: "mk", t: d.summary }];
       if (st.circ === "both") {
         if (forTheo) out.push({ s: "small", t: D.visitors.theo.fetchesOriginal });
         else out.push({ s: "small", t: "Original on the open shelves:" });
-        return out.concat(forTheo ? [] : d.original);
+        return out.concat(forTheo ? [] : L.original(id));
       }
       out.push({ s: "tag", t: "Original: closed storage. Ask at the front desk." });
       return out;
@@ -301,19 +341,37 @@
       ]);
     },
 
+    ledgerFriday() {
+      const o = D.visitors.plaque.options.find((x) => x.id === L.S.plaque) || D.visitors.plaque.options[0];
+      return [{ head: D.day3.plaqueHead, body: D.day3.plaqueBody + "“" + o.text + "”" }]
+        .concat(L.archiveCorner(3))
+        .concat([
+          { head: "Ferreira's Bakery", body: "Open late for the exhibit. Cinnamon rolls on the Town Hall steps, 6 pm, like the old days.", ad: true },
+          { head: "Weather", body: "Clear and cold. Good night for a crowd.", small: true }
+        ]);
+    },
+
     objective() {
       const f = L.S.flags, n = L.inbox().length, who = L.visitorDue();
       if (L.S.day === 1) {
         if (!f.juneDone) return "Someone is coming up the front steps…";
         if (n) return `Sort June's donation at the inbox tray (${n} left).`;
         if (who === "theo") return "A visitor is waiting at the front desk.";
-      } else {
+      } else if (L.S.day === 2) {
         if (!f.keyTaken) return "Lumen Facilities left something in the inbox tray.";
         const found = L.foundToday().length;
         if (who === "ruth") return "Ruth Okafor is waiting at the front desk.";
         if (who === "aide") return "Someone from the Mayor's office is at the front desk.";
         if (found < 3 && !n) return `Search the “Pending Review” boxes in the basement (${found} of 3 found).`;
         if (n) return `Sort the basement documents at the inbox tray (${n} waiting${found < 3 ? `, ${3 - found} still in the basement` : ""}).`;
+      } else if (L.S.day === 3) {
+        if (!f.serverOpen) return "Check in with the Memory Keeper at the terminal.";
+        if (who === "theo") return "Theo is waiting at the front desk.";
+        if (who === "aide") return "Priya is back for the plaque text.";
+        const found = ["minutes2", "revlog"].filter((id) => L.S.docs[id].status !== "unreceived").length;
+        if (found < 2 && !n) return `Look around the Server Room, through the Stacks (${found} of 2 found).`;
+        if (n) return `Sort the documents at the inbox tray (${n} waiting${found < 2 ? `, ${2 - found} still in the Server Room` : ""}).`;
+        if (L.canClose()) return "Close up. The exhibit opens tomorrow.";
       }
       if (L.canClose()) return "Close up for the day at the front door.";
       return "";

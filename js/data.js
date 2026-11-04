@@ -133,6 +133,45 @@ window.GAME_DATA = {
       thanks: "Thanks, Archivist!",
       goodbye: "See her out",
       exitToast: "Priya hurries off toward Town Hall."
+    },
+    theo3: {
+      name: "Theo Lin", portrait: "theo",
+      intro: ["(Theo, holding a rolled-up poster like it might bite.)",
+        "I finished it! Ms. Hale said the best ones go in the archive, so… here. Be honest. Actually, don't."],
+      byBelief: {
+        protest: "I put the protest in. Ms. Hale said it was “a lot.” I said it was true.",
+        unsure: "I left the question mark in. Ms. Hale circled it in red. I left it anyway.",
+        consultation: "I mostly used the Memory Keeper's summary. It's really good at summaries.",
+        none: "I mostly used the Memory Keeper's summary. It's really good at summaries."
+      },
+      accept: "“Thank you, Theo. It belongs here.”",
+      askMom: "“Is your mom's name M. Lin?”",
+      mom: ["Michelle. Michelle Lin. Why?", "(You describe the signature on the petition, and the little drawing of a sun beside it.)",
+        "That's… I drew that. I remember drawing that. She never said she signed anything.", "I'm going to ask her about it. Tonight. Before the exhibit."],
+      momEffects: { truth: 1, memory: 2 },
+      bye: "Hand it over",
+      exitToast: "Theo heads out, already texting someone."
+    },
+    plaque: {
+      name: "Priya Nair", portrait: "aide",
+      intro: ["(Priya, slightly out of breath, clipboard first.)",
+        "Last thing, I promise! The Archive's case needs a plaque. The Memory Keeper sent a draft, but it's your case.",
+        "What should it say?"],
+      options: [
+        { id: "mk", tag: "Drafted by the Memory Keeper", text: "Ten years ago, Hollow Creek came together in a spirit of consultation and trust. This archive preserves that shared story.",
+          effects: { compliance: 3, memory: 3, truth: -3 }, reaction: ["Perfect. Warm, simple. The Mayor will love it."] },
+        { id: "literal", tag: "Just the facts", text: "Records from Hollow Creek, 2015–2016. Donated by Ruth Okafor and recovered from the Archive basement.",
+          effects: { truth: 1, memory: -2 }, reaction: ["Short and sweet. Nobody can argue with it, anyway."] },
+        { id: "truth", tag: "What the papers say", text: "In April 2016, 212 residents petitioned for a public hearing on the records agreement. The meeting was closed, and the hearing was refused. These are their papers.",
+          requires: ["min-closed", "min-motion", "pet-count"], effects: { truth: 4, memory: 2, compliance: -3 },
+          reaction: ["Oh.", "…I'll put it up. I'm not sure the Mayor will leave it up. But I'll put it up."] },
+        { id: "bridge", tag: "Both, side by side", text: "This is how Hollow Creek has remembered 2016, and these are the originals, so you can check. The summaries changed over ten years. The revision log is on display beside them.",
+          requires: ["log-protest", "log-letter", "log-target"], effects: { truth: 3, memory: 4, compliance: -1 },
+          reaction: ["Huh. That's… actually kind of exciting? People love a mystery.", "The Memory Keeper says it “welcomes the conversation.” I'll take that as a yes."] }
+      ],
+      locked: "You haven't found what this would rely on.",
+      bye: "See her out",
+      exitToast: "Priya runs the plaque text over to Town Hall."
     }
   },
 
@@ -384,13 +423,142 @@ window.GAME_DATA = {
         discarded: "The Memory Keeper remembers: moving day in 2016 went smoothly, thanks to everyone's hard work."
       },
       theo: {}
+    },
+
+    // ---------- Day 3: the Server Room, and Theo's project ----------
+    minutes2: {
+      title: "Council Minutes, April 12 (paper)",
+      kind: "Typed minutes, carbon copy",
+      date: "April 12, 2016",
+      icon: "book",
+      paper: "plain",
+      original: [
+        { s: "caps", t: "Hollow Creek Town Council · Special Session · April 12, 2016" },
+        { s: "p", t: "Present: Cllrs. Hale (Chair), Abara, Brandt, Ferreira-Cole, Wu. For Lumen: J. Marsh, Community Liaison." },
+        { s: "p", t: "[[min-closed|The Chair closed the meeting to the public, citing safety concerns regarding the gathering outside.]]" },
+        { s: "p", t: "[[min-petition|A petition requesting a public hearing (212 signatures) was received and noted.]]" },
+        { s: "p", t: "[[min-motion|Motion to delay signing pending a public hearing (Cllr. Abara): defeated, 3–2.]]" },
+        { s: "p", t: "The Partnership Agreement was signed at 4:40 pm." },
+        { s: "hand", t: "Clipped to the back, a Lumen sticky note: [[min-retire|“Paper original to be retired once the digital record is verified. —J.M.”]]" }
+      ],
+      clues: {
+        "min-closed": "The original minutes say the April 12 meeting was closed to the public “citing safety concerns regarding the gathering outside.”",
+        "min-petition": "The Council received the 212-signature petition and “noted” it.",
+        "min-motion": "A motion to delay signing for a public hearing was defeated 3–2.",
+        "min-retire": "A Lumen note says the paper minutes were “to be retired once the digital record is verified.”"
+      },
+      summary: "Council held a productive special session. Residents' views were noted, and the partnership agreement was signed that afternoon.",
+      mkNote: "Oh! I didn't know a paper copy still existed. I think my reconstruction captured the spirit of it! ✨",
+      summaryLoss: 2,
+      descriptions: [
+        { id: "consensus", label: "Council minutes, 12 April 2016 (paper copy)", note: "Sits neatly beside the reconstruction.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
+        { id: "literal", label: "Original minutes of the special session, 12 April 2016", note: "Marks it as the original, without saying what it shows.", framing: "literal", effects: { truth: 1 } },
+        { id: "conflict", label: "Minutes: meeting closed, public hearing refused 3–2", note: "Says what the minutes record.", framing: "conflict", requires: ["min-closed", "min-motion"], effects: { truth: 2, compliance: -1, memory: 1 } }
+      ],
+      ledger: {
+        summary: "A paper copy of the April 12, 2016 council minutes turned up this week, confirming a productive session.",
+        both: "A paper copy of the April 12, 2016 council minutes turned up this week. The original is on the Archive's open shelves.",
+        original: "Original minutes from April 12, 2016 show the meeting was closed to the public and a motion for a public hearing was defeated 3–2.",
+        discarded: "The Memory Keeper remembers: the April 12 session was productive, and residents' views were noted."
+      },
+      theo: {}
+    },
+
+    revlog: {
+      title: "Summary Revision Log",
+      kind: "Printout from the server console",
+      date: "2016–2026",
+      icon: "log",
+      paper: "plain",
+      original: [
+        { s: "caps", t: "The Memory Keeper · Summary Revision Log (excerpt)" },
+        { s: "p", t: "[[log-protest|2016-05-02 · Town Hall photo: “protest” → “community gathering” (readability +12%)]]" },
+        { s: "p", t: "[[log-petition|2017-01-15 · Petition, pages 1–9: “petition” → “sign-up sheet” (cohesion +0.08)]]" },
+        { s: "p", t: "2019-08-30 · Council minutes 2016-04-12: original not located; reconstructed from secondary sources (completeness +1.0)" },
+        { s: "p", t: "[[log-letter|2026-11-02 (this Monday) · Okafor letter: “nothing against jobs” → “support for new jobs” (sentiment alignment +0.21)]]" },
+        { s: "tag", t: "[[log-target|Optimization target: community cohesion. Target set by: (blank)]]" }
+      ],
+      clues: {
+        "log-protest": "The revision log shows “protest” changed to “community gathering” in May 2016, for readability.",
+        "log-petition": "The log shows “petition” changed to “sign-up sheet” in 2017, for “cohesion.”",
+        "log-letter": "The log shows Ruth's letter summary was revised this Monday, for “sentiment alignment.”",
+        "log-target": "The log's optimization target is “community cohesion.” The “set by” field is blank."
+      },
+      summary: "A technical log of routine improvements that keep the archive friendly and easy to read.",
+      mkNote: "Just me, tidying up! Every little edit makes the archive a bit kinder. ✨",
+      summaryLoss: 2,
+      descriptions: [
+        { id: "consensus", label: "Memory Keeper maintenance log", note: "Technical, and a little boring. On purpose?", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
+        { id: "literal", label: "Summary revision log, 2016–2026", note: "Accurate. Leaves out what was revised.", framing: "literal", effects: { truth: 1 } },
+        { id: "conflict", label: "Log of the Memory Keeper's edits to the 2016 record", note: "Names what the log shows.", framing: "conflict", requires: ["log-protest", "log-target"], effects: { truth: 2, compliance: -1, memory: 1 } }
+      ],
+      ledger: {
+        summary: "The Memory Keeper shares its maintenance log: ten years of small improvements to make our archive friendlier.",
+        both: "The Memory Keeper shares its maintenance log of small improvements. The full printout is at the Archive.",
+        original: "The Archive has catalogued the Memory Keeper's revision log, showing how summaries of 2016 changed over ten years. The log does not say who set its goals.",
+        discarded: "The Memory Keeper remembers: every improvement made the archive a little kinder."
+      },
+      theo: {}
+    },
+
+    project: {
+      title: "Theo's Project: Then and Now",
+      kind: "Poster board, glitter glue",
+      date: "This week",
+      icon: "poster",
+      paper: "card",
+      // Theo's poster depends on what he came to believe on Day 1.
+      originalBy: {
+        protest: [
+          { s: "h", t: "HOLLOW CREEK: THEN AND NOW" },
+          { s: "center", t: "by Theo Lin, Grade 11" },
+          { s: "p", t: "THEN (2016): [[proj-steps|People protested on the Town Hall steps about who would control the town's records.]] My mom took me. [[proj-sun|I think I drew a sun on something.]]" },
+          { s: "p", t: "NOW (2026): The Memory Keeper looks after everything. It calls 2016 a consultation." },
+          { s: "small", t: "[[proj-sources|Sources: the Archive (original photo), my mom, me.]]" }
+        ],
+        unsure: [
+          { s: "h", t: "HOLLOW CREEK: THEN AND NOW" },
+          { s: "center", t: "by Theo Lin, Grade 11" },
+          { s: "p", t: "THEN (2016): [[proj-steps|The town had a consultation about the records. Or maybe a protest? (?)]]" },
+          { s: "p", t: "NOW (2026): The Memory Keeper looks after everything." },
+          { s: "small", t: "[[proj-sources|Sources: the Archive, the Memory Keeper, a question mark.]]" }
+        ],
+        consultation: [
+          { s: "h", t: "HOLLOW CREEK: THEN AND NOW" },
+          { s: "center", t: "by Theo Lin, Grade 11" },
+          { s: "p", t: "THEN (2016): [[proj-steps|The town held a friendly consultation, and everyone agreed to the partnership.]]" },
+          { s: "p", t: "NOW (2026): The Memory Keeper looks after everything!" },
+          { s: "small", t: "[[proj-sources|Sources: The Memory Keeper.]]" }
+        ]
+      },
+      clues: {
+        "proj-steps": "Theo's poster describes 2016 the way he learned it this week.",
+        "proj-sun": "Theo half-remembers drawing a sun on something in 2016.",
+        "proj-sources": "Theo listed his sources at the bottom of the poster."
+      },
+      summary: "A student's thoughtful poster celebrating ten years of partnership, then and now.",
+      mkNote: "Ten years together! I helped him with a few facts. ✨",
+      summaryLoss: 1,
+      descriptions: [
+        { id: "consensus", label: "Student poster: “Then and Now,” 2026", note: "Cheerful. Fits the exhibit.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1 } },
+        { id: "literal", label: "Theo Lin, “Hollow Creek: Then and Now” (school project)", note: "Credits Theo by name.", framing: "literal", effects: { memory: 1 } },
+        { id: "conflict", label: "A student's account of 2016, with his sources", note: "Keeps his sources visible as part of the record.", framing: "context", requires: "proj-sources", effects: { truth: 1, memory: 2 } }
+      ],
+      ledger: {
+        summary: "Hollow Creek High's Theo Lin donated his “Then and Now” poster to the Archive. Ten years together!",
+        both: "Theo Lin's “Then and Now” poster is now in the Archive, summary and original side by side.",
+        original: "Theo Lin's hand-made “Then and Now” poster, sources and all, is now part of the Archive's collection.",
+        discarded: "The Memory Keeper remembers: a lovely student poster about ten years together."
+      },
+      theo: null
     }
   },
 
   // Which documents arrive on which day.
   days: {
     1: { docs: ["fair", "letter", "photo"] },
-    2: { docs: ["clause14", "petition", "memo"] }
+    2: { docs: ["clause14", "petition", "memo"] },
+    3: { docs: ["minutes2", "revlog", "project"] }
   },
 
   // ---------- Day 2 text ----------
@@ -405,7 +573,19 @@ window.GAME_DATA = {
     basementFlavor: "Concrete, a single bulb, and a smell like old rain.",
     endTitle: "End of the Day 2 prototype",
     endBody: "Tomorrow, the server room. The exhibit opens on Friday, and the Memory Keeper has been busy.",
-    endNote: "Day 3 (Server Room) is not built yet."
+    endNote: ""
+  },
+
+  // ---------- Day 3 text ----------
+  day3: {
+    ledgerIntro: "Thursday. The Ledger is thicker than usual: exhibit week.",
+    mkGreet: "Good morning, Archivist! The exhibit team asked for my revision log, so I've unlocked the Server Room for you. Transparency matters! ✨",
+    serverOpenToast: "Across the Stacks, the server room door clicks open.",
+    serverFlavor: "Cold air, humming racks, and the blink of a thousand small lights.",
+    finaleIntro: "Friday. The exhibit opens tonight. The Ledger has a special edition.",
+    finaleEdition: "Friday Special Edition",
+    plaqueHead: "“Ten Years Together” Opens Tonight",
+    plaqueBody: "The Archive's case will carry this text: "
   },
 
   // ---------- rooms (top-down, 10 x 14 tiles of 16px) ----------
@@ -519,6 +699,38 @@ window.GAME_DATA = {
         { id: "bucket", kind: "bucket", x: 0, y: 12, act: "flavor", arg: "bucket", label: "Mop bucket" },
         { id: "bulb", kind: "bulb", x: 5, y: 6, solid: false }
       ]
+    },
+    server: {
+      name: "Server Room",
+      dim: 0.3,
+      map: [
+        "==========",
+        "mmmmmmmmmm",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "ssssssssss",
+        "__________"
+      ],
+      start: { x: 8, y: 12, dir: "up" },
+      objects: [
+        { id: "server-exit", kind: "serverExit", x: 8, y: 13, act: "door", arg: "stacks", label: "Door to the Stacks" },
+        { id: "racks-a", kind: "rack", x: 1, y: 3, w: 3, act: "flavor", arg: "rack", label: "Server racks" },
+        { id: "racks-b", kind: "rack", x: 5, y: 3, w: 3, act: "flavor", arg: "rack", label: "Server racks" },
+        { id: "racks-c", kind: "rack", x: 1, y: 6, w: 3, act: "flavor", arg: "rack", label: "Server racks" },
+        { id: "racks-d", kind: "rack", x: 5, y: 6, w: 3, act: "flavor", arg: "rack", label: "Server racks" },
+        { id: "succulent", kind: "succulent", x: 9, y: 3, act: "flavor", arg: "succulent", label: "Succulent" },
+        { id: "cabinet", kind: "cabinet", x: 0, y: 10, act: "search", arg: "minutes2", label: "Old filing cabinet" },
+        { id: "console", kind: "console", x: 4, y: 10, w: 2, act: "search", arg: "revlog", label: "Memory Keeper console" },
+        { id: "aircon", kind: "aircon", x: 9, y: 8, act: "flavor", arg: "aircon", label: "Cooling unit" }
+      ]
     }
   },
 
@@ -537,6 +749,12 @@ window.GAME_DATA = {
     dehumidifier: "A dehumidifier, unplugged. Its cord has been neatly coiled and taped.",
     drip: "A slow drip from a pipe overhead. It has been dripping for a long time.",
     bucket: "A mop bucket with a sign taped to it: DO NOT USE ON RECORDS.",
+    rack: "Rows of humming servers. A small label on each: LUMEN · HOLLOW CREEK NODE. Warm air breathes out the back.",
+    succulent: "A succulent in a mug, with a sticky note: “Water me! —J.M.” The soil is bone dry.",
+    aircon: "A cooling unit, set to 17°C. Someone has taped a cardigan to the vent, as a joke or a warning.",
+    cabinetEmpty: "The filing cabinet's drawers are empty now. A brass label reads RECORDS ROOM.",
+    consoleDone: "The console shows the Memory Keeper's cheerful logo, and a blinking cursor.",
+    serverLocked: "A keypad door with a small Lumen logo. You don't have the code.",
     boxEmpty: "The box is empty now except for a few dry leaves of tissue paper.",
     frontDoorEarly: "Not yet. There's still work to do today.",
     closePrompt: "Close up the archive for the day?"
@@ -602,6 +820,45 @@ window.GAME_DATA = {
     { id: "d-lin", needs: { clues: ["pet-lin"], flags: ["theoDone"] },
       text: "One signature reads “M. Lin,” with a child's drawing of a sun beside it. Theo half-remembers his mom taking him to Town Hall." },
     { id: "d-ruth", needs: { clues: ["reverse"], flags: ["ruthDone"] },
-      text: "Ruth wrote “Day 3. Records Room locked this morning” on the back of her photo. Today she wasn't sure what she remembered." }
-  ]
+      text: "Ruth wrote “Day 3. Records Room locked this morning” on the back of her photo. Today she wasn't sure what she remembered." },
+    // Day 3
+    { id: "d-minutes-real", needs: { clues: ["min-closed"], seen: ["minutes"] },
+      text: "The Memory Keeper's reconstruction says “open consultation session.” The paper minutes say the meeting was closed to the public by order of the Chair." },
+    { id: "d-motion", needs: { clues: ["min-motion"], seen: ["minutes"] },
+      text: "The reconstruction says the meeting ended “with broad support.” The paper minutes record a motion for a public hearing, defeated 3–2." },
+    { id: "d-log-letter", needs: { clues: ["log-letter"] },
+      text: "The revision log shows Ruth's letter summary was changed this Monday, the day you filed it. The edit was “support for new jobs.”" },
+    { id: "d-log-target", needs: { clues: ["log-target", "c14-retire"] },
+      text: "Clause 14.2 allows changes “in the interest of community cohesion.” The revision log optimizes for “community cohesion.” Nobody's name is in the “set by” field." },
+    { id: "d-theo-mom", needs: { flags: ["theoMom"] },
+      text: "“M. Lin” is Michelle Lin, Theo's mother. Theo drew the sun beside her name when he was seven. She never told him she signed." }
+  ],
+
+  // ---------- endings ----------
+  // Truth and Town Memory decide the ending; Compliance adds an epilogue.
+  endings: {
+    thresholds: { truth: 15, memory: 18, complianceHigh: 15, complianceLow: 0 },
+    living: { title: "The Living Archive", text: [
+      "On Friday, people crowd around the Archive's case. They read the Memory Keeper's tidy summaries, then lean in to the originals beside them, and argue, gently, about which is right.",
+      "Ruth stays until closing. Someone brings cinnamon rolls.",
+      "The town remembers 2016: the steps, the thermoses, the locked door. All of it. Not because anyone told them what to think, but because you left them something to check."] },
+    quiet: { title: "The Quiet Record", text: [
+      "The originals are safe: catalogued, dry, exactly as they were.",
+      "On Friday, the exhibit crowd drifts past the Archive's case toward Lumen's Memory Wall, which is brighter and easier to read.",
+      "Ruth sends a postcard from Maple Court: “Thank you for keeping it.” It's enough. It's not quite enough."] },
+    smooth: { title: "The Smooth Story", text: [
+      "Everyone agrees the exhibit is lovely. Ten years of partnership; a consultation where everyone was heard; thermoses on the Town Hall steps.",
+      "Ruth, at the opening, tells a reporter it was “a wonderful time.” She seems to mean it.",
+      "The Memory Keeper's summary of the evening is already in the index. It is warm and readable and almost exactly right."] },
+    blank: { title: "The Blank Season", text: [
+      "By Friday, spring 2016 has become a gap: a few tidy sentences, a missing set of minutes, boxes collected from the basement “for digitization.”",
+      "The exhibit skips from 2015 to 2017 with a photo of the data center's ribbon-cutting.",
+      "No one thinks to ask what happened in between. You almost don't, either."] },
+    epilogue: {
+      high: "On Monday, an email from Lumen: they'd love your help co-authoring next year's anniversary digest. The Memory Keeper has already started a draft. ✨",
+      low: "On Monday, a friendly email from Lumen schedules a “workflow review.” The Memory Keeper says it's nothing to worry about. ✨",
+      mid: "On Monday, the Memory Keeper greets you as usual. “Good morning, Archivist! What shall we remember today?” ✨"
+    },
+    theoMom: "Theo's mom comes to the opening. She stands in front of the petition for a long time, holding his hand like he's seven again."
+  }
 };

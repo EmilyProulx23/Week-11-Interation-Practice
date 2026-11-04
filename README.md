@@ -32,7 +32,7 @@ In **Settings → Pages**, under **Build and deployment**, set **Source** to *De
 
 - ✅ Day 1: walkable Front Desk and Stacks, 3 documents, June and Theo, notebook discrepancies, generated Day 2 newsletter
 - ✅ Day 2: basement key, Basement Records with "Pending Review" boxes, 3 documents, Ruth and Priya, generated Day 3 newsletter
-- ⏳ Day 3 (Server Room) and endings
+- ✅ Day 3: the Server Room, original minutes and revision log, Theo's poster, the exhibit plaque, Friday Ledger and four endings
 
 ## Structure
 

@@ -123,10 +123,21 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 - **Priya Nair** (Mayor's office) arrives after all documents are filed and Ruth has left, asking for one record as the exhibit centrepiece. The record's tone (warm / unsure / protest), or letting the Memory Keeper choose, sets the Day 3 Ledger's lead story and is recorded for the Day 3 plaque.
 - **New notebook notes:** the "Pending Review" boxes still in the basement; "sign-up sheet" vs. petition; clause 14.2 vs. the missing minutes; "D.H." and the Mayor's office; "M. Lin" and Theo; Ruth's own note vs. her drifting memory.
 
-### Day 3 — "The Exhibit"
-- **Server Room unlocks.**
-- **Documents:** the original April 12 council minutes (found in a server-room cabinet, contradicting the reconstruction); the Memory Keeper's revision log (summaries re-optimized for "community cohesion," with no author named); Theo's finished project.
-- **Final choice:** write the plaque text for the anniversary exhibit, which leads to an ending based on the three variables.
+### Day 3 — "The Exhibit" *(playable)*
+- **Ledger** generated from Day 2 (exhibit lead story, Ruth's goodbye).
+- **The Memory Keeper unlocks the Server Room** when you check in at the terminal: the exhibit team asked for its revision log. "Transparency matters! ✨"
+- **Server Room** (through the Stacks): humming racks, a cooling unit, J. Marsh's thirsty succulent, and two finds:
+  7. *Council Minutes, April 12 (paper)*, in the old Records Room filing cabinet: the meeting was closed to the public by the Chair (Hale), the 212-signature petition was "noted," a motion to delay for a public hearing was defeated 3–2; a Lumen sticky note says the paper original was "to be retired once the digital record is verified." The Memory Keeper: "I didn't know a paper copy still existed!"
+  8. *Summary Revision Log*, printed from the console: "protest" → "community gathering" (readability), "petition" → "sign-up sheet" (cohesion), the minutes reconstructed, and Ruth's letter softened *this Monday* (sentiment alignment). Optimization target: community cohesion. **Target set by: (blank).**
+- **Theo returns** with his poster, whose text depends on what he came to believe on Day 1 (protest / unsure / consultation). If you noticed "M. Lin" on the petition, you can ask him about his mom; he realises he drew the sun beside her name.
+- *Theo's Project* (document 9) is sorted like any other.
+- **Priya returns for the plaque.** Four options: the Memory Keeper's draft; a literal label; "what the papers say" (needs the minutes or petition evidence); and "both, side by side" (summaries, originals and the revision log on display; needs the log evidence).
+- **Friday:** a special-edition Ledger quoting the plaque, then the ending.
+
+### Endings
+Truth ≥ 15 and Town Memory ≥ 18 (tunable in `js/data.js`) select one of four endings: **The Living Archive** (both high), **The Quiet Record** (truth without readers), **The Smooth Story** (readers without truth), **The Blank Season** (neither). Compliance ≥ 15 / ≤ 0 adds an epilogue: Lumen invites you to co-author next year's digest, or schedules a gentle "workflow review"; otherwise the Memory Keeper simply asks, "What shall we remember today?" If Theo asked his mom, she comes to the opening.
+
+Tested routes: linking originals beside summaries → Living Archive; originals only with few readers → Quiet Record; accepting every suggestion → Smooth Story; discarding everything → Blank Season.
 
 ## 9. Characters
 
@@ -149,6 +160,6 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 
 ## 11. MVP Scope
 
-**In:** Days 1–2 playable as a top-down pixel game: 3 walkable rooms (Front Desk, Stacks, Basement), 6 documents, 4 visitors who walk in, card catalogue, 11 notebook discrepancies, generated Day 2 and Day 3 Ledgers, save/resume.
-**Next:** Day 3 (Server Room, revision log, the plaque) and the endings.
+**In:** All three days playable as a top-down pixel game: 4 walkable rooms (Front Desk, Stacks, Basement, Server Room), 9 documents, 4 visitors (6 visits), card catalogue, 16 notebook discrepancies, generated Ledgers for Days 2, 3 and Friday, the plaque, four endings with epilogues, save/resume.
+**Next:** playtesting and tuning, writing polish, art and audio passes.
 **Out (later):** richer art and animation, audio, free-text descriptions, room drafting.

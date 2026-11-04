@@ -26,9 +26,9 @@ const fxStr = (e) => Object.keys(e || {}).map((k) => `${k} ${e[k] > 0 ? "+" : ""
 
 const out = [];
 const P = (...s) => out.push(...s, "");
-const ICON = { program: "🍎", letter: "✉️", photo: "📷", book: "📒", notice: "📌", volume: "📚", contract: "📜", petition: "📝", memo: "🗒️" };
+const ICON = { log: "🧾", poster: "🖍️", program: "🍎", letter: "✉️", photo: "📷", book: "📒", notice: "📌", volume: "📚", contract: "📜", petition: "📝", memo: "🗒️" };
 
-P("# The Archive — Script (Days 1–2)", "# Day 1",
+P("# The Archive — Script (Days 1–3)", "# Day 1",
   "_Generated from `js/data.js` by `node tools/export-script.js`. Edit the data file, not this one._",
   "Legend: **bold** + `[clue: id]` = a detail the player can tap with the magnifier. _Italics_ = stage directions. Effects (`truth`, `compliance`, `memory`) are hidden from the player.");
 
@@ -58,7 +58,9 @@ P("## 4. Documents",
 
 function docSection(id, i, n) {
   const d = D.docs[id];
-  P(`### ${n}.${i + 1} ${ICON[d.icon] || ""} ${d.title}`, `_${d.kind} · ${d.date}_`, "**Original**", quote(d.original.map(md).join("\n\n")));
+  P(`### ${n}.${i + 1} ${ICON[d.icon] || ""} ${d.title}`, `_${d.kind} · ${d.date}_`);
+  if (d.original) P("**Original**", quote(d.original.map(md).join("\n\n")));
+  else Object.keys(d.originalBy).forEach((k) => P(`**Original, if Theo believes “${k}”**`, quote(d.originalBy[k].map(md).join("\n\n"))));
   P("**Clues (notebook text)**", ...Object.keys(d.clues).map((c) => `- \`${c}\`: ${d.clues[c]}`));
   P(`**Memory Keeper summary** _(summary loss: ${d.summaryLoss})_`, quote(d.summary), "", `_Memory Keeper aside:_ ${d.mkNote}`);
   P("**Descriptions**", ...d.descriptions.map((o) =>
@@ -127,6 +129,27 @@ P("## 16. Day 3 Ledger (generated)", `_${D.day2.ledgerIntro}_`,
   "Lead story depends on the exhibit choice (warm / unsure / protest / Memory Keeper's pick / nothing). Then an Archive Corner item per Day 2 document, and “Goodbye, Alder Street” quoting Ruth:",
   ...Object.keys(ruth.ledger).map((k) => `- _${k}:_ ${ruth.ledger[k]}`));
 P("## 17. End of Day 2 prototype", D.day2.endBody);
+
+// ---------------- Day 3 ----------------
+P("# Day 3", "## 18. Morning", `_${D.day2.ledgerIntro}_ (the Day 3 Ledger, section 16)`,
+  "**Memory Keeper greeting (unlocks the Server Room):** " + D.day3.mkGreet, `_Toast:_ ${D.day3.serverOpenToast}`);
+P("## 19. Server Room", `_${D.day3.serverFlavor}_`, "The old Records Room filing cabinet holds the paper minutes; the console prints the revision log.",
+  ...["rack", "succulent", "aircon", "cabinetEmpty", "consoleDone"].map((k) => `- _${k}:_ ${D.flavor[k]}`));
+P("## 20. Documents");
+D.days[3].docs.forEach((id, i) => docSection(id, i, 20));
+const t3 = D.visitors.theo3;
+P(`## 21. Visitor: ${t3.name} (returns)`, "_Arrives after both Server Room documents are filed. Hands over his poster (document 20.3)._", ...t3.intro.map((l) => line("Theo", l)),
+  ...Object.keys(t3.byBelief).map((k) => `- _believes ${k}:_ ${t3.byBelief[k]}`),
+  `- ➤ ${t3.accept}`, `- ➤ ${t3.askMom} _(only if the player noticed “M. Lin” on the petition; effects: ${fxStr(t3.momEffects)})_`,
+  ...t3.mom.map((l) => line("Theo", l)), `_Toast:_ ${t3.exitToast}`);
+const pq = D.visitors.plaque;
+P(`## 22. Visitor: ${pq.name}: the plaque`, "_Arrives after Theo's poster is filed._", ...pq.intro.map((l) => line("Priya", l)));
+pq.options.forEach((o) => P(`**${o.tag}** _(${o.requires ? "unlocks with any of " + o.requires.join(", ") + "; " : ""}effects: ${fxStr(o.effects)})_`, quote(o.text), ...o.reaction.map((l) => line("Priya", l))));
+P("## 23. Friday: the exhibit Ledger and the ending", `_${D.day3.finaleIntro}_`,
+  `Lead story: “${D.day3.plaqueHead}” quoting the chosen plaque, then Archive Corner items for Day 3 documents.`,
+  `**Ending rule:** Truth ≥ ${D.endings.thresholds.truth} and Town Memory ≥ ${D.endings.thresholds.memory} decide the ending; Compliance ≥ ${D.endings.thresholds.complianceHigh} or ≤ ${D.endings.thresholds.complianceLow} changes the epilogue.`);
+["living", "quiet", "smooth", "blank"].forEach((k) => P(`### ${D.endings[k].title}`, ...D.endings[k].text.map((t) => quote(t))));
+P("### Epilogues", ...Object.keys(D.endings.epilogue).map((k) => `- _${k} compliance:_ ${D.endings.epilogue[k]}`), `- _if Theo asked his mom:_ ${D.endings.theoMom}`);
 
 fs.mkdirSync(path.join(root, "docs"), { recursive: true });
 fs.writeFileSync(path.join(root, "docs/script.md"), out.join("\n"));
