@@ -38,11 +38,11 @@ You are the **Archivist**. You never appear on screen, you have no name, and you
 
 Using the Memory Keeper **does not delete the original.** Your decision controls *which version circulates* and *how accessible the original stays*:
 
-| Option | Public sees | Original access | Time | Tendencies |
-|---|---|---|---|---|
-| **Summary only** | Memory Keeper summary | Closed storage, on request | Fast | Compliance ↑, Town Memory ↑ (readable, wide reach), Truth ↓ only if the summary drops something |
-| **Summary + linked original** | Summary, with "see original" | Open stacks | Medium | Town Memory ↑, Truth ↑, Compliance slightly ↑ |
-| **Original only (hand-catalogued)** | Original + your description | Open stacks | Slow | Truth ↑, Town Memory slightly ↑ (fewer people read it), Compliance ↓ |
+| Option | Public sees | Original access | Tendencies |
+|---|---|---|---|
+| **Summary only** | Memory Keeper summary | Closed storage, on request | Compliance ↑, Town Memory ↑ (readable, wide reach), Truth ↓ only if the summary drops something |
+| **Summary + linked original** | Summary, with "see original" | Open stacks | Town Memory ↑, Truth ↑, Compliance slightly ↑ |
+| **Original only (hand-catalogued)** | Original + your description | Open stacks | Truth ↑, Town Memory slightly ↑ (fewer people read it), Compliance ↓ |
 
 **Discarding** an original doesn't fully erase it either. The Memory Keeper cheerfully keeps "a little summary in my index, just in case," and that summary can still surface in the newsletter. Sometimes the summary outlives the original.
 
@@ -56,6 +56,8 @@ Every document offers three catalogue descriptions, usually:
 - a **contextual/conflict** framing, unlocked by finding the relevant clue.
 
 The description you choose becomes the record's **public headline** in the catalogue and the newsletter, and it changes how visitors read the record.
+
+**No time limit.** The clock on the HUD is cozy flavor only. Choices are weighed by their consequences, not by time pressure.
 
 ## 5. Hidden Variables (adjustment: distinct, non-moralized)
 
@@ -128,7 +130,7 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 - Mobile-first: single column, max-width about 480px, large tap targets, a bottom room bar.
 - Visuals: CSS paper textures, serif and typewriter fonts, emoji/SVG. No art assets.
 - **Save/resume:** `localStorage` (wrapped in try/catch; the game still runs without it).
-- Content lives in `js/data.js`, separate from the engine in `js/game.js`, so writing new days doesn't touch code.
+- All writing (documents, dialogue, scene prose, Memory Keeper lines) lives in `js/data.js`, separate from the engine in `js/game.js`. `node tools/export-script.js` regenerates a readable script in `docs/`.
 - `?debug=1` shows the hidden variables.
 
 ## 11. MVP Scope

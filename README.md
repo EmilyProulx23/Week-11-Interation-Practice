@@ -14,7 +14,19 @@ python3 -m http.server 8000
 
 Then visit http://localhost:8000. Add `?debug=1` to see the hidden Truth / Compliance / Town Memory variables.
 
-Progress saves automatically to `localStorage`.
+Progress saves automatically to `localStorage`. There is no time limit.
+
+## Writing
+
+All story text lives in `js/data.js`. To review it as a readable script, regenerate it with the command below, which writes [docs/day1-script.md](docs/day1-script.md):
+
+```bash
+node tools/export-script.js
+```
+
+## Publishing (GitHub Pages)
+
+In **Settings → Pages**, under **Build and deployment**, set **Source** to *Deploy from a branch*, then pick the branch and `/ (root)`. The game uses relative paths, so it works under the Pages subpath.
 
 ## Status
 
@@ -28,4 +40,5 @@ index.html      page shell
 css/style.css   cozy paper styling, mobile-first, light/dark
 js/data.js      all story content (documents, descriptions, ledger lines, discrepancies)
 js/game.js      engine: scenes, rooms, document workflow, dialogs, save/load
+tools/          export-script.js (writing → docs/day1-script.md)
 ```

@@ -156,7 +156,7 @@
         stories.push({ kicker: "From the Memory Keeper's Index", head: doc.title, body: doc.ledger.discarded, archive: true });
       }
     });
-    const theoTopic = { protest: "the 2006 Town Hall protests", unsure: "what really happened in spring 2006", consultation: "the 2006 community consultation", none: "the 2006 community consultation" }[S.theo || "none"];
+    const theoTopic = D.visitors.theo.ledgerTopic[S.theo || "none"];
     stories.push({ head: "Student Project Spotlight", body: `Hollow Creek High junior Theo Lin is researching ${theoTopic} for the “Then and Now” anniversary showcase.` });
     stories.push({ head: "Ferreira's Bakery", body: "Anniversary special: “Twenty Years” honey cake, by the slice or whole.", ad: true });
     stories.push({ head: "Weather", body: "Fog on the creek in the morning, clearing by noon.", small: true });
@@ -171,7 +171,7 @@
         <div class="title-lamp">🕯️</div>
         <h1>The Archive</h1>
         <p class="subtitle">Hollow Creek Public Records</p>
-        <p class="blurb">Twenty years after Lumen came to town, the archive still needs someone to decide what is kept, how it is described, and what the town gets to read.</p>
+        <p class="blurb">${D.text.titleBlurb}</p>
         ${canContinue ? `<button class="btn primary" data-act="continue">Continue</button>` : ""}
         <button class="btn ${canContinue ? "" : "primary"}" data-act="newgame">${canContinue ? "Start over" : "Begin"}</button>
         <p class="fineprint">A prototype · Day 1 of 3</p>
@@ -180,7 +180,7 @@
 
     ledger1() {
       return `<div class="scene-pad">
-        <p class="scene-intro">Monday. The archive smells like radiator heat and old paper. Someone has left the Ledger on the front step.</p>
+        <p class="scene-intro">${D.text.ledger1Intro}</p>
         ${ledger(D.ledgerDay1.edition, D.ledgerDay1.stories)}
         <button class="btn primary wide" data-act="startday">Unlock the front door</button>
       </div>`;
@@ -193,11 +193,11 @@
       const disc = DOC_ORDER.filter((id) => S.docs[id].status === "discarded").length;
       return `<div class="scene-pad">
         <div class="evening paper">
-          <p class="scene-intro">You switch off the reading lamps one by one. Pocket follows you to the door.</p>
+          <p class="scene-intro">${D.text.eveningIntro}</p>
           <p>Today you filed <b>${kept}</b> record${kept === 1 ? "" : "s"}${disc ? ` and let <b>${disc}</b> go` : ""}. Your notebook holds <b>${S.clues.length}</b> observation${S.clues.length === 1 ? "" : "s"}${S.notes.length ? ` and <b>${S.notes.length}</b> thing${S.notes.length === 1 ? "" : "s"} that don't quite line up` : ""}.</p>
           <div class="mk-bubble"><span class="mk-name">The Memory Keeper</span>
-          ${S.digest ? `Wonderful work today, Archivist! ${S.digest} ${S.digest === 1 ? "story is" : "stories are"} ready for the anniversary digest. Sleep well! ✨`
-                     : "Thank you for today, Archivist! I'll keep the digest warm for tomorrow. Sleep well! ✨"}</div>
+          ${S.digest ? D.text.mk.eveningDigest.replace("{n}", S.digest).replace("{stories}", S.digest === 1 ? "story is" : "stories are")
+                     : D.text.mk.eveningNone}</div>
         </div>
         <button class="btn primary wide" data-act="sleep">Go home for the night</button>
       </div>`;
@@ -205,7 +205,7 @@
 
     ledger2() {
       return `<div class="scene-pad">
-        <p class="scene-intro">Tuesday. The Ledger is on the step again. You recognize a few of the sentences.</p>
+        <p class="scene-intro">${D.text.ledger2Intro}</p>
         ${buildLedgerDay2()}
         <button class="btn primary wide" data-act="end">Continue</button>
       </div>`;
@@ -214,7 +214,7 @@
     end() {
       return `<div class="scene-pad"><div class="paper end-card">
         <h2>End of the Day 1 prototype</h2>
-        <p>Tomorrow, Lumen Facilities sends over the basement key. Ruth Okafor is coming in to say goodbye to her boxes.</p>
+        <p>${D.text.endBody}</p>
         <p class="small">Day 2 (Basement Records) and Day 3 (Server Room) are not built yet.</p>
         ${DEBUG ? `<div class="debug">Truth ${S.stats.truth} · Compliance ${S.stats.compliance} · Town Memory ${S.stats.memory} · Theo: ${S.theo}</div>` : ""}
         <button class="btn" data-act="notebook">Open notebook</button>
@@ -229,7 +229,7 @@
     const theoWaiting = allFiled && !S.flags.theoDone;
     const canClose = allFiled && S.flags.theoDone;
     return `<h2 class="room-title">Front Desk</h2>
-      <p class="room-flavor">A green-shaded lamp, a brass bell, a terminal with a soft blue glow. Through the window, anniversary bunting flutters over Main Street.</p>
+      <p class="room-flavor">${D.text.deskFlavor}</p>
       <div class="desk-grid">
         <button class="desk-item ${n ? "glow" : ""}" data-act="inbox">
           <span class="di-icon">📥</span><span class="di-name">Inbox tray</span>
@@ -262,7 +262,7 @@
         <span class="si-icon">${doc.icon}</span><span class="si-title">${label}</span><span class="si-date">${tag}</span></button>`;
     });
     return `<h2 class="room-title">The Stacks</h2>
-      <p class="room-flavor">Tall oak shelves, a rolling ladder, a reading table under a skylight. ${pub ? "This is what any visitor can find." : "The full collection, including closed storage."}</p>
+      <p class="room-flavor">${D.text.stacksFlavor} ${pub ? D.text.stacksPublic : D.text.stacksArchivist}</p>
       <div class="toggle" role="group" aria-label="View">
         <button class="${pub ? "" : "on"}" data-act="view" data-arg="archivist">Archivist view</button>
         <button class="${pub ? "on" : ""}" data-act="view" data-arg="public">Public view</button>
@@ -297,7 +297,7 @@
   function inboxModal() {
     const ids = inbox();
     return `<h2>Inbox tray</h2>
-      <p class="muted">From the Okafor attic. A cardboard box that says “GRAN — TOWN STUFF.”</p>
+      <p class="muted">${D.text.inboxFlavor}</p>
       <div class="list">${ids.map((id) => {
         const d = D.docs[id];
         return `<button class="list-item" data-act="opendoc" data-arg="${id}">
@@ -363,8 +363,7 @@
         const c = D.circulation[k];
         return `<button class="desc-card" data-act="circulate" data-arg="${k}" data-doc="${id}">
           <span class="dc-label">${c.label}</span>
-          <span class="dc-note">${c.blurb}</span>
-          <span class="dc-time">⏱ ${D.costs.circulate[k]} min</span></button>`;
+          <span class="dc-note">${c.blurb}</span></button>`;
       }).join("")}</div>`;
   }
 
@@ -394,9 +393,7 @@
 
   function terminalModal() {
     const idx = filed().map((id) => `<li><b>${D.docs[id].title}</b>: ${D.docs[id].summary}</li>`).join("");
-    const greet = !S.flags.juneDone ? "Good morning, Archivist! It's anniversary month. Isn't that exciting? I'm ready to help whenever a donation comes in. ✨"
-      : inbox().length ? "Take your time! When you're ready, I'll prepare a friendly summary for each document. Readers love a short read. ✨"
-      : "All caught up! You're doing a wonderful job looking after Hollow Creek's memory. ✨";
+    const greet = !S.flags.juneDone ? D.text.mk.greetMorning : inbox().length ? D.text.mk.greetWorking : D.text.mk.greetDone;
     return `<div class="terminal-screen">
       <div class="term-head">LUMEN · THE MEMORY KEEPER</div>
       <div class="mk-bubble"><span class="mk-name">The Memory Keeper</span>${greet}</div>
@@ -442,16 +439,11 @@
   function dialog(speaker, portrait, nodes) { openModal({ type: "dialog", speaker, portrait, nodes, at: 0 }); }
 
   function juneDialog() {
-    dialog("June Okafor", "🧣", [
-      { lines: ["(The bell over the door jingles. A young woman shoulders in with a cardboard box.)",
-        "Hi! Are you the Archivist? I'm June. We're clearing out Gran's attic before she moves to Maple Court.",
-        "She was very particular that this box come to you, and not just go in the recycling. She said, and I quote, “the Archivist will know what to do with it.”"],
-        choices: [{ label: "“Thank you. I'll take good care of it.”", next: 1 }, { label: "“What's in it?”", next: 2 }] },
-      { lines: ["Great. She'll be so relieved. She might stop by later this week to say goodbye to it, honestly. That's very her.",
-        "(June sets the box down, waves, and is gone in a gust of cold air.)"], choices: [{ label: "Unpack the box", fn: receiveBox }] },
-      { lines: ["Town stuff, mostly? Old programs, newspaper clippings, a photo. Gran taught at the high school forever. She kept everything.",
-        "(June sets the box down, waves, and is gone in a gust of cold air.)"], choices: [{ label: "Unpack the box", fn: receiveBox }] }
-    ]);
+    const v = D.visitors.june;
+    dialog(v.name, v.portrait, v.nodes.map((n) => ({
+      lines: n.lines,
+      choices: n.choices.map((c) => (c.action ? { label: c.label, fn: DIALOG_FNS[c.action] } : c))
+    })));
   }
   function receiveBox() {
     S.flags.juneDone = true;
@@ -462,35 +454,34 @@
   }
 
   function theoDialog() {
+    const v = D.visitors.theo;
     const nodes = [{
-      lines: ["(A teenager in a too-big hoodie, backpack on one shoulder.)",
-        "Hey, um, hi. I'm Theo. Ms. Hale said the archive would have stuff for my project? It's for the anniversary showcase, “Hollow Creek: Then and Now.”",
-        "I'm doing spring 2006. She called it “the consultation.” Do you have anything from then?"],
-      choices: publicDocs().map((id) => ({ label: `Hand him “${descOf(id).label}”`, fn: () => theoReads(id) }))
-        .concat([{ label: "“Let's ask the Memory Keeper.”", fn: () => theoReads("mk") },
-                 { label: "“Nothing I can share yet, sorry.”", fn: () => theoReads(null) }])
+      lines: v.intro,
+      choices: publicDocs().map((id) => ({ label: `${v.handPrefix} “${descOf(id).label}”`, fn: () => theoReads(id) }))
+        .concat([{ label: v.askMK, fn: () => theoReads("mk") },
+                 { label: v.nothing, fn: () => theoReads(null) }])
     }];
-    dialog("Theo Lin", "🎒", nodes);
+    dialog(v.name, v.portrait, nodes);
   }
 
   function publicText(id) {
     const st = S.docs[id], d = D.docs[id];
     if (st.circ === "original") return `<b>“${descOf(id).label}”</b><br>${renderOriginal(id, false)}`;
     let t = `<b>“${descOf(id).label}”</b><br>${d.summary}`;
-    if (st.circ === "both") t += `<br><span class="muted small">Original on the open shelves. Theo goes and gets it.</span>`;
+    if (st.circ === "both") t += `<br><span class="muted small">${D.visitors.theo.fetchesOriginal}</span>`;
     return t;
   }
 
   function theoReads(id) {
     const m = ui.modal;
     if (id && D.docs[id] && !D.docs[id].theo) {
-      m.nodes.push({ quote: publicText(id), lines: ["This is cute, but it's 2005. Anything from the spring after?"], choices: m.nodes[0].choices });
+      m.nodes.push({ quote: publicText(id), lines: [D.visitors.theo.tooEarly], choices: m.nodes[0].choices });
       m.at = m.nodes.length - 1; renderModal(); return;
     }
     let belief, quote;
     if (id === "mk") {
       belief = "consultation";
-      quote = `<b>The Memory Keeper:</b> Spring 2006 was a lively season of community consultation! Neighbors shared their hopes for Hollow Creek's future, and the partnership was signed with broad support. ✨`;
+      quote = `<b>The Memory Keeper:</b> ${D.visitors.theo.mkAnswer}`;
     } else if (id === null) {
       belief = "none";
     } else {
@@ -504,20 +495,16 @@
       quote = publicText(id);
     }
     S.theo = belief;
-    const react = {
-      consultation: ["Oh, nice. So everyone just talked it through? That's honestly kind of sweet. Ms. Hale's going to love this.", "(He copies it into his notebook word for word.)"],
-      unsure: ["Huh. It says consultation, but… this doesn't totally sound like everyone agreed?", "I'm gonna put a question mark next to it. Is that allowed in a school project?"],
-      protest: ["Wait. Hold on. This is a protest. People were protesting.", "Nobody's ever said that. Not once. Ms. Hale definitely didn't say that."],
-      none: ["Oh. Okay, no worries! I'll just ask the Memory Keeper at home. It knows everything."]
-    }[belief];
-    const eff = { consultation: { compliance: 1, memory: 1 }, unsure: { truth: 1, memory: 1 },
-                  protest: { truth: 1, memory: 1, compliance: -1 }, none: { memory: -1 } }[belief];
-    m.nodes.push({ quote, lines: react.concat(["Thanks, Archivist. Seriously."]), choices: [{ label: "Wave goodbye", fn: () => {
+    const v = D.visitors.theo;
+    const react = v.reactions[belief], eff = v.effects[belief];
+    m.nodes.push({ quote, lines: react.concat([v.thanks]), choices: [{ label: v.goodbye, fn: () => {
       fx(eff); S.flags.theoDone = true; spend(D.costs.visitor); closeModal(); render();
-      toast("Theo heads out into the afternoon.");
+      toast(v.exitToast);
     } }] });
     m.at = m.nodes.length - 1; renderModal();
   }
+
+  const DIALOG_FNS = { receiveBox };
 
   // ---------- actions ----------
   const ACTIONS = {
@@ -525,8 +512,8 @@
     continue() { const s = loadSave(); if (s) S = s; render(); },
     startday() { S.scene = "room"; S.room = "desk"; render(); if (!S.flags.juneDone) setTimeout(juneDialog, 350); },
     room(id) {
-      if (id === "basement") return toast("🔒 Locked. A note on the door: “Key with Lumen Facilities. Collect Tuesday.”");
-      if (id === "server") return toast("🔒 A keypad door with a small Lumen logo. You don't have the code.");
+      if (id === "basement") return toast(D.text.basementLocked);
+      if (id === "server") return toast(D.text.serverLocked);
       S.room = id; render();
     },
     notebook() { openModal({ type: "notebook" }); },
@@ -557,7 +544,7 @@
     discard(id) {
       const d = D.docs[id];
       dialog("The Memory Keeper", "🖥️", [{
-        lines: ["No problem at all! Not everything needs a shelf.", "I'll keep a little summary in my index, just in case. That way nothing is ever really lost. ✨"],
+        lines: D.text.mk.discard,
         choices: [{ label: "Discard the original", fn: () => {
           S.docs[id].status = "discarded";
           fx({ compliance: 1, truth: -1 - Math.round(d.summaryLoss / 2) });
@@ -598,7 +585,7 @@
       const out = $modal.querySelector("#ask-out");
       out.innerHTML = `<div class="mk-bubble"><span class="mk-name">The Memory Keeper</span>${D.shelved.courier.ask}</div>`;
     },
-    cat() { toast(["Pocket purrs without opening her eyes.", "Pocket stretches one paw toward the lamp.", "Pocket is very warm."][Math.floor(Math.random() * 3)]); },
+    cat() { toast(D.text.catLines[Math.floor(Math.random() * D.text.catLines.length)]); },
     closemodal() { closeModal(); if (S.scene === "room") render(); },
     dchoice(i) {
       const m = ui.modal, c = m.nodes[m.at].choices[+i];

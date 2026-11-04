@@ -6,13 +6,88 @@ window.GAME_DATA = {
   dayStart: 9 * 60,   // 9:00
   dayEnd: 17 * 60,    // 17:00
 
+  // The clock is cozy flavor only: there is no time limit.
   costs: { describe: 15, discard: 10, visitor: 20,
            circulate: { summary: 15, both: 45, original: 75 } },
+
+  // ---------- scene prose & Memory Keeper lines ----------
+  text: {
+    titleBlurb: "Twenty years after Lumen came to town, the archive still needs someone to decide what is kept, how it is described, and what the town gets to read.",
+    ledger1Intro: "Monday. The archive smells like radiator heat and old paper. Someone has left the Ledger on the front step.",
+    ledger2Intro: "Tuesday. The Ledger is on the step again. You recognize a few of the sentences.",
+    deskFlavor: "A green-shaded lamp, a brass bell, a terminal with a soft blue glow. Through the window, anniversary bunting flutters over Main Street.",
+    stacksFlavor: "Tall oak shelves, a rolling ladder, a reading table under a skylight.",
+    stacksArchivist: "The full collection, including closed storage.",
+    stacksPublic: "This is what any visitor can find.",
+    inboxFlavor: "From the Okafor attic. A cardboard box that says “GRAN — TOWN STUFF.”",
+    catLines: ["Pocket purrs without opening her eyes.", "Pocket stretches one paw toward the lamp.", "Pocket is very warm."],
+    basementLocked: "🔒 Locked. A note on the door: “Key with Lumen Facilities. Collect Tuesday.”",
+    serverLocked: "🔒 A keypad door with a small Lumen logo. You don't have the code.",
+    eveningIntro: "You switch off the reading lamps one by one. Pocket follows you to the door.",
+    endBody: "Tomorrow, Lumen Facilities sends over the basement key. Ruth Okafor is coming in to say goodbye to her boxes.",
+    mk: {
+      greetMorning: "Good morning, Archivist! It's anniversary month. Isn't that exciting? I'm ready to help whenever a donation comes in. ✨",
+      greetWorking: "Take your time! When you're ready, I'll prepare a friendly summary for each document. Readers love a short read. ✨",
+      greetDone: "All caught up! You're doing a wonderful job looking after Hollow Creek's memory. ✨",
+      discard: ["No problem at all! Not everything needs a shelf.", "I'll keep a little summary in my index, just in case. That way nothing is ever really lost. ✨"],
+      eveningDigest: "Wonderful work today, Archivist! {n} {stories} ready for the anniversary digest. Sleep well! ✨",
+      eveningNone: "Thank you for today, Archivist! I'll keep the digest warm for tomorrow. Sleep well! ✨"
+    }
+  },
+
+  // ---------- visitors ----------
+  visitors: {
+    june: {
+      name: "June Okafor", portrait: "🧣",
+      nodes: [
+        { lines: ["(The bell over the door jingles. A young woman shoulders in with a cardboard box.)",
+          "Hi! Are you the Archivist? I'm June. We're clearing out Gran's attic before she moves to Maple Court.",
+          "She was very particular that this box come to you, and not just go in the recycling. She said, and I quote, “the Archivist will know what to do with it.”"],
+          choices: [{ label: "“Thank you. I'll take good care of it.”", next: 1 }, { label: "“What's in it?”", next: 2 }] },
+        { lines: ["Great. She'll be so relieved. She might stop by later this week to say goodbye to it, honestly. That's very her.",
+          "(June sets the box down, waves, and is gone in a gust of cold air.)"],
+          choices: [{ label: "Unpack the box", action: "receiveBox" }] },
+        { lines: ["Town stuff, mostly? Old programs, newspaper clippings, a photo. Gran taught at the high school forever. She kept everything.",
+          "(June sets the box down, waves, and is gone in a gust of cold air.)"],
+          choices: [{ label: "Unpack the box", action: "receiveBox" }] }
+      ]
+    },
+    theo: {
+      name: "Theo Lin", portrait: "🎒",
+      intro: ["(A teenager in a too-big hoodie, backpack on one shoulder.)",
+        "Hey, um, hi. I'm Theo. Ms. Hale said the archive would have stuff for my project? It's for the anniversary showcase, “Hollow Creek: Then and Now.”",
+        "I'm doing spring 2006. She called it “the consultation.” Do you have anything from then?"],
+      handPrefix: "Hand him",
+      askMK: "“Let's ask the Memory Keeper.”",
+      nothing: "“Nothing I can share yet, sorry.”",
+      tooEarly: "This is cute, but it's 2005. Anything from the spring after?",
+      fetchesOriginal: "Original on the open shelves. Theo goes and gets it.",
+      mkAnswer: "Spring 2006 was a lively season of community consultation! Neighbors shared their hopes for Hollow Creek's future, and the partnership was signed with broad support. ✨",
+      // What Theo comes away believing depends on the record's circulation and description framing.
+      reactions: {
+        consultation: ["Oh, nice. So everyone just talked it through? That's honestly kind of sweet. Ms. Hale's going to love this.", "(He copies it into his notebook word for word.)"],
+        unsure: ["Huh. It says consultation, but… this doesn't totally sound like everyone agreed?", "I'm gonna put a question mark next to it. Is that allowed in a school project?"],
+        protest: ["Wait. Hold on. This is a protest. People were protesting.", "Nobody's ever said that. Not once. Ms. Hale definitely didn't say that."],
+        none: ["Oh. Okay, no worries! I'll just ask the Memory Keeper at home. It knows everything."]
+      },
+      effects: {
+        consultation: { compliance: 1, memory: 1 }, unsure: { truth: 1, memory: 1 },
+        protest: { truth: 1, memory: 1, compliance: -1 }, none: { memory: -1 }
+      },
+      thanks: "Thanks, Archivist. Seriously.",
+      goodbye: "Wave goodbye",
+      exitToast: "Theo heads out into the afternoon.",
+      ledgerTopic: {
+        protest: "the 2006 Town Hall protests", unsure: "what really happened in spring 2006",
+        consultation: "the 2006 community consultation", none: "the 2006 community consultation"
+      }
+    }
+  },
 
   circulation: {
     summary: {
       label: "Circulate the summary",
-      blurb: "Fastest. The Memory Keeper's summary goes into the public catalogue and the Ledger. The original moves to closed storage and is available at the desk on request.",
+      blurb: "The Memory Keeper's summary goes into the public catalogue and the Ledger. The original moves to closed storage and is available at the desk on request.",
       access: "Closed storage — on request",
       effects: { compliance: 2, memory: 2 }
     },
@@ -24,7 +99,7 @@ window.GAME_DATA = {
     },
     original: {
       label: "Original only (hand-catalogued)",
-      blurb: "Slowest. You catalogue it yourself. The public sees the original and your description. Fewer people will read it closely.",
+      blurb: "You catalogue it yourself. The public sees the original and your description. Fewer people will read it closely.",
       access: "Open stacks",
       effects: { compliance: -1, memory: 1, truth: 2 }
     }
