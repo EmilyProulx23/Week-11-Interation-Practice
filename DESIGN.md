@@ -6,7 +6,7 @@
 
 Ten years ago, Lumen signed an agreement with the small town of **Hollow Creek** to build a data center and digitize the town's public archives. Today Lumen's archival AI, **The Memory Keeper**, helps the town's archivist catalogue, summarize and share local history.
 
-You are the **Archivist**. You never appear on screen, you have no name, and your gender is never given; townsfolk just call you "Archivist." You go through donated documents, decide what to keep, how to describe it, and which version reaches the public. Over three days, small discrepancies build up between the original documents, the Memory Keeper's summaries, the town newsletter and what visitors remember. Through them you piece together a conflict the town no longer remembers having.
+You are the **Archivist**: a small, gender-neutral pixel character (mustard cardigan, round glasses, no other defined features) whom you walk around a top-down archive. You have no name and your gender is never given; townsfolk just call you "Archivist." You go through donated documents, decide what to keep, how to describe it, and which version reaches the public. Over three days, small discrepancies build up between the original documents, the Memory Keeper's summaries, the town newsletter and what visitors remember. Through them you piece together a conflict the town no longer remembers having.
 
 ## 2. Tone Pillars
 
@@ -31,7 +31,8 @@ Ten years is long enough to count as history and to hang an anniversary on, and 
 
 | Verb | Where | What it does |
 |---|---|---|
-| **Move** | Room bar | Travel between rooms (Front Desk, Stacks, Basement, Server Room). |
+| **Walk** | The world | Tap a spot to walk there (pathfinding); tap an object or person to walk over and use it. Arrow keys/WASD + Enter on desktop. Doors lead between rooms. |
+| **Browse the catalogue** | Stacks | The card catalogue shows exactly what any visitor can find (the public view). |
 | **Examine** | Document viewer | Use the magnifier to tap details (marginalia, signatures, sign text). Each find is recorded as a *clue*. |
 | **Keep / Discard** | Document viewer | Decide whether the original enters the collection. |
 | **Describe** | Document viewer | Pick 1 of 3 catalogue descriptions. Some only unlock once you've found a related clue. |
@@ -130,15 +131,17 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 
 ## 10. Tech
 
-- Plain **HTML / CSS / JS**, no build step, playable in a phone browser; deployable via GitHub Pages.
-- Mobile-first: single column, max-width about 480px, large tap targets, a bottom room bar.
-- Visuals: CSS paper textures, serif and typewriter fonts, emoji/SVG. No art assets.
-- **Save/resume:** `localStorage` (wrapped in try/catch; the game still runs without it).
-- All writing (documents, dialogue, scene prose, Memory Keeper lines) lives in `js/data.js`, separate from the engine in `js/game.js`. `node tools/export-script.js` regenerates a readable script in `docs/`.
-- `?debug=1` shows the hidden variables.
+- **Top-down 2-D pixel game** in plain **HTML canvas + JS**, no build step and no engine; deployable via GitHub Pages.
+- **Perspective & controls:** visible Archivist, 10×14-tile rooms (16px tiles), tap-to-walk with grid pathfinding, keyboard on desktop. Visitors walk in through the front door.
+- **Art in code:** `js/art.js` draws every sprite, tile and icon from small pixel grids and rectangle helpers. There are no image files.
+- **Rendering:** the world is drawn at native resolution and scaled by the largest whole-number factor that fits (crisp pixels). Text and UI are drawn on the same canvas at full screen resolution with bundled pixel fonts (**VT323** body, **Pixelify Sans** headings, both SIL OFL in `assets/fonts/`), so long documents stay readable on phones.
+- **Code layout:** `js/data.js` (all writing + room layouts) · `js/logic.js` (rules & state, no drawing) · `js/world.js` (rooms, walking, NPCs) · `js/ui.js` (in-canvas panels, text, scrolling) · `js/main.js` (scenes, screens, input, loop).
+- **Save/resume:** `localStorage` (including room and position; wrapped in try/catch, so the game still runs without it).
+- `node tools/export-script.js` regenerates a readable script in `docs/`. `?debug=1` shows the hidden variables and exposes test hooks.
+- **Accessibility trade-off:** canvas text isn't visible to screen readers. A later pass could mirror the current screen's text into an ARIA live region.
 
 ## 11. MVP Scope
 
-**In:** Day 1 fully playable (2 rooms, 3 documents, 2 visitors, notebook discrepancies, Day 2 Ledger generation, save/resume).
+**In:** Day 1 fully playable as a top-down pixel game (2 walkable rooms, 3 documents, 2 visitors who walk in, card catalogue, notebook discrepancies, Day 2 Ledger generation, save/resume).
 **Next:** Days 2–3, Basement and Server Room, endings.
-**Out (later):** art pass in a cozy bookshop style, audio, free-text descriptions, room drafting.
+**Out (later):** richer art and animation, audio, free-text descriptions, room drafting.

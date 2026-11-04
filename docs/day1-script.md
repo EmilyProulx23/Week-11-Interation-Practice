@@ -95,7 +95,7 @@ _Memory Keeper aside:_ This one's a delight! I kept it short and sweet. ✨
 ### 4.2 ✉️ Letter to the Editor
 _Newspaper clipping, Hollow Creek Courier · March 18, 2016_
 **Original**
-> Letters to the Editor
+> LETTERS TO THE EDITOR
 > 
 > ### On the Records Partnership
 > 
@@ -133,11 +133,11 @@ _Memory Keeper aside:_ Such a thoughtful neighbor! I smoothed out the legal lang
 ### 4.3 📷 Photograph: Town Hall Steps
 _Pharmacy print of a phone photo · April 12, 2016_
 **Original**
-> A crowd of perhaps sixty people on the Town Hall steps. Some carry thermoses. A child sits on someone's shoulders.
+> 📷 _A crowd of perhaps sixty people on the Town Hall steps. Some carry thermoses. A child sits on someone's shoulders._
 > 
-> **Several hand-lettered signs. The clearest reads: OUR RECORDS, OUR TOWN.** `[clue: signs]`
+> 📷 _**Several hand-lettered signs. The clearest reads: OUR RECORDS, OUR TOWN.** `[clue: signs]`_
 > 
-> **Behind the crowd hangs a printed banner: “Building Tomorrow's Hollow Creek — Together.”** `[clue: banner]`
+> 📷 _**Behind the crowd hangs a printed banner: “Building Tomorrow's Hollow Creek — Together.”** `[clue: banner]`_
 > 
 > _✍️ On the back, in pencil: **“Day 3. Records Room locked this morning (‘relocation’). Council meeting closed to the public. —R.”** `[clue: reverse]`_
 
@@ -171,27 +171,27 @@ _Tall oak shelves, a rolling ladder, a reading table under a skylight._
 - Server room door: 🔒 A keypad door with a small Lumen logo. You don't have the code.
 
 ### 📒 Town Council Minutes (April 12, 2016)
-> Original not located. Reconstructed by The Memory Keeper during the 2016 digitization.
+> 🏷️ `Original not located. Reconstructed by The Memory Keeper during the 2016 digitization.`
 > 
 > “Council held an open consultation session. Residents shared a range of views, and the meeting concluded with broad support for the partnership.”
 > 
 > Reconstructed from: Lumen Partnership press release (Apr 13, 2016); Courier coverage (issue not on shelf).
 
 ### 📌 Records Room Notice (April 2016)
-> Notice
+> NOTICE
 > 
-> The Records Room will be temporarily closed **April 10 – May 30, 2016** for relocation and digitization.
+> The Records Room will be temporarily closed April 10 – May 30, 2016 for relocation and digitization.
 > 
 > Thank you for your patience as we build tomorrow's Hollow Creek together!
 > 
 > — Lumen Partnership Office
 
 ### 📚 Hollow Creek Courier, bound 2016 (January – December 2016)
-> A heavy bound volume. Leafing through it, you find that the issues for **April 14** and **April 21** are missing from the binding.
+> A heavy bound volume. Leafing through it, you find that the issues for April 14 and April 21 are missing from the binding.
 > 
 > _✍️ A slip of paper in their place: “Digitized. See Memory Keeper.”_
 > 
-> Taped inside the cover: “Courier website retired 2017. Hollow Creek Community Board closed 2017. All content migrated to The Memory Keeper.”
+> 🏷️ `Taped inside the cover: “Courier website retired 2017. Hollow Creek Community Board closed 2017. All content migrated to The Memory Keeper.”`
 
 _Ask the Memory Keeper:_ Those issues are safe in my index! So is the old Community Board. I tidied it up during the migration. Highlights: the spring cleanup, the community consultation, and a lovely piece on the new library hours. ✨
 

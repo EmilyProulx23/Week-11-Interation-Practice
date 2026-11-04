@@ -124,13 +124,13 @@ window.GAME_DATA = {
       title: "Harvest Fair Program",
       kind: "Folded card program",
       date: "September 2015",
-      icon: "🍎",
+      icon: "program",
       paper: "card",
       original: [
-        "<h3>HOLLOW CREEK HARVEST FAIR</h3>",
-        "<p class='center'>31st Annual · Saturday, September 26, 2015 · Creekside Green</p>",
-        "<p>10:00 — Pie judging (Fellowship Hall)<br>11:30 — Junior Pumpkin Parade<br>1:00 — [[lumen-table|Special Guest: Lumen Systems, “A Future for Hollow Creek's Memory” (Library Tent)]]<br>3:00 — Square dance with the Creek Bottom Ramblers</p>",
-        "<p class='hand'>Pencil, in the margin: [[margin|“Lumen folks very nice. Free cider. Asked who'd hold the keys to the records room. Nobody knew. —R.”]]</p>"
+        { s: "h", t: "HOLLOW CREEK HARVEST FAIR" },
+        { s: "center", t: "31st Annual · Saturday, September 26, 2015 · Creekside Green" },
+        { s: "p", t: "10:00 — Pie judging (Fellowship Hall)\n11:30 — Junior Pumpkin Parade\n1:00 — [[lumen-table|Special Guest: Lumen Systems, “A Future for Hollow Creek's Memory” (Library Tent)]]\n3:00 — Square dance with the Creek Bottom Ramblers" },
+        { s: "hand", t: "Pencil, in the margin: [[margin|“Lumen folks very nice. Free cider. Asked who'd hold the keys to the records room. Nobody knew. —R.”]]" }
       ],
       clues: {
         "lumen-table": "Lumen introduced itself at the Harvest Fair, months before any agreement.",
@@ -157,16 +157,16 @@ window.GAME_DATA = {
       title: "Letter to the Editor",
       kind: "Newspaper clipping, Hollow Creek Courier",
       date: "March 18, 2016",
-      icon: "✉️",
+      icon: "letter",
       paper: "newsprint",
       original: [
-        "<p class='small caps'>Letters to the Editor</p>",
-        "<h3>On the Records Partnership</h3>",
-        "<p>I have taught in Hollow Creek for thirty-one years, and I have nothing against jobs or new buildings. My concern is [[clause14|Clause 14 of the draft agreement, which would make Lumen the “sole custodian” of our public records for ninety-nine years]].</p>",
-        "<p>Once our records live on someone else's machines, who decides what is kept, and how it is described?</p>",
-        "<p>I ask the Council to [[hearing|hold a public hearing before signing]].</p>",
-        "<p class='right'>— Ruth Okafor, Alder Street</p>",
-        "<p class='hand'>[[signatures|Clipped behind the letter: a folded sheet with 41 signatures, headed “We support Mrs. Okafor's request.”]]</p>"
+        { s: "small caps", t: "Letters to the Editor" },
+        { s: "h", t: "On the Records Partnership" },
+        { s: "p", t: "I have taught in Hollow Creek for thirty-one years, and I have nothing against jobs or new buildings. My concern is [[clause14|Clause 14 of the draft agreement, which would make Lumen the “sole custodian” of our public records for ninety-nine years]]." },
+        { s: "p", t: "Once our records live on someone else's machines, who decides what is kept, and how it is described?" },
+        { s: "p", t: "I ask the Council to [[hearing|hold a public hearing before signing]]." },
+        { s: "right", t: "— Ruth Okafor, Alder Street" },
+        { s: "hand", t: "[[signatures|Clipped behind the letter: a folded sheet with 41 signatures, headed “We support Mrs. Okafor's request.”]]" }
       ],
       clues: {
         "clause14": "Clause 14 would have made Lumen “sole custodian” of public records for 99 years.",
@@ -194,13 +194,13 @@ window.GAME_DATA = {
       title: "Photograph: Town Hall Steps",
       kind: "Pharmacy print of a phone photo",
       date: "April 12, 2016",
-      icon: "📷",
+      icon: "photo",
       paper: "photo",
       original: [
-        "<div class='photo-frame'><p class='photo-desc'>A crowd of perhaps sixty people on the Town Hall steps. Some carry thermoses. A child sits on someone's shoulders.</p>",
-        "<p class='photo-desc'>[[signs|Several hand-lettered signs. The clearest reads: OUR RECORDS, OUR TOWN.]]</p>",
-        "<p class='photo-desc'>[[banner|Behind the crowd hangs a printed banner: “Building Tomorrow's Hollow Creek — Together.”]]</p></div>",
-        "<p class='hand'>On the back, in pencil: [[reverse|“Day 3. Records Room locked this morning (‘relocation’). Council meeting closed to the public. —R.”]]</p>"
+        { s: "photo", t: "A crowd of perhaps sixty people on the Town Hall steps. Some carry thermoses. A child sits on someone's shoulders." },
+        { s: "photo", t: "[[signs|Several hand-lettered signs. The clearest reads: OUR RECORDS, OUR TOWN.]]" },
+        { s: "photo", t: "[[banner|Behind the crowd hangs a printed banner: “Building Tomorrow's Hollow Creek — Together.”]]" },
+        { s: "hand", t: "On the back, in pencil: [[reverse|“Day 3. Records Room locked this morning (‘relocation’). Council meeting closed to the public. —R.”]]" }
       ],
       clues: {
         "signs": "Signs at Town Hall read “OUR RECORDS, OUR TOWN.”",
@@ -225,37 +225,132 @@ window.GAME_DATA = {
     }
   },
 
+  // ---------- rooms (top-down, 10 x 14 tiles of 16px) ----------
+  // Tiles: '=' wall cap · '|' wall face · 'w' window · '.' floor · ',' rug · '_' low wall
+  // Doors and furniture are objects. solid:false objects don't block walking.
+  // spots: tiles the Archivist stands on to use the object (default: walkable neighbours).
+  rooms: {
+    desk: {
+      name: "Front Desk",
+      map: [
+        "==========",
+        "||||ww||||",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "...,,,,...",
+        "...,,,,...",
+        "...,,,,...",
+        "..........",
+        "____..____"
+      ],
+      start: { x: 4, y: 12, dir: "up" },
+      visitorSpot: { x: 4, y: 7 },
+      visitorTalkSpots: [[4, 5], [3, 7], [5, 7], [4, 8]],
+      entry: { x: 4, y: 13 },
+      objects: [
+        { id: "door-stacks", kind: "door", x: 1, y: 1, act: "door", arg: "stacks", label: "Door to the Stacks" },
+        { id: "notice-board", kind: "noticeBoard", x: 6, y: 1, act: "flavor", arg: "noticeBoard", label: "Notice board" },
+        { id: "door-basement", kind: "lockedDoor", x: 8, y: 1, act: "locked", arg: "basement", label: "Basement door" },
+        { id: "front-door", kind: "frontDoor", x: 4, y: 13, w: 2, act: "frontDoor", label: "Front door" },
+        { id: "desk", kind: "desk", x: 2, y: 6, w: 6 },
+        { id: "inbox", kind: "inbox", x: 3, y: 6, solid: false, act: "inbox", label: "Inbox tray", spots: [[3, 5], [3, 7]] },
+        { id: "terminal", kind: "terminal", x: 5, y: 6, solid: false, act: "terminal", label: "The Memory Keeper", spots: [[5, 5], [5, 7]] },
+        { id: "bell", kind: "bell", x: 7, y: 6, solid: false, act: "bell", label: "Visitor bell", spots: [[7, 5], [7, 7]] },
+        { id: "stool", kind: "stool", x: 5, y: 5, solid: false },
+        { id: "plant", kind: "plant", x: 0, y: 2, act: "flavor", arg: "plant", label: "Fern" },
+        { id: "lamp", kind: "lamp", x: 9, y: 2, act: "flavor", arg: "lamp", label: "Reading lamp" },
+        { id: "bench", kind: "bench", x: 0, y: 9, h: 2, act: "flavor", arg: "bench", label: "Bench" },
+        { id: "cart", kind: "cart", x: 9, y: 9, act: "flavor", arg: "cart", label: "Book cart" },
+        { id: "coatrack", kind: "coatrack", x: 8, y: 12, act: "flavor", arg: "coatrack", label: "Coat rack" }
+      ]
+    },
+    stacks: {
+      name: "The Stacks",
+      map: [
+        "==========",
+        "||w||||w||",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "__________"
+      ],
+      start: { x: 1, y: 12, dir: "up" },
+      objects: [
+        { id: "door-desk", kind: "doorBottom", x: 1, y: 13, act: "door", arg: "desk", label: "Door to the Front Desk" },
+        { id: "door-server", kind: "serverDoor", x: 8, y: 1, act: "locked", arg: "server", label: "Server room door" },
+        { id: "shelf-new", kind: "shelf", variant: "new", x: 1, y: 3, w: 4, act: "shelfNew", label: "Newly filed shelf" },
+        { id: "shelf-2016", kind: "shelf", variant: "old", x: 6, y: 3, w: 3, act: "shelf2016", label: "Spring 2016 shelf" },
+        { id: "shelf-minutes", kind: "shelf", variant: "green", x: 1, y: 6, w: 4, act: "flavor", arg: "oldShelves", label: "Council minutes" },
+        { id: "shelf-yearbooks", kind: "shelf", variant: "mixed", x: 6, y: 6, w: 3, act: "flavor", arg: "yearbooks", label: "Yearbooks" },
+        { id: "ladder", kind: "ladder", x: 0, y: 6, act: "flavor", arg: "ladder", label: "Rolling ladder" },
+        { id: "table", kind: "table", x: 2, y: 9, w: 3 },
+        { id: "cat", kind: "cat", x: 3, y: 9, solid: false, act: "cat", label: "Pocket", spots: [[3, 8], [3, 10]] },
+        { id: "chair-l", kind: "chair", x: 2, y: 10, solid: false },
+        { id: "chair-r", kind: "chair", x: 4, y: 10, solid: false },
+        { id: "catalogue", kind: "catalogue", x: 8, y: 9, act: "catalogue", label: "Card catalogue (public view)" },
+        { id: "plant-2", kind: "plant", x: 9, y: 12, act: "flavor", arg: "plant", label: "Fern" }
+      ]
+    }
+  },
+
+  flavor: {
+    noticeBoard: "A poster: “10 Years Together — Lumen & Hollow Creek.” Someone has pinned a lost-mitten notice over one corner.",
+    plant: "A fern. It is thriving, which feels like a small victory.",
+    lamp: "The green lamp hums. It has been here longer than the terminal.",
+    bench: "A wooden bench, worn smooth. Visitors wait here when the bell is busy.",
+    cart: "A book cart with one squeaky wheel. Due-back slips flutter when it moves.",
+    coatrack: "Your coat, a forgotten umbrella, and a scarf nobody has claimed since spring.",
+    oldShelves: "Council minutes, 1987–2015, in matching green bindings. 2016 is shelved separately.",
+    yearbooks: "Hollow Creek High yearbooks, 1962 to present. Some have pressed flowers inside.",
+    ladder: "The rolling ladder. It squeaks on the third rung, every time.",
+    frontDoorEarly: "Not yet. There's still work to do today.",
+    closePrompt: "Close up the archive for the day?"
+  },
+
   // Items already on the shelves in the Stacks.
   shelved: {
     minutes: {
       title: "Town Council Minutes",
       date: "April 12, 2016",
-      icon: "📒",
+      icon: "book",
       body: [
-        "<p class='mk-tag'>Original not located. Reconstructed by The Memory Keeper during the 2016 digitization.</p>",
-        "<p>“Council held an open consultation session. Residents shared a range of views, and the meeting concluded with broad support for the partnership.”</p>",
-        "<p class='small'>Reconstructed from: Lumen Partnership press release (Apr 13, 2016); Courier coverage (issue not on shelf).</p>"
+        { s: "tag", t: "Original not located. Reconstructed by The Memory Keeper during the 2016 digitization." },
+        { s: "p", t: "“Council held an open consultation session. Residents shared a range of views, and the meeting concluded with broad support for the partnership.”" },
+        { s: "small", t: "Reconstructed from: Lumen Partnership press release (Apr 13, 2016); Courier coverage (issue not on shelf)." }
       ]
     },
     notice: {
       title: "Records Room Notice",
       date: "April 2016",
-      icon: "📌",
+      icon: "notice",
       body: [
-        "<p class='center caps'>Notice</p>",
-        "<p>The Records Room will be temporarily closed <b>April 10 – May 30, 2016</b> for relocation and digitization.</p>",
-        "<p>Thank you for your patience as we build tomorrow's Hollow Creek together!</p>",
-        "<p class='right small'>— Lumen Partnership Office</p>"
+        { s: "center caps", t: "Notice" },
+        { s: "p", t: "The Records Room will be temporarily closed April 10 – May 30, 2016 for relocation and digitization." },
+        { s: "p", t: "Thank you for your patience as we build tomorrow's Hollow Creek together!" },
+        { s: "right small", t: "— Lumen Partnership Office" }
       ]
     },
     courier: {
       title: "Hollow Creek Courier, bound 2016",
       date: "January – December 2016",
-      icon: "📚",
+      icon: "volume",
       body: [
-        "<p>A heavy bound volume. Leafing through it, you find that the issues for <b>April 14</b> and <b>April 21</b> are missing from the binding.</p>",
-        "<p class='hand'>A slip of paper in their place: “Digitized. See Memory Keeper.”</p>",
-        "<p class='mk-tag'>Taped inside the cover: “Courier website retired 2017. Hollow Creek Community Board closed 2017. All content migrated to The Memory Keeper.”</p>"
+        { s: "p", t: "A heavy bound volume. Leafing through it, you find that the issues for April 14 and April 21 are missing from the binding." },
+        { s: "hand", t: "A slip of paper in their place: “Digitized. See Memory Keeper.”" },
+        { s: "tag", t: "Taped inside the cover: “Courier website retired 2017. Hollow Creek Community Board closed 2017. All content migrated to The Memory Keeper.”" }
       ],
       ask: "Those issues are safe in my index! So is the old Community Board. I tidied it up during the migration. Highlights: the spring cleanup, the community consultation, and a lovely piece on the new library hours. ✨"
     }

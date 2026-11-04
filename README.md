@@ -1,6 +1,6 @@
 # The Archive
 
-A cozy, mobile-friendly archival simulator set in Hollow Creek. As the town's archivist, you decide which documents to keep, how to describe them, and whether the town reads the original or the friendly summary written by Lumen's AI, **The Memory Keeper**.
+A cozy, mobile-friendly top-down pixel game set in Hollow Creek. As the town's archivist, you decide which documents to keep, how to describe them, and whether the town reads the original or the friendly summary written by Lumen's AI, **The Memory Keeper**.
 
 See [DESIGN.md](DESIGN.md) for the full MVP design.
 
@@ -12,7 +12,7 @@ No build step. Serve the folder and open it in a (phone) browser:
 python3 -m http.server 8000
 ```
 
-Then visit http://localhost:8000. Add `?debug=1` to see the hidden Truth / Compliance / Town Memory variables.
+Then visit http://localhost:8000. Tap to walk and tap things to use them (arrow keys/WASD + Enter on desktop). Add `?debug=1` to see the hidden Truth / Compliance / Town Memory variables.
 
 Progress saves automatically to `localStorage`. There is no time limit.
 
@@ -30,15 +30,20 @@ In **Settings → Pages**, under **Build and deployment**, set **Source** to *De
 
 ## Status
 
-- ✅ Day 1 prototype: Front Desk and Stacks, 3 documents, 2 visitors, notebook discrepancies, and a generated Day 2 newsletter
+- ✅ Day 1 as a top-down pixel game: walkable Front Desk and Stacks, 3 documents, 2 visitors, notebook discrepancies, and a generated Day 2 newsletter
 - ⏳ Day 2 (Basement Records), Day 3 (Server Room), endings
 
 ## Structure
 
 ```
-index.html      page shell
-css/style.css   cozy paper styling, mobile-first, light/dark
-js/data.js      all story content (documents, descriptions, ledger lines, discrepancies)
-js/game.js      engine: scenes, rooms, document workflow, dialogs, save/load
+index.html      canvas page shell
+css/style.css   full-screen canvas + bundled pixel fonts
+assets/fonts/   VT323 and Pixelify Sans (SIL Open Font License)
+js/data.js      all story content and room layouts
+js/art.js       pixel art drawn in code (sprites, tiles, icons)
+js/logic.js     rules and state (no drawing)
+js/world.js     rooms, tap-to-walk pathfinding, visitors
+js/ui.js        in-canvas panels, text, scrolling
+js/main.js      scenes, screens, input, game loop
 tools/          export-script.js (writing → docs/day1-script.md)
 ```
