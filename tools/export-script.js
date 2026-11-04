@@ -9,22 +9,24 @@ const sandbox = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, "js/data.js"), "utf8"), sandbox);
 const D = sandbox.window.GAME_DATA;
 
-// HTML/hotspot markup → Markdown. Hotspots become **bold** with a [clue] tag.
-const md = (html) => html
-  .replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, "**$2** `[clue: $1]`")
-  .replace(/<h3>(.*?)<\/h3>/g, "### $1\n")
-  .replace(/<br\s*\/?>/g, "  \n")
-  .replace(/<b>(.*?)<\/b>/g, "**$1**")
-  .replace(/<p class='hand'>(.*?)<\/p>/g, "_✍️ $1_\n")
-  .replace(/<\/p>/g, "\n")
-  .replace(/<[^>]+>/g, "")
-  .trim();
+// Markup blocks ({ s: styles, t: text }) → Markdown. Hotspots become **bold** with a [clue] tag.
+const hot = (t) => t.replace(/\[\[([^|\]]+)\|([^\]]+)\]\]/g, "**$2** `[clue: $1]`").replace(/\n/g, "  \n");
+const md = (b) => {
+  const s = " " + b.s + " ", t = hot(b.t);
+  if (s.includes(" h ")) return "### " + t;
+  if (s.includes(" hand ")) return "_✍️ " + t + "_";
+  if (s.includes(" photo ")) return "📷 _" + t + "_";
+  if (s.includes(" tag ")) return "🏷️ `" + b.t + "`";
+  if (s.includes(" caps ")) return t.toUpperCase();
+  return t;
+};
 const quote = (s) => s.split("\n").map((l) => "> " + l).join("\n");
 const line = (who, l) => l.startsWith("(") ? `_${l}_` : `**${who}:** ${l}`;
 const fxStr = (e) => Object.keys(e || {}).map((k) => `${k} ${e[k] > 0 ? "+" : ""}${e[k]}`).join(", ") || "none";
 
 const out = [];
 const P = (...s) => out.push(...s, "");
+const ICON = { program: "🍎", letter: "✉️", photo: "📷", book: "📒", notice: "📌", volume: "📚" };
 
 P("# The Archive — Day 1 Script",
   "_Generated from `js/data.js` by `node tools/export-script.js`. Edit the data file, not this one._",
@@ -56,7 +58,7 @@ P("## 4. Documents",
 
 Object.keys(D.docs).forEach((id, i) => {
   const d = D.docs[id];
-  P(`### 4.${i + 1} ${d.icon} ${d.title}`, `_${d.kind} · ${d.date}_`, "**Original**", quote(d.original.map(md).join("\n\n")));
+  P(`### 4.${i + 1} ${ICON[d.icon] || ""} ${d.title}`, `_${d.kind} · ${d.date}_`, "**Original**", quote(d.original.map(md).join("\n\n")));
   P("**Clues (notebook text)**", ...Object.keys(d.clues).map((c) => `- \`${c}\`: ${d.clues[c]}`));
   P(`**Memory Keeper summary** _(summary loss: ${d.summaryLoss})_`, quote(d.summary), "", `_Memory Keeper aside:_ ${d.mkNote}`);
   P("**Descriptions**", ...d.descriptions.map((o) =>
@@ -70,7 +72,7 @@ P("## 5. The Stacks", `_${D.text.stacksFlavor}_`,
   `- Basement door: ${D.text.basementLocked}`, `- Server room door: ${D.text.serverLocked}`);
 Object.keys(D.shelved).forEach((id) => {
   const it = D.shelved[id];
-  P(`### ${it.icon} ${it.title} (${it.date})`, quote(it.body.map(md).join("\n\n")));
+  P(`### ${ICON[it.icon] || ""} ${it.title} (${it.date})`, quote(it.body.map(md).join("\n\n")));
   if (it.ask) P(`_Ask the Memory Keeper:_ ${it.ask}`);
 });
 
