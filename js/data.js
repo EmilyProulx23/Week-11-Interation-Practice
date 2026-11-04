@@ -81,6 +81,58 @@ window.GAME_DATA = {
         protest: "the 2016 Town Hall protests", unsure: "what really happened in spring 2016",
         consultation: "the 2016 community consultation", none: "the 2016 community consultation"
       }
+    },
+    ruth: {
+      name: "Ruth Okafor", portrait: "ruth",
+      intro: ["(A woman in her late sixties, silver hair pinned up, reading glasses on a beaded chain. She's carrying a tin of shortbread.)",
+        "Archivist! June said you'd taken my box. I brought these as a bribe, so you'll be gentle with it."],
+      // How far her memory has drifted depends on what circulated on Day 1.
+      drift: {
+        low: "We sat on those steps for three days, you know. Thermoses and all. I'd like someone to remember that properly.",
+        mid: "We were… well, we were upset. Weren't we? Funny. It gets softer every time I read about it in the Ledger.",
+        high: "I read in the Ledger that it was a consultation. I suppose it was. We were consulted. That's what I remember now, anyway."
+      },
+      showPrefix: "Show her the original:",
+      ledgerRight: "“The Ledger has it about right.”",
+      thank: "“Thank you for trusting us with the box.”",
+      shown: {
+        photo: ["(She turns the print over and reads her own handwriting for a long time.)", "Day three. They locked the Records Room that morning. I'd forgotten I wrote that down.", "I'd almost forgotten it happened."],
+        letter: ["(She reads her own letter, lips moving slightly.)", "Clause fourteen. Ninety-nine years. I was so angry I wrote it three times before I sent it.", "Don't let anyone make it sound polite."],
+        petition: ["(She runs a thumb over the blurred names.)", "Two hundred and twelve. I counted them twice. Abel from the bakery signed first. He brought cinnamon rolls to the steps every morning."],
+        clause14: ["(She finds her own pencil note in the margin and laughs, once.)", "“Who verifies.” Nobody ever answered that. Somebody wrote “stays” instead."]
+      },
+      remembersEnd: "Keep that somewhere people can find it, Archivist.",
+      consulted: ["Oh. Good. That's… good.", "It's nicer that way, isn't it? Everybody heard. Nobody angry."],
+      thanked: { low: ["Just keep it dry. And keep it true."], mid: ["I wish I could remember it more clearly. Maybe that's what the box is for."], high: ["It'll be nice to have it all in one place. The Memory Keeper says it's in good hands."] },
+      goodbye: "(Ruth pats the inbox tray as if it were a dog, and goes.)",
+      wave: "Say goodbye",
+      effects: { remembers: { truth: 1, memory: 2, compliance: -1 }, consulted: { compliance: 1, memory: -1 }, unsure: {}, thankedLow: { memory: 1 } },
+      ledger: {
+        remembers: "Asked about 2016, she said: “We sat on those steps for three days. Write that down.”",
+        unsure: "Asked about 2016, she said: “I remember being upset. I just can't remember why anymore.”",
+        consulted: "Asked about 2016, she said: “It was a lovely consultation. Everyone was heard.”"
+      }
+    },
+    aide: {
+      name: "Priya Nair", portrait: "aide",
+      intro: ["(A young woman in a burgundy blazer, with a clipboard and a lanyard that says MAYOR'S OFFICE.)",
+        "Hi! Priya, from Mayor Hale's office. We're finalising the “Ten Years Together” exhibit, and the Mayor would love one archive piece as the centrepiece.",
+        "The Memory Keeper sent over some suggestions, but the Mayor said the Archivist would know best. Something that shows how the town came together?"],
+      lendPrefix: "Lend",
+      letMK: "“Let the Memory Keeper choose.”",
+      nothing: "“Nothing's ready to lend yet.”",
+      mkPick: "The Memory Keeper suggests: “Community Gathering at Town Hall, 2016.” A warm summary of a wonderful day! ✨",
+      reactions: {
+        warm: ["Perfect. That's exactly the tone. The Mayor will be thrilled."],
+        unsure: ["Hm. I'll check with the Mayor, but I think it works. It's… honest?"],
+        protest: ["Oh. “Protest.” That's a different tone than we planned.", "I'll show the Mayor. She may want to talk to you about it."],
+        mk: ["Lovely, that's what we hoped for. Thank you!"],
+        none: ["No problem! The Memory Keeper can put something together for us."]
+      },
+      effects: { warm: { compliance: 2, memory: 1 }, unsure: { truth: 1, memory: 1 }, protest: { truth: 2, compliance: -2, memory: 1 }, mk: { compliance: 2 }, none: { compliance: -1 } },
+      thanks: "Thanks, Archivist!",
+      goodbye: "See her out",
+      exitToast: "Priya hurries off toward Town Hall."
     }
   },
 
@@ -222,7 +274,138 @@ window.GAME_DATA = {
         discarded: "The Memory Keeper remembers: spring 2016 brought a lively, well-attended community consultation."
       },
       theo: { original: "protest", summary: "consultation" }
+    },
+
+    // ---------- Day 2: found in the basement "Pending Review" boxes ----------
+    clause14: {
+      title: "Draft Agreement, p. 7",
+      kind: "Typed draft with handwritten notes",
+      date: "February 2016",
+      icon: "contract",
+      paper: "plain",
+      original: [
+        { s: "caps", t: "Hollow Creek – Lumen Partnership Agreement · DRAFT 3 · Page 7" },
+        { s: "h", t: "Clause 14: Custodianship" },
+        { s: "p", t: "14.1 Upon completion of digitization, Lumen shall serve as sole custodian of the Town's public records for a term of ninety-nine (99) years." },
+        { s: "p", t: "14.2 The Custodian [[c14-retire|may summarize, consolidate, or retire records in the interest of accessibility and community cohesion]]." },
+        { s: "p", t: "14.3 [[c14-deaccession|Original materials may be deaccessioned once a verified digital record exists.]]" },
+        { s: "hand", t: "In the margin, in pencil: [[c14-margin|“WHO verifies?? And what does ‘cohesion’ mean? —R.”]]" },
+        { s: "hand", t: "Below, in blue ink, a different hand: [[c14-hale|“Discussed w/ Lumen. 14.2 stays. —D.H.”]]" }
+      ],
+      clues: {
+        "c14-retire": "Clause 14.2 lets the custodian “summarize, consolidate, or retire” records for “community cohesion.”",
+        "c14-deaccession": "Clause 14.3 allows originals to be deaccessioned once a digital record exists.",
+        "c14-margin": "Ruth asked in the margin who would verify the digital records, and what “cohesion” meant.",
+        "c14-hale": "Someone initialled “D.H.” decided that clause 14.2 “stays.”"
+      },
+      summary: "A page from an early draft of the partnership agreement, describing Lumen's role in caring for Hollow Creek's records, with a few notes from the drafting process.",
+      mkNote: "Contracts can be so dry! I've kept it simple so it's easy for everyone to understand. ✨",
+      summaryLoss: 2,
+      descriptions: [
+        { id: "consensus", label: "Partnership agreement, early draft (page 7)", note: "Accurate, and reassuringly dull.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
+        { id: "literal", label: "Draft Clause 14 with handwritten annotations", note: "Names the clause, not what it does.", framing: "literal", effects: { truth: 1 } },
+        { id: "conflict", label: "Clause 14 draft: residents' objections overruled", note: "Says what the margins show.", framing: "conflict", requires: ["c14-margin", "c14-hale"], effects: { truth: 2, compliance: -1, memory: 1 } }
+      ],
+      ledger: {
+        summary: "An early draft of the partnership agreement shows how carefully the town planned for its records' future.",
+        both: "An early draft of the partnership agreement shows how the town planned for its records' future. The original page is at the Archive.",
+        original: "A 2016 draft of Clause 14 gives Lumen the power to “summarize, consolidate, or retire” the town's records. Margin notes object; another note says the clause “stays.”",
+        discarded: "The Memory Keeper remembers: the partnership agreement was drafted with care and community input."
+      },
+      theo: {}
+    },
+
+    petition: {
+      title: "Water-Damaged Petition",
+      kind: "Handwritten pages, water-stained",
+      date: "March 2016",
+      icon: "petition",
+      paper: "damp",
+      original: [
+        { s: "h", t: "PETITION FOR A PUBLIC HEARING" },
+        { s: "p", t: "We, the undersigned residents of Hollow Creek, ask the Town Council to hold a public hearing on the Lumen Partnership Agreement before it is signed." },
+        { s: "tag", t: "Most of the page is blurred by an old water stain. A few names are still legible." },
+        { s: "hand", t: "Ruth Okafor · [[pet-ferreira|Abel Ferreira (Ferreira's Bakery)]] · J. Okafor · [[pet-lin|M. Lin, with a small drawing of a sun beside it]] · ~~~~~ · ~~~~~" },
+        { s: "small right", t: "[[pet-count|Bottom corner: “Page 3 of 9. Running total: 212.”]]" }
+      ],
+      clues: {
+        "pet-ferreira": "Abel Ferreira from the bakery signed the petition.",
+        "pet-lin": "One signature reads “M. Lin,” with a child's drawing of a sun beside it.",
+        "pet-count": "The petition ran to nine pages and 212 signatures."
+      },
+      summary: "A community sign-up sheet from the 2016 consultation period. Water damage has made most of the names unreadable.",
+      mkNote: "Oh, this one's fragile! My summary keeps it safe, so the soggy original won't need to be handled at all. ✨",
+      summaryLoss: 2,
+      descriptions: [
+        { id: "consensus", label: "Community sign-up sheet, 2016 (damaged)", note: "Gentle. Fits the existing catalogue.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
+        { id: "literal", label: "Water-damaged list of names, 2016", note: "True, but it doesn't say what they signed.", framing: "literal", effects: {} },
+        { id: "conflict", label: "Petition for a public hearing, 212 signatures", note: "Uses the petition's own words and count.", framing: "conflict", requires: "pet-count", effects: { truth: 2, compliance: -1, memory: 1 } }
+      ],
+      ledger: {
+        summary: "A water-damaged sign-up sheet from 2016 shows how many neighbors took part in the community consultation.",
+        both: "A water-damaged sign-up sheet from 2016 shows how many neighbors took part. The original is at the Archive, handle with care!",
+        original: "The Archive has catalogued a 2016 petition for a public hearing on the Lumen agreement, with 212 signatures, including Abel Ferreira's.",
+        discarded: "The Memory Keeper remembers: in 2016, lots of neighbors signed up to take part in the consultation."
+      },
+      theo: {}
+    },
+
+    memo: {
+      title: "Relocation Memo",
+      kind: "Typed memo on Lumen letterhead",
+      date: "April 11, 2016",
+      icon: "memo",
+      paper: "plain",
+      original: [
+        { s: "caps", t: "Lumen Partnership Office · Internal" },
+        { s: "p", t: "To: Records Room staff\nFrom: J. Marsh, Community Liaison\nRe: Relocation" },
+        { s: "p", t: "[[memo-date|Effective tomorrow (April 12), the Records Room will close for relocation.]]" },
+        { s: "p", t: "[[memo-pending|Please box all materials dated January–April 2016 separately and label them “Pending Review.” These will be digitized last.]]" },
+        { s: "p", t: "Thank you for helping us build tomorrow's Hollow Creek together!" },
+        { s: "small", t: "[[memo-cc|cc: Office of Councillor D. Hale]]" }
+      ],
+      clues: {
+        "memo-date": "Lumen closed the Records Room on April 12, the day of the Town Hall gathering.",
+        "memo-pending": "Everything from January–April 2016 was boxed as “Pending Review” and set aside to be digitized last.",
+        "memo-cc": "The relocation memo was copied to Councillor D. Hale."
+      },
+      summary: "A friendly operational note about moving the town's records to their new home during digitization.",
+      mkNote: "Moving day! Everyone worked so hard to keep the records safe. ✨",
+      summaryLoss: 2,
+      descriptions: [
+        { id: "consensus", label: "Records relocation notice, April 2016", note: "Matches the notice already on the shelf.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
+        { id: "literal", label: "Lumen memo to Records Room staff, 11 April 2016", note: "Precise. Doesn't mention what was boxed.", framing: "literal", effects: { truth: 1 } },
+        { id: "conflict", label: "Memo setting aside spring 2016 records as “Pending Review”", note: "Names what happened to the records.", framing: "conflict", requires: "memo-pending", effects: { truth: 2, compliance: -1, memory: 1 } }
+      ],
+      ledger: {
+        summary: "A 2016 memo shows the care that went into moving the town's records to their new digital home.",
+        both: "A 2016 memo shows the care that went into moving the town's records. The original is available at the Archive.",
+        original: "A Lumen memo from April 11, 2016 asked staff to box spring 2016 records as “Pending Review,” to be digitized last. The boxes were found in the Archive basement this week.",
+        discarded: "The Memory Keeper remembers: moving day in 2016 went smoothly, thanks to everyone's hard work."
+      },
+      theo: {}
     }
+  },
+
+  // Which documents arrive on which day.
+  days: {
+    1: { docs: ["fair", "letter", "photo"] },
+    2: { docs: ["clause14", "petition", "memo"] }
+  },
+
+  // ---------- Day 2 text ----------
+  day2: {
+    ledgerIntro: "Wednesday. Frost on the step, and the Ledger tucked under the mat.",
+    ledgerEdition: "Wednesday Morning Edition",
+    envelopeTitle: "Envelope from Lumen Facilities",
+    envelope: ["(A padded envelope with a sticky note on the front.)", "“Basement key, as requested! Please keep the 2016 boxes dry; we'll collect them for digitization soon. Happy anniversary! — Lumen Facilities”"],
+    takeKey: "Take the basement key",
+    keyToast: "You pocket the basement key. It's heavier than it looks.",
+    mkGreet: "Good morning, Archivist! Yesterday's digest was a hit. Lumen Facilities left something in your inbox tray. ✨",
+    basementFlavor: "Concrete, a single bulb, and a smell like old rain.",
+    endTitle: "End of the Day 2 prototype",
+    endBody: "Tomorrow, the server room. The exhibit opens on Friday, and the Memory Keeper has been busy.",
+    endNote: "Day 3 (Server Room) is not built yet."
   },
 
   // ---------- rooms (top-down, 10 x 14 tiles of 16px) ----------
@@ -303,6 +486,39 @@ window.GAME_DATA = {
         { id: "catalogue", kind: "catalogue", x: 8, y: 9, act: "catalogue", label: "Card catalogue (public view)" },
         { id: "plant-2", kind: "plant", x: 9, y: 12, act: "flavor", arg: "plant", label: "Fern" }
       ]
+    },
+    basement: {
+      name: "Basement Records",
+      dim: 0.22,
+      map: [
+        "==========",
+        "bbbbbbbbbb",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "cccccccccc",
+        "__________"
+      ],
+      start: { x: 8, y: 2, dir: "down" },
+      objects: [
+        { id: "stairs-up", kind: "stairs", x: 8, y: 1, act: "door", arg: "desk", label: "Stairs up" },
+        { id: "shelf-metal", kind: "metalShelf", x: 1, y: 3, w: 4, act: "flavor", arg: "metalShelf", label: "Metal shelving" },
+        { id: "box-clause14", kind: "box", x: 6, y: 4, act: "search", arg: "clause14", label: "Pending Review box" },
+        { id: "box-petition", kind: "box", variant: "wet", x: 2, y: 8, act: "search", arg: "petition", label: "Pending Review box (damp)" },
+        { id: "box-memo", kind: "box", x: 7, y: 10, act: "search", arg: "memo", label: "Pending Review box" },
+        { id: "box-lights", kind: "box", variant: "xmas", x: 4, y: 11, act: "flavor", arg: "lightsBox", label: "Box of Christmas lights" },
+        { id: "dehumidifier", kind: "dehumidifier", x: 9, y: 6, act: "flavor", arg: "dehumidifier", label: "Dehumidifier" },
+        { id: "puddle", kind: "puddle", x: 3, y: 9, solid: false, act: "flavor", arg: "drip", label: "Puddle" },
+        { id: "bucket", kind: "bucket", x: 0, y: 12, act: "flavor", arg: "bucket", label: "Mop bucket" },
+        { id: "bulb", kind: "bulb", x: 5, y: 6, solid: false }
+      ]
     }
   },
 
@@ -316,6 +532,12 @@ window.GAME_DATA = {
     oldShelves: "Council minutes, 1987–2015, in matching green bindings. 2016 is shelved separately.",
     yearbooks: "Hollow Creek High yearbooks, 1962 to present. Some have pressed flowers inside.",
     ladder: "The rolling ladder. It squeaks on the third rung, every time.",
+    metalShelf: "Metal shelving, mostly empty. Dust outlines show where boxes used to sit.",
+    lightsBox: "A box labelled XMAS LIGHTS 2009. It is, in fact, Christmas lights.",
+    dehumidifier: "A dehumidifier, unplugged. Its cord has been neatly coiled and taped.",
+    drip: "A slow drip from a pipe overhead. It has been dripping for a long time.",
+    bucket: "A mop bucket with a sign taped to it: DO NOT USE ON RECORDS.",
+    boxEmpty: "The box is empty now except for a few dry leaves of tissue paper.",
     frontDoorEarly: "Not yet. There's still work to do today.",
     closePrompt: "Close up the archive for the day?"
   },
@@ -367,6 +589,19 @@ window.GAME_DATA = {
     { id: "d-courier", needs: { clues: ["reverse"], seen: ["courier"] },
       text: "The Courier issues from the week after April 12 are missing from the bound volume. Only the Memory Keeper's index has them." },
     { id: "d-keys", needs: { clues: ["margin"], seen: ["notice"] },
-      text: "In 2015 Ruth asked who would hold the records room keys. By April 2016, the room was closed for “relocation.”" }
+      text: "In 2015 Ruth asked who would hold the records room keys. By April 2016, the room was closed for “relocation.”" },
+    // Day 2
+    { id: "d-pending", needs: { clues: ["memo-pending"], seen: ["pendingBoxes"] },
+      text: "The memo asked staff to box everything from January–April 2016 as “Pending Review,” to be digitized last. The boxes are still in the basement, ten years later." },
+    { id: "d-petition", needs: { clues: ["pet-count"], summaries: ["petition"] },
+      text: "The Memory Keeper calls it a “community sign-up sheet.” It says PETITION at the top, and it ran to 212 names." },
+    { id: "d-retire", needs: { clues: ["c14-retire"], seen: ["minutes"] },
+      text: "Clause 14.2 lets the custodian “summarize, consolidate, or retire” records. The original April 12 minutes are “not located.” Only the Memory Keeper's reconstruction remains." },
+    { id: "d-hale", needs: { clues: ["c14-hale"], flags: ["aideDone"] },
+      text: "“14.2 stays. —D.H.” Mayor Hale was a councillor in 2016. Her office wants the exhibit to show “how this town came together.”" },
+    { id: "d-lin", needs: { clues: ["pet-lin"], flags: ["theoDone"] },
+      text: "One signature reads “M. Lin,” with a child's drawing of a sun beside it. Theo half-remembers his mom taking him to Town Hall." },
+    { id: "d-ruth", needs: { clues: ["reverse"], flags: ["ruthDone"] },
+      text: "Ruth wrote “Day 3. Records Room locked this morning” on the back of her photo. Today she wasn't sure what she remembered." }
   ]
 };

@@ -45,13 +45,18 @@
   // Split text with [[clue|text]] markup into words carrying their clue id.
   function tokens(text) {
     const out = [];
+    let spaceBefore = true; // whether the previous text ended in whitespace
     clean(text).split(/(\[\[[^\]]+\]\])/).forEach((part) => {
+      if (!part) return;
       const m = part.match(/^\[\[([^|\]]+)\|([^\]]+)\]\]$/);
       const clue = m ? m[1] : null, body = m ? m[2] : part;
       body.split(/(\n)/).forEach((seg) => {
-        if (seg === "\n") out.push({ br: true });
-        else seg.split(/ +/).forEach((w, i, arr) => { if (w) out.push({ w, clue, space: i > 0 || /^ /.test(seg) }); });
+        if (seg === "\n") { out.push({ br: true }); spaceBefore = true; return; }
+        seg.split(/ +/).forEach((w, i) => { if (w) { out.push({ w, clue, space: i > 0 || spaceBefore }); } spaceBefore = false; });
+        spaceBefore = / $/.test(seg);
       });
+      // A hotspot's text doesn't carry the surrounding spaces; trust the markup boundaries.
+      if (m) spaceBefore = false;
     });
     return out;
   }
@@ -60,11 +65,11 @@
     tokens(text).forEach((tk) => {
       if (tk.br) { lines.push([]); lw = 0; return; }
       const ww = measure(c, f, tk.w), cur = lines[lines.length - 1];
-      const add = (cur.length ? sp : 0) + ww;
+      const add = (cur.length && tk.space ? sp : 0) + ww;
       if (cur.length && lw + add > maxW) { lines.push([Object.assign({ ww }, tk)]); lw = ww; }
       else { cur.push(Object.assign({ ww }, tk)); lw += add; }
     });
-    return lines.map((ln) => ({ words: ln, w: ln.reduce((a, t, i) => a + t.ww + (i ? sp : 0), 0), sp }));
+    return lines.map((ln) => ({ words: ln, w: ln.reduce((a, t, i) => a + t.ww + (i && t.space ? sp : 0), 0), sp }));
   }
 
   // Draw wrapped text. opts: {font, color, align, line, hot:{docId, magnify, found:fn, onTap:fn}, upper}
@@ -78,14 +83,14 @@
         let lx = opts.align === "center" ? x + (w - ln.w) / 2 : opts.align === "right" ? x + w - ln.w : x;
         const ly = y + i * lh;
         ln.words.forEach((tk, j) => {
-          if (j) lx += ln.sp;
+          if (j && tk.space) lx += ln.sp;
           if (tk.clue && opts.hot) {
             const found = opts.hot.found(tk.clue);
             if (opts.hot.magnify || found) {
               c.fillStyle = found ? "rgba(168,87,47,.20)" : "rgba(242,193,78,.45)";
-              c.fillRect(lx - 1, ly + 1, tk.ww + 2 + (j < ln.words.length - 1 && ln.words[j + 1].clue === tk.clue ? ln.sp : 0), lh - 2);
+              c.fillRect(lx - 1, ly + 1, tk.ww + 2 + (j < ln.words.length - 1 && ln.words[j + 1].clue === tk.clue && ln.words[j + 1].space ? ln.sp : 0), lh - 2);
             }
-            if (found) { c.fillStyle = K.rust; c.fillRect(lx, ly + lh - 3, tk.ww + (j < ln.words.length - 1 && ln.words[j + 1].clue === tk.clue ? ln.sp : 0), 2); }
+            if (found) { c.fillStyle = K.rust; c.fillRect(lx, ly + lh - 3, tk.ww + (j < ln.words.length - 1 && ln.words[j + 1].clue === tk.clue && ln.words[j + 1].space ? ln.sp : 0), 2); }
             U.hit(lx - 2, ly, tk.ww + 4, lh, () => opts.hot.onTap(tk.clue), "clue:" + tk.clue);
           }
           c.fillStyle = opts.color || K.ink;

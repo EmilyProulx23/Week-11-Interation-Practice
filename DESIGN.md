@@ -111,10 +111,17 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 - **Visitor:** Theo Lin, a high-schooler, asks about "the 2016 consultation" for an anniversary school project. You hand him a public record (or ask the Memory Keeper), and that shapes what he believes.
 - **End:** close up → Day 2 Ledger generated from your choices.
 
-### Day 2 — "Anniversary Prep"
-- **Basement unlocks.**
-- **Documents:** the Clause 14 page of the draft agreement (with handwritten objections), the water-damaged petition, and a relocation memo signed by a Lumen liaison.
-- **Visitors:** Ruth Okafor (her own memory has partly drifted toward whatever circulated; "I suppose we… consulted?"), and an aide from the Mayor's office asking for exhibit material.
+### Day 2 — "Anniversary Prep" *(playable)*
+- **Ledger** generated from Day 1 choices.
+- **Basement key:** an envelope from Lumen Facilities in the inbox tray ("please keep the 2016 boxes dry; we'll collect them for digitization soon").
+- **Basement Records** (dim, single bulb): three cardboard boxes labelled **PENDING REVIEW — JAN–APR 2016**, found by walking to them and searching. Each sends its document to the inbox.
+- **Documents:**
+  4. *Draft Agreement, p. 7 (Feb 2016).* Clause 14: sole custodian for 99 years; 14.2 the custodian "may summarize, consolidate, or retire records in the interest of accessibility and community cohesion"; 14.3 originals may be deaccessioned. Ruth's margin note ("WHO verifies?") and a second hand: "14.2 stays. —D.H."
+  5. *Water-damaged petition (Mar 2016).* A request for a public hearing; legible names include Abel Ferreira and "M. Lin" (with a child's sun drawing); "Page 3 of 9. Running total: 212." The Memory Keeper calls it a "community sign-up sheet" and gently suggests the soggy original needn't be kept.
+  6. *Relocation memo (Apr 11 2016)* from Lumen's community liaison: close the Records Room "effective tomorrow" (April 12), box all January–April 2016 materials as "Pending Review," to be digitized last; cc Councillor D. Hale.
+- **Ruth Okafor** arrives after two documents are filed. Her memory has **drifted** according to how softly the Day 1 letter and photo circulated (low / mid / high drift). You can show her a kept original (it brings the memory back), agree that "the Ledger has it about right," or simply thank her. The result feeds the next Ledger.
+- **Priya Nair** (Mayor's office) arrives after all documents are filed and Ruth has left, asking for one record as the exhibit centrepiece. The record's tone (warm / unsure / protest), or letting the Memory Keeper choose, sets the Day 3 Ledger's lead story and is recorded for the Day 3 plaque.
+- **New notebook notes:** the "Pending Review" boxes still in the basement; "sign-up sheet" vs. petition; clause 14.2 vs. the missing minutes; "D.H." and the Mayor's office; "M. Lin" and Theo; Ruth's own note vs. her drifting memory.
 
 ### Day 3 — "The Exhibit"
 - **Server Room unlocks.**
@@ -142,6 +149,6 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 
 ## 11. MVP Scope
 
-**In:** Day 1 fully playable as a top-down pixel game (2 walkable rooms, 3 documents, 2 visitors who walk in, card catalogue, notebook discrepancies, Day 2 Ledger generation, save/resume).
-**Next:** Days 2–3, Basement and Server Room, endings.
+**In:** Days 1–2 playable as a top-down pixel game: 3 walkable rooms (Front Desk, Stacks, Basement), 6 documents, 4 visitors who walk in, card catalogue, 11 notebook discrepancies, generated Day 2 and Day 3 Ledgers, save/resume.
+**Next:** Day 3 (Server Room, revision log, the plaque) and the endings.
 **Out (later):** richer art and animation, audio, free-text descriptions, room drafting.

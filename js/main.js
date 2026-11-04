@@ -14,7 +14,7 @@
 
   L.on((type, p) => {
     if (type === "toast") UI.toast(p);
-    if (type === "theoArrives") theoArrives();
+    if (type === "visitorDue") checkVisitor(true);
   });
 
   // ---------- layout ----------
@@ -64,27 +64,32 @@
         { t: "space", h: 10 },
         cont && { t: "btn", label: "Continue", primary: true, onTap: () => { L.continueGame(); startScene(); } },
         { t: "btn", label: cont ? "Start over" : "Begin", primary: !cont, onTap: () => { L.newGame(); startScene(); } },
-        { t: "text", text: "A prototype · Day 1 of 3 · Tap to walk, tap things to use them.", size: 18, align: "center", color: "#a8957a" }];
+        { t: "text", text: "A prototype · Days 1–2 of 3 · Tap to walk, tap things to use them.", size: 18, align: "center", color: "#a8957a" }];
     } });
-    if (sc === "ledger1" || sc === "ledger2") {
-      const first = sc === "ledger1";
+    if (/^ledger[123]$/.test(sc)) {
+      const n = +sc.slice(6);
+      const cfg = {
+        1: { intro: D.text.ledger1Intro, stories: () => D.ledgerDay1.stories, edition: D.ledgerDay1.edition, label: "Unlock the front door", go: () => beginDay(1) },
+        2: { intro: D.text.ledger2Intro, stories: L.ledgerDay2, edition: "Tuesday Morning Edition", label: "Unlock the front door", go: () => beginDay(2) },
+        3: { intro: D.day2.ledgerIntro, stories: L.ledgerDay3, edition: D.day2.ledgerEdition, label: "Continue", go: () => setScene("end") }
+      }[n];
       UI.open({ id: sc, kind: "full", bg: "#2a201a", build: () => [
         { t: "space", h: 16 },
-        { t: "text", text: first ? D.text.ledger1Intro : D.text.ledger2Intro, color: "#e8dcc4", align: "center" },
-        { t: "panel", els: ledgerEls(first ? D.ledgerDay1.stories : L.ledgerDay2(), first ? D.ledgerDay1.edition : "Tuesday Morning Edition") },
-        { t: "btn", label: first ? "Unlock the front door" : "Continue", primary: true, onTap: () => first ? beginDay() : setScene("end") },
+        { t: "text", text: cfg.intro, color: "#e8dcc4", align: "center" },
+        { t: "panel", els: ledgerEls(cfg.stories(), cfg.edition) },
+        { t: "btn", label: cfg.label, primary: true, onTap: cfg.go },
         { t: "space", h: 20 }] });
     }
     if (sc === "end") UI.open({ id: "end", kind: "full", bg: "#2a201a", build: () => [
       { t: "space", h: Math.max(20, H * 0.1) },
       { t: "panel", els: [
-        { t: "head", text: "End of the Day 1 prototype", align: "center" },
+        { t: "head", text: S().day >= 2 ? D.day2.endTitle : "End of the Day 1 prototype", align: "center" },
         { t: "custom", h: 64, draw: (c, x, y, w) => { UI.sprite(c, Art.person("archivist", "up", 0), x + w / 2 - 54, y, 3); UI.sprite(c, Art.icon("cat"), x + w / 2 + 6, y + 18, 3); } },
-        { t: "text", text: D.text.endBody, align: "center" },
-        { t: "text", text: "Day 2 (Basement Records) and Day 3 (Server Room) are not built yet.", size: 19, color: UI.K.soft, align: "center" },
-        DEBUG && { t: "text", text: `Truth ${S().stats.truth} · Compliance ${S().stats.compliance} · Town Memory ${S().stats.memory} · Theo: ${S().theo}`, size: 18, color: UI.K.teal, align: "center" },
+        { t: "text", text: S().day >= 2 ? D.day2.endBody : D.text.endBody, align: "center" },
+        { t: "text", text: S().day >= 2 ? D.day2.endNote : "Days 2 and 3 are not built yet.", size: 19, color: UI.K.soft, align: "center" },
+        DEBUG && { t: "text", text: `Truth ${S().stats.truth} · Compliance ${S().stats.compliance} · Town Memory ${S().stats.memory} · Theo: ${S().theo} · Ruth: ${S().ruth} · Exhibit: ${S().exhibit && S().exhibit.tone}`, size: 18, color: UI.K.teal, align: "center" },
         { t: "btn", label: "Open notebook", icon: icon("notebook"), onTap: openNotebook },
-        { t: "btn", label: "Play Day 1 again", primary: true, onTap: () => { L.newGame(); startScene(); } }] }] });
+        { t: "btn", label: "Play again from Day 1", primary: true, onTap: () => { L.newGame(); startScene(); } }] }] });
   }
 
   function ledgerEls(stories, edition) {
@@ -98,7 +103,7 @@
     if (S().scene === "world" || S().scene === "evening") enterWorld(); else openSceneScreen();
   }
 
-  function beginDay() { S().scene = "world"; UI.clear(); L.save(); enterWorld(); }
+  function beginDay(n) { L.beginDay(n); UI.clear(); enterWorld(); }
 
   // ---------- world ----------
   function enterWorld() {
@@ -106,36 +111,50 @@
     World.npcs = [];
     World.load(p.room, p.x, p.y, p.dir);
     if (S().scene === "evening") { fx.evening = 0; openEvening(); return; }
-    if (p.room === "desk") {
-      if (!S().flags.juneDone) setTimeout(juneArrives, 900);
-      else if (L.theoWaiting()) World.placeNpc("theo");
-    }
+    checkVisitor(false);
   }
 
-  function juneArrives() {
-    if (World.roomId !== "desk" || World.npcs.some((n) => n.name === "june") || S().flags.juneDone) return;
-    World.spawnNpc("june", (n) => { n.bubble = true; if (!UI.top()) juneDialog(); });
-  }
-  function theoArrives() {
-    if (World.roomId !== "desk" || World.npcs.some((n) => n.name === "theo")) return;
+  // Bring whoever is due to the front desk. walkIn: arrive through the door (bell) vs. already waiting.
+  function checkVisitor(walkIn) {
+    const who = L.visitorDue();
+    if (!who) return;
+    if (World.roomId !== "desk") { if (walkIn) { UI.toast("The bell rings upstairs at the front desk."); } return; }
+    if (World.npcs.some((n) => n.name === who)) return;
+    if (who === "june") return void setTimeout(() => {
+      if (World.roomId !== "desk" || World.npcs.some((n) => n.name === "june") || S().flags.juneDone) return;
+      World.spawnNpc("june", (n) => { n.bubble = true; if (!UI.top()) juneDialog(); });
+    }, 900);
+    if (!walkIn) { World.placeNpc(who); return; }
     fx.bellUntil = time + 1.4;
     UI.toast("The bell rings at the front desk.");
-    World.spawnNpc("theo", (n) => { n.bubble = true; });
+    World.spawnNpc(who, (n) => { n.bubble = true; });
+  }
+  function talkTo(who) {
+    if (who === "june") return S().flags.juneDone ? null : juneDialog();
+    if (L.visitorDue() !== who) return;
+    ({ theo: theoDialog, ruth: ruthDialog, aide: aideDialog })[who]();
   }
 
-  World.onRoomChange = (id) => { S().pos.room = id; savePos(true); };
+  World.onRoomChange = (id) => { S().pos.room = id; savePos(true); if (id === "desk") checkVisitor(true); };
   World.onInteract = (o) => {
-    if (o.npc === "june") return S().flags.juneDone ? null : juneDialog();
-    if (o.npc === "theo") return L.theoWaiting() ? theoDialog() : null;
-    const tx = { desk: { x: 1, y: 2, dir: "down" }, stacks: D.rooms.stacks.start };
+    if (o.npc) return talkTo(o.npc);
+    const tx = { desk: World.roomId === "basement" ? { x: 8, y: 2, dir: "down" } : { x: 1, y: 2, dir: "down" }, stacks: D.rooms.stacks.start, basement: D.rooms.basement.start };
     switch (o.act) {
       case "door": { const d = tx[o.arg]; World.changeRoom(o.arg, d.x, d.y, d.dir); break; }
-      case "locked": UI.toast(o.arg === "basement" ? D.text.basementLocked : D.text.serverLocked); break;
+      case "locked":
+        if (o.arg === "basement" && S().flags.keyTaken) { const d = tx.basement; World.changeRoom("basement", d.x, d.y, d.dir); }
+        else UI.toast(o.arg === "basement" ? D.text.basementLocked : D.text.serverLocked);
+        break;
+      case "search": if (!L.findDoc(o.arg)) UI.toast(D.flavor.boxEmpty); break;
       case "flavor": UI.toast(D.flavor[o.arg]); break;
       case "cat": UI.toast(D.text.catLines[Math.floor(Math.random() * D.text.catLines.length)]); break;
-      case "inbox": if (!S().flags.juneDone) UI.toast("The tray is empty."); else openInbox(); break;
+      case "inbox":
+        if (S().day === 2 && !S().flags.keyTaken) envelopeDialog();
+        else if (!S().flags.juneDone) UI.toast("The tray is empty.");
+        else openInbox();
+        break;
       case "terminal": openTerminal(); break;
-      case "bell": if (L.theoWaiting() && World.npcs.some((n) => n.name === "theo" && !n.path.length)) theoDialog(); else { fx.bellUntil = time + 0.6; UI.toast(S().flags.theoDone ? "The bell is quiet." : "No one's here. You give the bell a tiny ring anyway."); } break;
+      case "bell": { const who = L.visitorDue(); if (who && who !== "june" && World.npcs.some((n) => n.name === who && !n.path.length)) talkTo(who); else { fx.bellUntil = time + 0.6; UI.toast("No one's here. You give the bell a tiny ring anyway."); } break; }
       case "frontDoor": if (L.canClose()) closeUpDialog(); else UI.toast(D.flavor.frontDoorEarly); break;
       case "shelfNew": openShelfNew(); break;
       case "shelf2016": openShelf2016(); break;
@@ -187,6 +206,46 @@
     s.at = s.nodes.length - 1; s.scroll = 0;
   }
 
+  function envelopeDialog() {
+    dialog("envelope", D.day2.envelopeTitle, Art.icon("key"), [{ lines: D.day2.envelope, choices: [
+      { label: D.day2.takeKey, fn: () => { UI.close(); L.takeKey(); } }] }]);
+  }
+
+  function ruthDialog() {
+    const v = D.visitors.ruth, drift = L.ruthDrift();
+    const shown = (id) => (s) => {
+      s.nodes.push({ quote: D.docs[id].original, lines: v.shown[id].concat([v.remembersEnd]), choices: [{ label: v.wave, fn: () => endRuth("remembers") }] });
+      s.at = s.nodes.length - 1; s.scroll = 0;
+    };
+    const choices = L.ruthCanShow().map((id) => ({ label: `${v.showPrefix} “${L.descOf(id).label}”`, fn: shown(id) }))
+      .concat([
+        { label: v.ledgerRight, fn: (s) => { s.nodes.push({ lines: v.consulted, choices: [{ label: v.wave, fn: () => endRuth("consulted") }] }); s.at = s.nodes.length - 1; s.scroll = 0; } },
+        { label: v.thank, fn: (s) => {
+          const belief = { low: "remembers", mid: "unsure", high: "consulted" }[drift];
+          s.nodes.push({ lines: v.thanked[drift], choices: [{ label: v.wave, fn: () => endRuth(belief, drift === "low" ? "thankedLow" : "unsure") }] }); s.at = s.nodes.length - 1; s.scroll = 0;
+        } }]);
+    dialog("ruth", v.name, portrait("ruth"), [{ lines: v.intro.concat([v.drift[drift]]), choices }]);
+  }
+  function endRuth(belief, effKey) {
+    L.finishRuth(belief, effKey); UI.close(); World.npcLeave("ruth"); UI.toast(D.visitors.ruth.goodbye);
+    setTimeout(() => checkVisitor(true), 2500);
+  }
+
+  function aideDialog() {
+    const v = D.visitors.aide;
+    const pick = (id) => (s) => {
+      const tone = L.exhibitTone(id);
+      const quote = id === "mk" ? [{ s: "mk", t: v.mkPick }] : id ? L.publicBlocks(id, true) : null;
+      s.nodes.push({ quote, lines: v.reactions[tone].concat([v.thanks]), choices: [{ label: v.goodbye, fn: () => {
+        L.finishAide(id); UI.close(); World.npcLeave("aide"); UI.toast(v.exitToast);
+      } }] });
+      s.at = s.nodes.length - 1; s.scroll = 0;
+    };
+    const choices = L.publicDocs().map((id) => ({ label: `${v.lendPrefix} “${L.descOf(id).label}”`, fn: pick(id) }))
+      .concat([{ label: v.letMK, fn: pick("mk") }, { label: v.nothing, fn: pick(null) }]);
+    dialog("aide", v.name, portrait("aide"), [{ lines: v.intro, choices }]);
+  }
+
   function closeUpDialog() {
     dialog("closeup", "Front door", Art.icon("notebook"), [{ lines: [D.flavor.closePrompt], choices: [
       { label: "Switch off the lamps and lock up", fn: () => { UI.close(); S().scene = "evening"; savePos(true); fx.evening = 0; openEvening(); } },
@@ -194,14 +253,14 @@
   }
 
   function openEvening() {
-    const kept = L.DOC_ORDER.filter((id) => S().docs[id].status === "kept").length, disc = L.DOC_ORDER.filter((id) => S().docs[id].status === "discarded").length;
+    const today = L.dayDocs(), kept = today.filter((id) => S().docs[id].status === "kept").length, disc = today.filter((id) => S().docs[id].status === "discarded").length;
     const st = S();
     const summary = `Today you filed ${kept} record${kept === 1 ? "" : "s"}${disc ? ` and let ${disc} go` : ""}. Your notebook holds ${st.clues.length} observation${st.clues.length === 1 ? "" : "s"}${st.notes.length ? ` and ${st.notes.length} thing${st.notes.length === 1 ? "" : "s"} that don't quite line up` : ""}.`;
     const mk = st.digest ? D.text.mk.eveningDigest.replace("{n}", st.digest).replace("{stories}", st.digest === 1 ? "story is" : "stories are") : D.text.mk.eveningNone;
     setTimeout(() => {
       const s = { id: "evening", kind: "dialog", title: "Evening", portrait: Art.icon("cat"), closable: false };
       s.build = () => [{ t: "line", text: "(" + D.text.eveningIntro + ")" }, { t: "text", text: summary }, { t: "bubble", text: mk },
-        { t: "btn", label: "Go home for the night", primary: true, onTap: () => setScene("ledger2") }];
+        { t: "btn", label: "Go home for the night", primary: true, onTap: () => setScene("ledger" + (S().day + 1)) }];
       UI.open(s);
     }, 1800);
   }
@@ -210,7 +269,7 @@
   function panel(id, title, sub, iconImg, build, footer) { const s = { id, kind: "panel", title, sub, icon: iconImg, build, footer }; UI.open(s); return s; }
 
   function openInbox() {
-    panel("inbox", "Inbox tray", D.text.inboxFlavor, null, () => {
+    panel("inbox", "Inbox tray", S().day === 1 ? D.text.inboxFlavor : "Brought up from the basement boxes.", null, () => {
       const ids = L.inbox();
       return ids.length ? ids.map((id) => ({ t: "card", icon: docIcon(id), label: D.docs[id].title, note: `${D.docs[id].kind} · ${D.docs[id].date}`, onTap: () => openDoc(id) }))
         : [{ t: "text", text: "The tray is empty.", color: UI.K.soft }];
@@ -275,7 +334,7 @@
 
   function openTerminal() {
     panel("terminal", "The Memory Keeper", "Lumen · Hollow Creek Archive Assistant", icon("mk"), () => {
-      const greet = !S().flags.juneDone ? D.text.mk.greetMorning : L.inbox().length ? D.text.mk.greetWorking : D.text.mk.greetDone;
+      const greet = S().day === 1 && !S().flags.juneDone ? D.text.mk.greetMorning : S().day === 2 && !S().flags.keyTaken ? D.day2.mkGreet : L.inbox().length ? D.text.mk.greetWorking : D.text.mk.greetDone;
       const idx = L.filed();
       return [{ t: "bubble", text: greet }, { t: "bar", label: "Anniversary digest", value: S().digest, max: 3 },
         { t: "head", text: "My index", size: 18 }]
@@ -387,8 +446,9 @@
       saveTimer += dt; hintTimer += dt;
       if (saveTimer > 1 && !World.player.path.length && sc === "world") { saveTimer = 0; savePos(false); }
       const st = {
-        t: time, inbox: L.inbox().length, glowInbox: L.inbox().length > 0, glowFront: L.canClose() && sc === "world",
-        bellRinging: time < fx.bellUntil, newCount: L.filed().length, glowShelf: false,
+        t: time, inbox: L.inbox().length, glowInbox: L.inbox().length > 0 || (S().day === 2 && !S().flags.keyTaken), glowFront: L.canClose() && sc === "world",
+        bellRinging: time < fx.bellUntil, newCount: Math.min(4, L.filed().length), glowShelf: false,
+        basementOpen: !!S().flags.keyTaken, found: L.foundToday(), glowBoxes: S().day === 2 && !!S().flags.keyTaken,
         lampsOn: sc === "evening" ? (fx.evening < 0.6 ? 2 : fx.evening < 1.2 ? 1 : 0) : 2,
         daylight: sc === "evening" ? 0 : 1,
         dark: sc === "evening" ? Math.min(0.55, fx.evening * 0.35) : 0
