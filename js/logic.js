@@ -4,7 +4,7 @@
 
   const D = window.GAME_DATA;
   const SAVE_KEY = "the-archive-pixel-save-v1";
-  const DOC_ORDER = ["fair", "letter", "photo"];
+  const DOC_ORDER = Object.keys(D.days).sort().reduce((a, d) => a.concat(D.days[d].docs), []);
   const listeners = [];
 
   function freshState() {
@@ -16,8 +16,15 @@
       pos: { room: "desk", x: start.x, y: start.y, dir: start.dir },
       stats: { truth: 0, compliance: 0, memory: 0 },
       flags: {}, docs, clues: [], seen: [], summaries: [], notes: [],
-      theo: null, digest: 0
+      theo: null, ruth: null, exhibit: null, digest: 0
     };
+  }
+  // Older saves may be missing newer documents or fields.
+  function migrate(s) {
+    const f = freshState();
+    DOC_ORDER.forEach((id) => { if (!s.docs[id]) s.docs[id] = f.docs[id]; });
+    ["ruth", "exhibit"].forEach((k) => { if (!(k in s)) s[k] = null; });
+    return s;
   }
 
   const L = {
@@ -38,7 +45,7 @@
         const raw = localStorage.getItem(SAVE_KEY);
         if (!raw) return null;
         const s = JSON.parse(raw);
-        return s && s.v === 2 ? s : null;
+        return s && s.v === 2 ? migrate(s) : null;
       } catch (e) { return null; }
     },
     hasSave() { const s = L.loadSave(); return !!(s && s.scene !== "title"); },
@@ -49,6 +56,12 @@
       L.save();
     },
     continueGame() { const s = L.loadSave(); if (s) L.S = s; },
+    beginDay(n) {
+      const start = D.rooms.desk.start;
+      L.S.day = n; L.S.time = D.dayStart; L.S.scene = "world";
+      L.S.pos = { room: "desk", x: start.x, y: start.y, dir: start.dir };
+      L.save();
+    },
 
     // ---------- helpers ----------
     has: (arr, x) => arr.indexOf(x) !== -1,
@@ -60,15 +73,35 @@
       return ((h + 11) % 12) + 1 + ":" + String(m).padStart(2, "0") + (h < 12 ? " am" : " pm");
     },
 
+    dayDocs: (day) => D.days[day || L.S.day].docs,
+    isFiled: (id) => ["kept", "discarded"].indexOf(L.S.docs[id].status) !== -1,
     inbox: () => DOC_ORDER.filter((id) => L.S.docs[id].status === "inbox"),
-    filed: () => DOC_ORDER.filter((id) => ["kept", "discarded"].indexOf(L.S.docs[id].status) !== -1),
+    filed: () => DOC_ORDER.filter(L.isFiled),
+    filedToday: () => L.dayDocs().filter(L.isFiled),
+    foundToday: () => L.dayDocs().filter((id) => L.S.docs[id].status !== "unreceived"),
     publicDocs: () => DOC_ORDER.filter((id) => L.S.docs[id].status === "kept"),
     descOf: (id) => D.docs[id].descriptions.find((d) => d.id === L.S.docs[id].desc),
-    allFiled: () => L.filed().length === DOC_ORDER.length,
-    theoWaiting: () => L.allFiled() && !L.S.flags.theoDone,
-    canClose: () => L.allFiled() && !!L.S.flags.theoDone,
+    allFiled: () => L.filedToday().length === L.dayDocs().length,
+    theoWaiting: () => L.S.day === 1 && L.allFiled() && !L.S.flags.theoDone,
     isDescLocked(o) { const r = L.req(o.requires); return r.length > 0 && !r.some((c) => L.has(L.S.clues, c)); },
     cluesFound: (id) => Object.keys(D.docs[id].clues).filter((c) => L.has(L.S.clues, c)).length,
+
+    // Who should be at (or walking to) the front desk right now.
+    visitorDue() {
+      const f = L.S.flags;
+      if (L.S.day === 1) {
+        if (!f.juneDone) return "june";
+        if (L.theoWaiting()) return "theo";
+      } else if (L.S.day === 2) {
+        if (L.filedToday().length >= 2 && !f.ruthDone) return "ruth";
+        if (L.allFiled() && f.ruthDone && !f.aideDone) return "aide";
+      }
+      return null;
+    },
+    canClose() {
+      if (!L.allFiled()) return false;
+      return L.S.day === 1 ? !!L.S.flags.theoDone : !!(L.S.flags.ruthDone && L.S.flags.aideDone);
+    },
 
     // ---------- clues & discrepancies ----------
     addClue(docId, clue) {
@@ -88,7 +121,8 @@
         const n = d.needs;
         const ok = (n.clues || []).every((c) => L.has(L.S.clues, c)) &&
                    (n.seen || []).every((c) => L.has(L.S.seen, c)) &&
-                   (n.summaries || []).every((c) => L.has(L.S.summaries, c));
+                   (n.summaries || []).every((c) => L.has(L.S.summaries, c)) &&
+                   (n.flags || []).every((c) => !!L.S.flags[c]);
         if (ok) {
           L.S.notes.push(d.id);
           L.fx({ truth: 1 });
@@ -102,9 +136,21 @@
     receiveBox() {
       L.S.flags.juneDone = true;
       L.spend(D.costs.visitor);
-      DOC_ORDER.forEach((id) => (L.S.docs[id].status = "inbox"));
+      L.dayDocs(1).forEach((id) => (L.S.docs[id].status = "inbox"));
       L.save();
       L.toast("3 documents added to the inbox tray.");
+    },
+    takeKey() { L.S.flags.keyTaken = true; L.save(); L.toast(D.day2.keyToast); },
+    findDoc(id) {
+      const st = L.S.docs[id];
+      L.markSeen("pendingBoxes");
+      if (st.status !== "unreceived") return false;
+      st.status = "inbox";
+      L.spend(10);
+      L.save();
+      const left = L.dayDocs().length - L.foundToday().length;
+      L.toast(`You find the ${D.docs[id].title.toLowerCase()} and take it up to the inbox tray.${left ? ` (${left} box${left === 1 ? "" : "es"} left to search.)` : ""}`);
+      return true;
     },
     keep(id) { L.S.docs[id].step = "describe"; L.save(); },
     discard(id) {
@@ -136,22 +182,26 @@
       L.toast("Filed: “" + L.descOf(id).label + "”");
       L.afterFiling();
     },
-    afterFiling() {
-      if (L.theoWaiting()) setTimeout(() => L.emit("theoArrives"), 1600);
-    },
+    afterFiling() { if (L.visitorDue()) setTimeout(() => L.emit("visitorDue", L.visitorDue()), 1600); },
 
-    // What Theo reads and comes to believe. Returns { belief, quote: blocks }.
-    theoRead(id) {
-      const v = D.visitors.theo;
-      if (id === "mk") return { belief: "consultation", quote: [{ s: "mk", t: "The Memory Keeper: " + v.mkAnswer }] };
-      if (id === null) return { belief: "none", quote: null };
+    // How a public record reads: consultation (soft) → unsure → protest (hard).
+    tone(id) {
       const st = L.S.docs[id], d = D.docs[id];
+      if (!d.theo) return null; // not about spring 2016
       const scale = ["consultation", "unsure", "protest"];
       let i = st.circ === "summary" ? 0 : st.circ === "both" ? 1 : 2;
       const fr = L.descOf(id).framing;
       if (fr === "conflict") i = Math.min(2, i + 1);
       if (fr === "consensus") i = Math.max(0, i - 1);
-      return { belief: d.theo ? scale[i] : null, quote: L.publicBlocks(id, true) };
+      return scale[i];
+    },
+
+    // Theo (Day 1). Returns { belief, quote: blocks }.
+    theoRead(id) {
+      const v = D.visitors.theo;
+      if (id === "mk") return { belief: "consultation", quote: [{ s: "mk", t: "The Memory Keeper: " + v.mkAnswer }] };
+      if (id === null) return { belief: "none", quote: null };
+      return { belief: L.tone(id), quote: L.publicBlocks(id, true) };
     },
     finishTheo(belief) {
       L.S.theo = belief;
@@ -159,6 +209,42 @@
       L.S.flags.theoDone = true;
       L.spend(D.costs.visitor);
       L.save();
+    },
+
+    // Ruth (Day 2): how far her memory has drifted toward what circulated on Day 1.
+    ruthDrift() {
+      const soft = ["letter", "photo"].filter((id) => {
+        const st = L.S.docs[id];
+        return st.status === "discarded" || st.status !== "kept" || L.tone(id) === "consultation";
+      }).length;
+      return ["low", "mid", "high"][soft];
+    },
+    ruthCanShow: () => ["photo", "letter", "petition", "clause14"].filter((id) => L.S.docs[id].status === "kept"),
+    finishRuth(belief, effKey) {
+      L.S.ruth = belief;
+      L.fx(D.visitors.ruth.effects[effKey || belief]);
+      L.S.flags.ruthDone = true;
+      L.spend(D.costs.visitor);
+      L.checkDiscrepancies();
+      L.save();
+    },
+
+    // Priya (Day 2): the exhibit centrepiece.
+    exhibitTone(id) {
+      if (id === "mk") return "mk";
+      if (id === null) return "none";
+      const t = L.tone(id);
+      return t === null || t === "consultation" ? "warm" : t;
+    },
+    finishAide(id) {
+      const tone = L.exhibitTone(id);
+      L.S.exhibit = { id, tone };
+      L.fx(D.visitors.aide.effects[tone]);
+      L.S.flags.aideDone = true;
+      L.spend(D.costs.visitor);
+      L.checkDiscrepancies();
+      L.save();
+      return tone;
     },
 
     // What any visitor sees for a record (public catalogue).
@@ -176,27 +262,59 @@
       return out;
     },
 
+    archiveCorner(day) {
+      const out = [];
+      L.dayDocs(day).forEach((id) => {
+        const st = L.S.docs[id], doc = D.docs[id];
+        if (st.status === "kept") out.push({ kicker: "Archive Corner", head: L.descOf(id).label, body: doc.ledger[st.circ], archive: true });
+        else if (st.status === "discarded") out.push({ kicker: "From the Memory Keeper's Index", head: doc.title, body: doc.ledger.discarded, archive: true });
+      });
+      return out;
+    },
+
     ledgerDay2() {
-      const stories = [{
+      return [{
         head: "Exhibit Plans Take Shape",
         body: "Mayor Hale previewed the anniversary exhibit at Town Hall: “It's a celebration of how this town came together.” Lumen will provide display screens and refreshments."
-      }];
-      DOC_ORDER.forEach((id) => {
-        const st = L.S.docs[id], doc = D.docs[id];
-        if (st.status === "kept") stories.push({ kicker: "Archive Corner", head: L.descOf(id).label, body: doc.ledger[st.circ], archive: true });
-        else if (st.status === "discarded") stories.push({ kicker: "From the Memory Keeper's Index", head: doc.title, body: doc.ledger.discarded, archive: true });
-      });
-      stories.push({ head: "Student Project Spotlight", body: `Hollow Creek High junior Theo Lin is researching ${D.visitors.theo.ledgerTopic[L.S.theo || "none"]} for the “Then and Now” anniversary showcase.` });
-      stories.push({ head: "Ferreira's Bakery", body: "Anniversary special: “Ten Years” honey cake, by the slice or whole.", ad: true });
-      stories.push({ head: "Weather", body: "Fog on the creek in the morning, clearing by noon.", small: true });
-      return stories;
+      }].concat(L.archiveCorner(1)).concat([
+        { head: "Student Project Spotlight", body: `Hollow Creek High junior Theo Lin is researching ${D.visitors.theo.ledgerTopic[L.S.theo || "none"]} for the “Then and Now” anniversary showcase.` },
+        { head: "Ferreira's Bakery", body: "Anniversary special: “Ten Years” honey cake, by the slice or whole.", ad: true },
+        { head: "Weather", body: "Fog on the creek in the morning, clearing by noon.", small: true }
+      ]);
+    },
+
+    ledgerDay3() {
+      const ex = L.S.exhibit || { id: null, tone: "none" };
+      const label = ex.id && D.docs[ex.id] ? "“" + L.descOf(ex.id).label + "”" : "";
+      const lead = {
+        warm: { head: "Exhibit Centrepiece Chosen", body: `The Archive has lent ${label} to Friday's “Ten Years Together” exhibit. “It captures how we came together,” said Mayor Hale.` },
+        unsure: { head: "Exhibit Takes Shape", body: `${label} will appear at Friday's opening, alongside Lumen's interactive Memory Wall.` },
+        protest: { head: "Exhibit Plans Under Review", body: `Mayor Hale's office is “reviewing the tone” of the Archive's contribution, ${label}, ahead of Friday's opening.` },
+        mk: { head: "Memory Wall to Anchor Exhibit", body: "The Memory Keeper has curated Friday's centrepiece: a warm look back at the 2016 community consultation." },
+        none: { head: "Exhibit Still Seeking Centrepiece", body: "The Mayor's office says the Memory Keeper will “fill any gaps” before Friday's opening." }
+      }[ex.tone];
+      const ruthBelief = L.S.ruth || "unsure";
+      return [lead].concat(L.archiveCorner(2)).concat([
+        { head: "Goodbye, Alder Street", body: "Retired teacher Ruth Okafor moves to Maple Court this week. " + D.visitors.ruth.ledger[ruthBelief] },
+        { head: "Ferreira's Bakery", body: "Abel says: cinnamon rolls, like the old days. You know the ones.", ad: true },
+        { head: "Weather", body: "First frost. Wrap up warm.", small: true }
+      ]);
     },
 
     objective() {
-      const f = L.S.flags, n = L.inbox().length;
-      if (!f.juneDone) return "Someone is coming up the front steps…";
-      if (n) return `Sort June's donation at the inbox tray (${n} left).`;
-      if (L.theoWaiting()) return "A visitor is waiting at the front desk.";
+      const f = L.S.flags, n = L.inbox().length, who = L.visitorDue();
+      if (L.S.day === 1) {
+        if (!f.juneDone) return "Someone is coming up the front steps…";
+        if (n) return `Sort June's donation at the inbox tray (${n} left).`;
+        if (who === "theo") return "A visitor is waiting at the front desk.";
+      } else {
+        if (!f.keyTaken) return "Lumen Facilities left something in the inbox tray.";
+        const found = L.foundToday().length;
+        if (who === "ruth") return "Ruth Okafor is waiting at the front desk.";
+        if (who === "aide") return "Someone from the Mayor's office is at the front desk.";
+        if (found < 3 && !n) return `Search the “Pending Review” boxes in the basement (${found} of 3 found).`;
+        if (n) return `Sort the basement documents at the inbox tray (${n} waiting${found < 3 ? `, ${3 - found} still in the basement` : ""}).`;
+      }
       if (L.canClose()) return "Close up for the day at the front door.";
       return "";
     }

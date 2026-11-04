@@ -5,8 +5,8 @@
   const SPEED = 64; // px per second
   const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   // How far each kind of object visually extends above its footprint (for tapping).
-  const OVERHANG = { shelf: 10, catalogue: 8, terminal: 8, lamp: 8, plant: 4, coatrack: 6, ladder: 12, cat: 7, door: 3, lockedDoor: 3, serverDoor: 3, inbox: 6, bell: 3 };
-  const ZOFF = { inbox: 0.2, terminal: 0.2, bell: 0.2, cat: 0.2, stool: -1, chair: -1 };
+  const OVERHANG = { stairs: 3, box: 4, metalShelf: 10, dehumidifier: 5, bucket: 7, shelf: 10, catalogue: 8, terminal: 8, lamp: 8, plant: 4, coatrack: 6, ladder: 12, cat: 7, door: 3, lockedDoor: 3, serverDoor: 3, inbox: 6, bell: 3 };
+  const ZOFF = { bulb: 20, puddle: -1, inbox: 0.2, terminal: 0.2, bell: 0.2, cat: 0.2, stool: -1, chair: -1 };
 
   const W = {
     COLS, ROWS, room: null, roomId: null,
@@ -39,7 +39,7 @@
   W.walkable = function (x, y, ignoreNpcs) {
     if (x < 0 || y < 0 || x >= COLS || y >= ROWS) return false;
     const ch = W.room.map[y][x];
-    if (ch !== "." && ch !== ",") return false;
+    if (ch !== "." && ch !== "," && ch !== "c") return false;
     for (const o of W.room.objects) if (o.solid !== false && footprint(o).some(([a, b]) => a === x && b === y)) return false;
     if (!ignoreNpcs) for (const n of W.npcs) if (tileOf(n.x) === x && tileOf(n.y) === y) return false;
     return true;
@@ -156,7 +156,6 @@
   };
   W.findPathFor = function (from, goals, npc) {
     const saved = W.npcs; W.npcs = W.npcs.filter((m) => m !== npc);
-    const keepPlayer = W.walkable;
     const p = W.findPath(from, goals);
     W.npcs = saved; return p;
   };
@@ -207,6 +206,7 @@
     items.push({ z: W.player.y + T + 0.5, draw: () => drawMover(W.player, "archivist") });
     W.npcs.forEach((n) => items.push({ z: n.y + T + 0.5, draw: () => drawMover(n, n.name) }));
     items.sort((a, b) => a.z - b.z).forEach((it) => it.draw());
+    if (W.room.dim) { c.fillStyle = `rgba(20,14,24,${W.room.dim})`; c.fillRect(0, 0, COLS * T, ROWS * T); }
     Art.light(c, W.room, st);
     if (st.dark) { c.fillStyle = `rgba(20,12,30,${st.dark})`; c.fillRect(0, 0, COLS * T, ROWS * T); }
     if (W.fade > 0) { c.fillStyle = `rgba(26,18,14,${W.fade})`; c.fillRect(0, 0, COLS * T, ROWS * T); }

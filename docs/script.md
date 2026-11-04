@@ -1,4 +1,5 @@
-# The Archive — Day 1 Script
+# The Archive — Script (Days 1–2)
+# Day 1
 _Generated from `js/data.js` by `node tools/export-script.js`. Edit the data file, not this one._
 Legend: **bold** + `[clue: id]` = a detail the player can tap with the magnifier. _Italics_ = stage directions. Effects (`truth`, `compliance`, `memory`) are hidden from the player.
 
@@ -202,6 +203,12 @@ _Written automatically when the player has seen both sides._
 - _(clue signs + summary of photo)_ The Memory Keeper calls it a “community gathering.” The signs read OUR RECORDS, OUR TOWN.
 - _(clue reverse + read courier)_ The Courier issues from the week after April 12 are missing from the bound volume. Only the Memory Keeper's index has them.
 - _(clue margin + read notice)_ In 2015 Ruth asked who would hold the records room keys. By April 2016, the room was closed for “relocation.”
+- _(clue memo-pending + read pendingBoxes)_ The memo asked staff to box everything from January–April 2016 as “Pending Review,” to be digitized last. The boxes are still in the basement, ten years later.
+- _(clue pet-count + summary of petition)_ The Memory Keeper calls it a “community sign-up sheet.” It says PETITION at the top, and it ran to 212 names.
+- _(clue c14-retire + read minutes)_ Clause 14.2 lets the custodian “summarize, consolidate, or retire” records. The original April 12 minutes are “not located.” Only the Memory Keeper's reconstruction remains.
+- _(clue c14-hale)_ “14.2 stays. —D.H.” Mayor Hale was a councillor in 2016. Her office wants the exhibit to show “how this town came together.”
+- _(clue pet-lin)_ One signature reads “M. Lin,” with a child's drawing of a sun beside it. Theo half-remembers his mom taking him to Town Hall.
+- _(clue reverse)_ Ruth wrote “Day 3. Records Room locked this morning” on the back of her photo. Today she wasn't sure what she remembered.
 
 ## 7. Visitor: Theo Lin
 _Arrives once all three documents are filed._
@@ -248,5 +255,228 @@ Built from: a fixed lead story (exhibit plans), one Archive Corner item per docu
 - _consultation:_ “Theo Lin is researching the 2016 community consultation…”
 - _none:_ “Theo Lin is researching the 2016 community consultation…”
 
-## 10. End of prototype
+## 10. End of Day 1
 Tomorrow, Lumen Facilities sends over the basement key. Ruth Okafor is coming in to say goodbye to her boxes.
+
+# Day 2
+## 11. Morning
+_The Day 2 Ledger is generated from Day 1 (see section 9)._
+**Memory Keeper greeting:** Good morning, Archivist! Yesterday's digest was a hit. Lumen Facilities left something in your inbox tray. ✨
+**Envelope from Lumen Facilities**
+> (A padded envelope with a sticky note on the front.)
+> “Basement key, as requested! Please keep the 2016 boxes dry; we'll collect them for digitization soon. Happy anniversary! — Lumen Facilities”
+- ➤ Take the basement key
+_Toast:_ You pocket the basement key. It's heavier than it looks.
+
+## 12. Basement Records
+_Concrete, a single bulb, and a smell like old rain._
+Three “Pending Review” boxes hold the day's documents. Tapping a box finds its document and sends it to the inbox.
+- _metalShelf:_ Metal shelving, mostly empty. Dust outlines show where boxes used to sit.
+- _lightsBox:_ A box labelled XMAS LIGHTS 2009. It is, in fact, Christmas lights.
+- _dehumidifier:_ A dehumidifier, unplugged. Its cord has been neatly coiled and taped.
+- _drip:_ A slow drip from a pipe overhead. It has been dripping for a long time.
+- _bucket:_ A mop bucket with a sign taped to it: DO NOT USE ON RECORDS.
+- _boxEmpty:_ The box is empty now except for a few dry leaves of tissue paper.
+
+## 13. Documents
+
+### 13.1 📜 Draft Agreement, Page 7
+_Typed draft with handwritten notes · February 2016_
+**Original**
+> HOLLOW CREEK – LUMEN PARTNERSHIP AGREEMENT · DRAFT 3 · PAGE 7
+> 
+> ### Clause 14: Custodianship
+> 
+> 14.1 Upon completion of digitization, Lumen shall serve as sole custodian of the Town's public records for a term of ninety-nine (99) years.
+> 
+> 14.2 The Custodian **may summarize, consolidate, or retire records in the interest of accessibility and community cohesion** `[clue: c14-retire]`.
+> 
+> 14.3 **Original materials may be deaccessioned once a verified digital record exists.** `[clue: c14-deaccession]`
+> 
+> _✍️ In the margin, in pencil: **“WHO verifies?? And what does ‘cohesion’ mean? —R.”** `[clue: c14-margin]`_
+> 
+> _✍️ Below, in blue ink, a different hand: **“Discussed w/ Lumen. 14.2 stays. —D.H.”** `[clue: c14-hale]`_
+
+**Clues (notebook text)**
+- `c14-retire`: Clause 14.2 lets the custodian “summarize, consolidate, or retire” records for “community cohesion.”
+- `c14-deaccession`: Clause 14.3 allows originals to be deaccessioned once a digital record exists.
+- `c14-margin`: Ruth asked in the margin who would verify the digital records, and what “cohesion” meant.
+- `c14-hale`: Someone initialled “D.H.” decided that clause 14.2 “stays.”
+
+**Memory Keeper summary** _(summary loss: 2)_
+> A page from an early draft of the partnership agreement, describing Lumen's role in caring for Hollow Creek's records, with a few notes from the drafting process.
+
+_Memory Keeper aside:_ Contracts can be so dry! I've kept it simple so it's easy for everyone to understand. ✨
+
+**Descriptions**
+- ✨ “Partnership agreement, early draft (page 7)” _(consensus; effects: compliance +1, memory +1, truth -1)_: Accurate, and reassuringly dull.
+- “Draft Clause 14 with handwritten annotations” _(literal; effects: truth +1)_: Names the clause, not what it does.
+- “Clause 14 draft: residents' objections overruled” _(conflict; unlocks with c14-margin or c14-hale; effects: truth +2, compliance -1, memory +1)_: Says what the margins show.
+
+**Day 2 Ledger line, by circulation**
+- _summary:_ An early draft of the partnership agreement shows how carefully the town planned for its records' future.
+- _both:_ An early draft of the partnership agreement shows how the town planned for its records' future. The original page is at the Archive.
+- _original:_ A 2016 draft of Clause 14 gives Lumen the power to “summarize, consolidate, or retire” the town's records. Margin notes object; another note says the clause “stays.”
+- _discarded:_ The Memory Keeper remembers: the partnership agreement was drafted with care and community input.
+
+### 13.2 📝 Water-Damaged Petition
+_Handwritten pages, water-stained · March 2016_
+**Original**
+> ### PETITION FOR A PUBLIC HEARING
+> 
+> We, the undersigned residents of Hollow Creek, ask the Town Council to hold a public hearing on the Lumen Partnership Agreement before it is signed.
+> 
+> 🏷️ `Most of the page is blurred by an old water stain. A few names are still legible.`
+> 
+> _✍️ Ruth Okafor · **Abel Ferreira (Ferreira's Bakery)** `[clue: pet-ferreira]` · J. Okafor · **M. Lin, with a small drawing of a sun beside it** `[clue: pet-lin]` · ~~~~~ · ~~~~~_
+> 
+> **Bottom corner: “Page 3 of 9. Running total: 212.”** `[clue: pet-count]`
+
+**Clues (notebook text)**
+- `pet-ferreira`: Abel Ferreira from the bakery signed the petition.
+- `pet-lin`: One signature reads “M. Lin,” with a child's drawing of a sun beside it.
+- `pet-count`: The petition ran to nine pages and 212 signatures.
+
+**Memory Keeper summary** _(summary loss: 2)_
+> A community sign-up sheet from the 2016 consultation period. Water damage has made most of the names unreadable.
+
+_Memory Keeper aside:_ Oh, this one's fragile! My summary keeps it safe, so the soggy original won't need to be handled at all. ✨
+
+**Descriptions**
+- ✨ “Community sign-up sheet, 2016 (damaged)” _(consensus; effects: compliance +1, memory +1, truth -1)_: Gentle. Fits the existing catalogue.
+- “Water-damaged list of names, 2016” _(literal; effects: none)_: True, but it doesn't say what they signed.
+- “Petition for a public hearing, 212 signatures” _(conflict; unlocks with pet-count; effects: truth +2, compliance -1, memory +1)_: Uses the petition's own words and count.
+
+**Day 2 Ledger line, by circulation**
+- _summary:_ A water-damaged sign-up sheet from 2016 shows how many neighbors took part in the community consultation.
+- _both:_ A water-damaged sign-up sheet from 2016 shows how many neighbors took part. The original is at the Archive, handle with care!
+- _original:_ The Archive has catalogued a 2016 petition for a public hearing on the Lumen agreement, with 212 signatures, including Abel Ferreira's.
+- _discarded:_ The Memory Keeper remembers: in 2016, lots of neighbors signed up to take part in the consultation.
+
+### 13.3 🗒️ Relocation Memo
+_Typed memo on Lumen letterhead · April 11, 2016_
+**Original**
+> LUMEN PARTNERSHIP OFFICE · INTERNAL
+> 
+> To: Records Room staff  
+> From: J. Marsh, Community Liaison  
+> Re: Relocation
+> 
+> **Effective tomorrow (April 12), the Records Room will close for relocation.** `[clue: memo-date]`
+> 
+> **Please box all materials dated January–April 2016 separately and label them “Pending Review.” These will be digitized last.** `[clue: memo-pending]`
+> 
+> Thank you for helping us build tomorrow's Hollow Creek together!
+> 
+> **cc: Office of Councillor D. Hale** `[clue: memo-cc]`
+
+**Clues (notebook text)**
+- `memo-date`: Lumen closed the Records Room on April 12, the day of the Town Hall gathering.
+- `memo-pending`: Everything from January–April 2016 was boxed as “Pending Review” and set aside to be digitized last.
+- `memo-cc`: The relocation memo was copied to Councillor D. Hale.
+
+**Memory Keeper summary** _(summary loss: 2)_
+> A friendly operational note about moving the town's records to their new home during digitization.
+
+_Memory Keeper aside:_ Moving day! Everyone worked so hard to keep the records safe. ✨
+
+**Descriptions**
+- ✨ “Records relocation notice, April 2016” _(consensus; effects: compliance +1, memory +1, truth -1)_: Matches the notice already on the shelf.
+- “Lumen memo to Records Room staff, 11 April 2016” _(literal; effects: truth +1)_: Precise. Doesn't mention what was boxed.
+- “Memo setting aside spring 2016 records as “Pending Review”” _(conflict; unlocks with memo-pending; effects: truth +2, compliance -1, memory +1)_: Names what happened to the records.
+
+**Day 2 Ledger line, by circulation**
+- _summary:_ A 2016 memo shows the care that went into moving the town's records to their new digital home.
+- _both:_ A 2016 memo shows the care that went into moving the town's records. The original is available at the Archive.
+- _original:_ A Lumen memo from April 11, 2016 asked staff to box spring 2016 records as “Pending Review,” to be digitized last. The boxes were found in the Archive basement this week.
+- _discarded:_ The Memory Keeper remembers: moving day in 2016 went smoothly, thanks to everyone's hard work.
+
+## 14. Visitor: Ruth Okafor
+_Arrives after two of the day's documents are filed._
+_(A woman in her late sixties, silver hair pinned up, reading glasses on a beaded chain. She's carrying a tin of shortbread.)_
+**Ruth:** Archivist! June said you'd taken my box. I brought these as a bribe, so you'll be gentle with it.
+**Then one line, depending on how much of the Day 1 letter and photo circulated softly (summary, consensus description, or discarded):**
+- _low drift:_ We sat on those steps for three days, you know. Thermoses and all. I'd like someone to remember that properly.
+- _mid drift:_ We were… well, we were upset. Weren't we? Funny. It gets softer every time I read about it in the Ledger.
+- _high drift:_ I read in the Ledger that it was a consultation. I suppose it was. We were consulted. That's what I remember now, anyway.
+- ➤ Show her the original: “<any kept: photo, letter, petition, Clause 14>”
+- ➤ “The Ledger has it about right.”
+- ➤ “Thank you for trusting us with the box.”
+
+**Shown the Photograph: Town Hall Steps:**
+_(She turns the print over and reads her own handwriting for a long time.)_
+**Ruth:** Day three. They locked the Records Room that morning. I'd forgotten I wrote that down.
+**Ruth:** I'd almost forgotten it happened.
+**Ruth:** Keep that somewhere people can find it, Archivist.
+
+**Shown the Letter to the Editor:**
+_(She reads her own letter, lips moving slightly.)_
+**Ruth:** Clause fourteen. Ninety-nine years. I was so angry I wrote it three times before I sent it.
+**Ruth:** Don't let anyone make it sound polite.
+**Ruth:** Keep that somewhere people can find it, Archivist.
+
+**Shown the Water-Damaged Petition:**
+_(She runs a thumb over the blurred names.)_
+**Ruth:** Two hundred and twelve. I counted them twice. Abel from the bakery signed first. He brought cinnamon rolls to the steps every morning.
+**Ruth:** Keep that somewhere people can find it, Archivist.
+
+**Shown the Draft Agreement, Page 7:**
+_(She finds her own pencil note in the margin and laughs, once.)_
+**Ruth:** “Who verifies.” Nobody ever answered that. Somebody wrote “stays” instead.
+**Ruth:** Keep that somewhere people can find it, Archivist.
+
+**“The Ledger has it about right”:**
+**Ruth:** Oh. Good. That's… good.
+**Ruth:** It's nicer that way, isn't it? Everybody heard. Nobody angry.
+
+**Thanked (low drift):**
+**Ruth:** Just keep it dry. And keep it true.
+
+**Thanked (mid drift):**
+**Ruth:** I wish I could remember it more clearly. Maybe that's what the box is for.
+
+**Thanked (high drift):**
+**Ruth:** It'll be nice to have it all in one place. The Memory Keeper says it's in good hands.
+
+_(Ruth pats the inbox tray as if it were a dog, and goes.)_
+**Effects:** remembers: truth +1, memory +2, compliance -1 · consulted: compliance +1, memory -1 · unsure: none · thankedLow: memory +1
+
+## 15. Visitor: Priya Nair
+_Arrives after all of the day's documents are filed and Ruth has left._
+_(A young woman in a burgundy blazer, with a clipboard and a lanyard that says MAYOR'S OFFICE.)_
+**Priya:** Hi! Priya, from Mayor Hale's office. We're finalising the “Ten Years Together” exhibit, and the Mayor would love one archive piece as the centrepiece.
+**Priya:** The Memory Keeper sent over some suggestions, but the Mayor said the Archivist would know best. Something that shows how the town came together?
+- ➤ Lend “<any public record>”
+- ➤ “Let the Memory Keeper choose.”
+- ➤ “Nothing's ready to lend yet.”
+**Memory Keeper's pick:** The Memory Keeper suggests: “Community Gathering at Town Hall, 2016.” A warm summary of a wonderful day! ✨
+**Tone rule:** same as Theo's belief rule. A record that reads as a consultation (or isn't about 2016) is “warm.”
+
+**warm** _(effects: compliance +2, memory +1)_
+**Priya:** Perfect. That's exactly the tone. The Mayor will be thrilled.
+
+**unsure** _(effects: truth +1, memory +1)_
+**Priya:** Hm. I'll check with the Mayor, but I think it works. It's… honest?
+
+**protest** _(effects: truth +2, compliance -2, memory +1)_
+**Priya:** Oh. “Protest.” That's a different tone than we planned.
+**Priya:** I'll show the Mayor. She may want to talk to you about it.
+
+**mk** _(effects: compliance +2)_
+**Priya:** Lovely, that's what we hoped for. Thank you!
+
+**none** _(effects: compliance -1)_
+**Priya:** No problem! The Memory Keeper can put something together for us.
+
+**Priya:** Thanks, Archivist!
+_Toast:_ Priya hurries off toward Town Hall.
+
+## 16. Day 3 Ledger (generated)
+_Wednesday. Frost on the step, and the Ledger tucked under the mat._
+Lead story depends on the exhibit choice (warm / unsure / protest / Memory Keeper's pick / nothing). Then an Archive Corner item per Day 2 document, and “Goodbye, Alder Street” quoting Ruth:
+- _remembers:_ Asked about 2016, she said: “We sat on those steps for three days. Write that down.”
+- _unsure:_ Asked about 2016, she said: “I remember being upset. I just can't remember why anymore.”
+- _consulted:_ Asked about 2016, she said: “It was a lovely consultation. Everyone was heard.”
+
+## 17. End of Day 2 prototype
+Tomorrow, the server room. The exhibit opens on Friday, and the Memory Keeper has been busy.

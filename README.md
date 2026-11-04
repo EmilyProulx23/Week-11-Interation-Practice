@@ -18,7 +18,7 @@ Progress saves automatically to `localStorage`. There is no time limit.
 
 ## Writing
 
-All story text lives in `js/data.js`. To review it as a readable script, regenerate it with the command below, which writes [docs/day1-script.md](docs/day1-script.md):
+All story text lives in `js/data.js`. To review it as a readable script, regenerate it with the command below, which writes [docs/script.md](docs/script.md):
 
 ```bash
 node tools/export-script.js
@@ -30,8 +30,9 @@ In **Settings → Pages**, under **Build and deployment**, set **Source** to *De
 
 ## Status
 
-- ✅ Day 1 as a top-down pixel game: walkable Front Desk and Stacks, 3 documents, 2 visitors, notebook discrepancies, and a generated Day 2 newsletter
-- ⏳ Day 2 (Basement Records), Day 3 (Server Room), endings
+- ✅ Day 1: walkable Front Desk and Stacks, 3 documents, June and Theo, notebook discrepancies, generated Day 2 newsletter
+- ✅ Day 2: basement key, Basement Records with "Pending Review" boxes, 3 documents, Ruth and Priya, generated Day 3 newsletter
+- ⏳ Day 3 (Server Room) and endings
 
 ## Structure
 
@@ -45,5 +46,5 @@ js/logic.js     rules and state (no drawing)
 js/world.js     rooms, tap-to-walk pathfinding, visitors
 js/ui.js        in-canvas panels, text, scrolling
 js/main.js      scenes, screens, input, game loop
-tools/          export-script.js (writing → docs/day1-script.md)
+tools/          export-script.js (writing → docs/script.md)
 ```
