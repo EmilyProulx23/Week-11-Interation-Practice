@@ -40,7 +40,16 @@
             [".....nnnnnn.....", "......nnnn......", "......kkkk......"]]
   };
   const PEOPLE = {
-    archivist: { glasses: true, pal: { h: "#4a3426", s: "#d9a27a", u: "#c9963a", U: "#9a6e26", z: "#f3e6c8", n: "#4a3b4f", k: C.ink } },
+    // The Archivist: shoulder-length pink hair (H = lighter highlight), round glasses, mustard cardigan.
+    archivist: { glasses: true, pal: { h: "#d9719e", H: "#f2a7c6", s: "#d9a27a", u: "#c9963a", U: "#9a6e26", z: "#f3e6c8", n: "#4a3b4f", k: C.ink },
+      rows: {
+        down: ["......hhhh......", "....hhHHHhhh....", "...hhHHhhhhhh...", "..hhhsssssshhh..", "..hhsssssssshh..", "..hhskksskkshh..",
+               "..hhsssssssshh..", "..hhhsssssshhh..", "..hhuuzzzzuuhh..", "..huuuzzzzuuuh..", "..uuuuzzzzuuuu..", "..suuuuUUuuuus..", "...uuuuUUuuuu..."],
+        up:   ["......hhhh......", "....hhHHHhhh....", "...hhHHhhhhhh...", "..hhhhhhhhhhhh..", "..hhhhhhhhhhhh..", "..hhHhhhhhhhhh..",
+               "..hhhhhhhhhhhh..", "..hhhhhhhhhhhh..", "..hhhhhhhhhhhh..", "..huuhhhhhhuuh..", "..uuuuuuuuuuuu..", "..suuuuuuuuuus..", "...uuuuUUuuuu..."],
+        side: ["......hhhh......", ".....hhHHHhh....", "....hhHHhhhhh...", "...hhhhhhssss...", "...hhhhhsssss...", "...hhhhhsskks...",
+               "...hhhhhsssss...", "...hhhhhhsss....", "...hhhhuzzuu....", "....hhuuzuuu....", "....uuuuuuuu....", "....uuusuuuu....", "....uuuuuuuu...."]
+      } },
     june:      { glasses: false, pal: { h: "#1e1a1a", s: "#8d5a3b", u: "#4f6b4a", U: "#3a5038", z: "#b5443a", n: "#3a3340", k: C.ink } },
     theo:      { glasses: false, pal: { h: "#6b4a2e", s: "#e8c09a", u: "#5b6d8f", U: "#3f4d68", z: "#3f4d68", n: "#3e5a8a", k: C.ink } }
   };
@@ -64,7 +73,7 @@
     if (cache[key]) return cache[key];
     const p = PEOPLE[name];
     const base = dir === "up" ? "up" : dir === "down" ? "down" : "side";
-    const rows = BODY[base].map((row) => row === "FACE" ? (p.glasses ? FACE_GLASSES : FACE_EYES) : row === "SIDE" ? (p.glasses ? SIDE_GLASSES : SIDE_EYES) : row);
+    const rows = (p.rows ? p.rows[base] : BODY[base]).map((row) => row === "FACE" ? (p.glasses ? FACE_GLASSES : FACE_EYES) : row === "SIDE" ? (p.glasses ? SIDE_GLASSES : SIDE_EYES) : row);
     const legs = LEGS[base === "side" ? "side" : "front"][frame];
     let c = gridToCanvas(rows.concat(legs), p.pal, "rgba(43,29,22,.85)");
     if (dir === "left") c = mirror(c);

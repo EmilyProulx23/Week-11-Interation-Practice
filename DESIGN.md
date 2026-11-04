@@ -6,7 +6,7 @@
 
 Ten years ago, Lumen signed an agreement with the small town of **Hollow Creek** to build a data center and digitize the town's public archives. Today Lumen's archival AI, **The Memory Keeper**, helps the town's archivist catalogue, summarize and share local history.
 
-You are the **Archivist**: a small, gender-neutral pixel character (mustard cardigan, round glasses, no other defined features) whom you walk around a top-down archive. You have no name and your gender is never given; townsfolk just call you "Archivist." You go through donated documents, decide what to keep, how to describe it, and which version reaches the public. Over three days, small discrepancies build up between the original documents, the Memory Keeper's summaries, the town newsletter and what visitors remember. Through them you piece together a conflict the town no longer remembers having.
+You are the **Archivist**: a woman with shoulder-length pink hair, round glasses and a mustard cardigan, whom you walk around a top-down archive. She has no name in the game; townsfolk just call her "Archivist." You go through donated documents, decide what to keep, how to describe it, and which version reaches the public. Over three days, small discrepancies build up between the original documents, the Memory Keeper's summaries, the town newsletter and what visitors remember. Through them you piece together a conflict the town no longer remembers having.
 
 ## 2. Tone Pillars
 
