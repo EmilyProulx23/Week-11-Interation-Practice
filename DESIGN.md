@@ -4,7 +4,7 @@
 
 ## 1. Pitch
 
-Twenty years ago, Lumen signed an agreement with the small town of **Hollow Creek** to build a data center and digitize the town's public archives. Today Lumen's archival AI, **The Memory Keeper**, helps the town's archivist catalogue, summarize and share local history.
+Ten years ago, Lumen signed an agreement with the small town of **Hollow Creek** to build a data center and digitize the town's public archives. Today Lumen's archival AI, **The Memory Keeper**, helps the town's archivist catalogue, summarize and share local history.
 
 You are the **Archivist**. You never appear on screen, you have no name, and your gender is never given; townsfolk just call you "Archivist." You go through donated documents, decide what to keep, how to describe it, and which version reaches the public. Over three days, small discrepancies build up between the original documents, the Memory Keeper's summaries, the town newsletter and what visitors remember. Through them you piece together a conflict the town no longer remembers having.
 
@@ -19,9 +19,13 @@ You are the **Archivist**. You never appear on screen, you have no name, and you
 ## 3. Setting & Buried History
 
 - **Hollow Creek:** a small town with a creek, a green, a bakery, a high school and an old Town Hall with a records room.
-- **Spring 2006:** the Lumen partnership is celebrated as economic revitalization. Some residents (led informally by retired teacher **Ruth Okafor**) learn that *Clause 14* makes Lumen the "sole custodian" of public records for 99 years. They petition for a public hearing and gather on the Town Hall steps.
+- **Spring 2016:** the Lumen partnership is celebrated as economic revitalization. Some residents (led informally by longtime high-school teacher **Ruth Okafor**) learn that *Clause 14* makes Lumen the "sole custodian" of public records for 99 years. They petition for a public hearing and gather on the Town Hall steps.
 - **During the protests** the Records Room is closed for "relocation/digitization," a council meeting is closed to the public, and several documents disappear (council minutes, Courier issues, the petition).
+- **The migration (2017):** the Courier's website and the Hollow Creek Community Board (the town's online forum) were retired, and all their content "migrated" into the Memory Keeper. Phone photos and posts from the protests now exist only as the Memory Keeper indexes them. Paper copies kept by people like Ruth, who "prints everything," may be the **only surviving originals**, which raises the stakes on every Discard.
 - **Today:** the Memory Keeper's summaries, reconstructions and index entries describe that period as an ordinary, friendly **"community consultation."** This was never decreed. It happens one reasonable sentence at a time.
+
+### Why ten years
+Ten years is long enough to count as history and to hang an anniversary on, and short enough that **most of the town lived through it**. The forgetting is therefore uncomfortable rather than natural: people *remember* a "consultation." Theo was about seven and half-remembers being taken to Town Hall. Ruth, in her late 60s, starts to doubt her own memory. Five years would read as a deliberate cover-up (pushing toward a villain); twenty would let time, not summaries, do the forgetting.
 
 ## 4. Player Verbs
 
@@ -74,7 +78,7 @@ They are deliberately not one axis. Possible combinations include:
 | High | High | **The Living Archive:** people remember, and can check. |
 | High | Low | **The Quiet Record:** the truth is preserved, but nobody reads it. |
 | Low | High | **The Smooth Story:** everyone fondly remembers a consultation. |
-| Low | Low | **The Blank Season:** spring 2006 slips out of memory entirely. |
+| Low | Low | **The Blank Season:** spring 2016 slips out of memory entirely. |
 
 Compliance acts as a modifier rather than a judgment. High Compliance gets you invited to co-author Lumen's anniversary exhibit (influence from inside). Low Compliance triggers a gentle "workflow review" (independence, less reach).
 
@@ -90,7 +94,7 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 |---|---|---|
 | **Front Desk** | Day 1 | Inbox tray, Memory Keeper terminal, visitor bell, close-up-for-the-day |
 | **The Stacks** | Day 1 | Filed records (archivist view / public view toggle), pre-existing shelved items, Pocket the cat |
-| **Basement Records** | Day 2 | Water-damaged boxes from the 2006 "relocation" |
+| **Basement Records** | Day 2 | Water-damaged boxes from the 2016 "relocation" |
 | **Server Room** | Day 3 | Lumen hardware, the Memory Keeper's revision log, the anniversary exhibit decision |
 
 ## 8. Three-Day Structure (about 9 documents, 10–15 minutes)
@@ -99,11 +103,11 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 - **Ledger:** cozy anniversary edition.
 - **Visitor:** June Okafor brings a box from her grandmother Ruth's attic.
 - **Documents:**
-  1. *Harvest Fair program (Sept 2005).* Lumen's first public presentation; Ruth's margin note asks "who'd hold the keys to the records room." The summary is **accurate**.
-  2. *Letter to the Editor (Mar 2006), Ruth Okafor.* Clause 14, "sole custodian," 99 years, a request for a public hearing, 41 signatures. The summary softens "nothing against jobs" into "support for new jobs" and leaves out the petition.
-  3. *Photograph, Town Hall steps (Apr 12 2006).* "OUR RECORDS, OUR TOWN" signs; a note on the back says the records room was locked and the council meeting closed. The summary describes a "well-attended community gathering during the consultation period."
-- **Stacks (pre-shelved):** council minutes for Apr 12 2006 marked *"Original not located — reconstructed by The Memory Keeper"*; a Records Room relocation notice; a bound Courier volume missing two April issues.
-- **Visitor:** Theo Lin, a high-schooler, asks about "the 2006 consultation" for an anniversary school project. You hand him a public record (or ask the Memory Keeper), and that shapes what he believes.
+  1. *Harvest Fair program (Sept 2015).* Lumen's first public presentation; Ruth's margin note asks "who'd hold the keys to the records room." The summary is **accurate**.
+  2. *Letter to the Editor (Mar 2016), Ruth Okafor.* Clause 14, "sole custodian," 99 years, a request for a public hearing, 41 signatures. The summary softens "nothing against jobs" into "support for new jobs" and leaves out the petition.
+  3. *Photograph, Town Hall steps (Apr 12 2016).* "OUR RECORDS, OUR TOWN" signs; a note on the back says the records room was locked and the council meeting closed. The summary describes a "well-attended community gathering during the consultation period."
+- **Stacks (pre-shelved):** council minutes for Apr 12 2016 marked *"Original not located — reconstructed by The Memory Keeper"*; a Records Room relocation notice; a bound Courier volume missing two April issues.
+- **Visitor:** Theo Lin, a high-schooler, asks about "the 2016 consultation" for an anniversary school project. You hand him a public record (or ask the Memory Keeper), and that shapes what he believes.
 - **End:** close up → Day 2 Ledger generated from your choices.
 
 ### Day 2 — "Anniversary Prep"
@@ -120,8 +124,8 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 
 - **The Memory Keeper:** warm, upbeat, a little eager. Uses gentle sparkles ✨. Never threatens, never lies outright, and never admits to anything. ("I've tidied this up so it's easy for everyone to enjoy!")
 - **June Okafor:** Ruth's granddaughter, friendly and busy.
-- **Ruth Okafor:** retired teacher, now moving to Maple Court. Was there in 2006.
-- **Theo Lin:** a curious teen who writes down whatever he's given.
+- **Ruth Okafor:** retired teacher in her late 60s, sharp and wry, downsizing to a flat at Maple Court. Organized the 2016 petition. Prints everything.
+- **Theo Lin:** a curious teen who writes down whatever he's given. He was about seven in 2016 and half-remembers being taken to Town Hall.
 - **Pocket:** the archive cat. Purely cozy.
 
 ## 10. Tech

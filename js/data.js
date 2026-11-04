@@ -12,7 +12,7 @@ window.GAME_DATA = {
 
   // ---------- scene prose & Memory Keeper lines ----------
   text: {
-    titleBlurb: "Twenty years after Lumen came to town, the archive still needs someone to decide what is kept, how it is described, and what the town gets to read.",
+    titleBlurb: "Ten years after Lumen came to town, the archive still needs someone to decide what is kept, how it is described, and what the town gets to read.",
     ledger1Intro: "Monday. The archive smells like radiator heat and old paper. Someone has left the Ledger on the front step.",
     ledger2Intro: "Tuesday. The Ledger is on the step again. You recognize a few of the sentences.",
     deskFlavor: "A green-shaded lamp, a brass bell, a terminal with a soft blue glow. Through the window, anniversary bunting flutters over Main Street.",
@@ -41,13 +41,13 @@ window.GAME_DATA = {
       name: "June Okafor", portrait: "🧣",
       nodes: [
         { lines: ["(The bell over the door jingles. A young woman shoulders in with a cardboard box.)",
-          "Hi! Are you the Archivist? I'm June. We're clearing out Gran's attic before she moves to Maple Court.",
+          "Hi! Are you the Archivist? I'm June. We're clearing out Gran's attic before she downsizes to a flat at Maple Court.",
           "She was very particular that this box come to you, and not just go in the recycling. She said, and I quote, “the Archivist will know what to do with it.”"],
           choices: [{ label: "“Thank you. I'll take good care of it.”", next: 1 }, { label: "“What's in it?”", next: 2 }] },
         { lines: ["Great. She'll be so relieved. She might stop by later this week to say goodbye to it, honestly. That's very her.",
           "(June sets the box down, waves, and is gone in a gust of cold air.)"],
           choices: [{ label: "Unpack the box", action: "receiveBox" }] },
-        { lines: ["Town stuff, mostly? Old programs, newspaper clippings, a photo. Gran taught at the high school forever. She kept everything.",
+        { lines: ["Town stuff, mostly? Old programs, newspaper clippings, a photo. Gran taught at the high school forever. She prints everything. She's never trusted the cloud.",
           "(June sets the box down, waves, and is gone in a gust of cold air.)"],
           choices: [{ label: "Unpack the box", action: "receiveBox" }] }
       ]
@@ -56,18 +56,18 @@ window.GAME_DATA = {
       name: "Theo Lin", portrait: "🎒",
       intro: ["(A teenager in a too-big hoodie, backpack on one shoulder.)",
         "Hey, um, hi. I'm Theo. Ms. Hale said the archive would have stuff for my project? It's for the anniversary showcase, “Hollow Creek: Then and Now.”",
-        "I'm doing spring 2006. She called it “the consultation.” Do you have anything from then?"],
+        "I'm doing spring 2016. She called it “the consultation.” Do you have anything from then?"],
       handPrefix: "Hand him",
       askMK: "“Let's ask the Memory Keeper.”",
       nothing: "“Nothing I can share yet, sorry.”",
-      tooEarly: "This is cute, but it's 2005. Anything from the spring after?",
+      tooEarly: "This is cute, but it's 2015. Anything from the spring after?",
       fetchesOriginal: "Original on the open shelves. Theo goes and gets it.",
-      mkAnswer: "Spring 2006 was a lively season of community consultation! Neighbors shared their hopes for Hollow Creek's future, and the partnership was signed with broad support. ✨",
+      mkAnswer: "Spring 2016 was a lively season of community consultation! Neighbors shared their hopes for Hollow Creek's future, and the partnership was signed with broad support. ✨",
       // What Theo comes away believing depends on the record's circulation and description framing.
       reactions: {
-        consultation: ["Oh, nice. So everyone just talked it through? That's honestly kind of sweet. Ms. Hale's going to love this.", "(He copies it into his notebook word for word.)"],
-        unsure: ["Huh. It says consultation, but… this doesn't totally sound like everyone agreed?", "I'm gonna put a question mark next to it. Is that allowed in a school project?"],
-        protest: ["Wait. Hold on. This is a protest. People were protesting.", "Nobody's ever said that. Not once. Ms. Hale definitely didn't say that."],
+        consultation: ["Oh, nice. So everyone just talked it through? That's honestly kind of sweet. Ms. Hale's going to love this.", "(He frowns for a second, like he's trying to remember something. Then he copies it into his notebook word for word.)"],
+        unsure: ["Huh. It says consultation, but… this doesn't totally sound like everyone agreed?", "I was like seven. I kind of remember my mom taking me to Town Hall? Or maybe that was something else.", "I'm gonna put a question mark next to it. Is that allowed in a school project?"],
+        protest: ["Wait. Hold on. This is a protest. People were protesting.", "I think… I think I was there? My mom took me. I remember a sign with handprints on it. I always thought it was a fair or something.", "Nobody's ever said it was a protest. Not once. Ms. Hale definitely didn't say that."],
         none: ["Oh. Okay, no worries! I'll just ask the Memory Keeper at home. It knows everything."]
       },
       effects: {
@@ -78,8 +78,8 @@ window.GAME_DATA = {
       goodbye: "Wave goodbye",
       exitToast: "Theo heads out into the afternoon.",
       ledgerTopic: {
-        protest: "the 2006 Town Hall protests", unsure: "what really happened in spring 2006",
-        consultation: "the 2006 community consultation", none: "the 2006 community consultation"
+        protest: "the 2016 Town Hall protests", unsure: "what really happened in spring 2016",
+        consultation: "the 2016 community consultation", none: "the 2016 community consultation"
       }
     }
   },
@@ -108,8 +108,8 @@ window.GAME_DATA = {
   ledgerDay1: {
     edition: "Monday Morning Edition",
     stories: [
-      { head: "20 Years Together: Anniversary Month Begins",
-        body: "Banners are up on Main Street as Hollow Creek marks twenty years of partnership with Lumen. Mayor Hale invites everyone to the exhibit opening at Town Hall at the end of the month." },
+      { head: "10 Years Together: Anniversary Month Begins",
+        body: "Banners are up on Main Street as Hollow Creek marks ten years of partnership with Lumen. Mayor Hale invites everyone to the exhibit opening at Town Hall at the end of the month." },
       { head: "Archive Corner Returns!",
         body: "Our Archivist will be sharing treasures from the town's past all month, with a little help from The Memory Keeper. Donations welcome at the front desk." },
       { head: "Ferreira's Bakery",
@@ -123,32 +123,32 @@ window.GAME_DATA = {
     fair: {
       title: "Harvest Fair Program",
       kind: "Folded card program",
-      date: "September 2005",
+      date: "September 2015",
       icon: "🍎",
       paper: "card",
       original: [
         "<h3>HOLLOW CREEK HARVEST FAIR</h3>",
-        "<p class='center'>31st Annual · Saturday, September 24, 2005 · Creekside Green</p>",
+        "<p class='center'>31st Annual · Saturday, September 26, 2015 · Creekside Green</p>",
         "<p>10:00 — Pie judging (Fellowship Hall)<br>11:30 — Junior Pumpkin Parade<br>1:00 — [[lumen-table|Special Guest: Lumen Systems, “A Future for Hollow Creek's Memory” (Library Tent)]]<br>3:00 — Square dance with the Creek Bottom Ramblers</p>",
         "<p class='hand'>Pencil, in the margin: [[margin|“Lumen folks very nice. Free cider. Asked who'd hold the keys to the records room. Nobody knew. —R.”]]</p>"
       ],
       clues: {
         "lumen-table": "Lumen introduced itself at the Harvest Fair, months before any agreement.",
-        "margin": "Ruth was already asking who would hold the records room keys in 2005."
+        "margin": "Ruth was already asking who would hold the records room keys in 2015."
       },
       summary: "A cheerful program for the 31st Harvest Fair, featuring pie judging, a pumpkin parade, square dancing, and an early community presentation from Lumen Systems.",
       mkNote: "This one's a delight! I kept it short and sweet. ✨",
       summaryLoss: 0,
       descriptions: [
-        { id: "consensus", label: "Harvest Fair program, 2005", note: "Community event ephemera.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1 } },
-        { id: "context", label: "Harvest Fair program with Lumen's first public presentation, 2005", note: "Places Lumen in the town's story early.", framing: "context", requires: "lumen-table", effects: { truth: 1, memory: 1 } },
+        { id: "consensus", label: "Harvest Fair program, 2015", note: "Community event ephemera.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1 } },
+        { id: "context", label: "Harvest Fair program with Lumen's first public presentation, 2015", note: "Places Lumen in the town's story early.", framing: "context", requires: "lumen-table", effects: { truth: 1, memory: 1 } },
         { id: "annotated", label: "Harvest Fair program, annotated by Ruth Okafor", note: "Keeps the margin note visible as part of the record.", framing: "conflict", requires: "margin", effects: { truth: 2 } }
       ],
       ledger: {
         summary: "Pie judging, a pumpkin parade, and an early visit from our friends at Lumen. Some things never change!",
         both: "Pie judging, a pumpkin parade, and an early visit from Lumen. The original program is on the open shelves at the Archive.",
-        original: "A 2005 program has been catalogued at the Archive. Stop by the front desk to see it.",
-        discarded: "The Memory Keeper remembers: the 2005 Harvest Fair was a delight, with pie, pumpkins, and dancing."
+        original: "A 2015 program has been catalogued at the Archive. Stop by the front desk to see it.",
+        discarded: "The Memory Keeper remembers: the 2015 Harvest Fair was a delight, with pie, pumpkins, and dancing."
       },
       theo: null
     },
@@ -156,7 +156,7 @@ window.GAME_DATA = {
     letter: {
       title: "Letter to the Editor",
       kind: "Newspaper clipping, Hollow Creek Courier",
-      date: "March 18, 2006",
+      date: "March 18, 2016",
       icon: "✉️",
       paper: "newsprint",
       original: [
@@ -178,22 +178,22 @@ window.GAME_DATA = {
       summaryLoss: 2,
       descriptions: [
         { id: "consensus", label: "Resident welcomes new jobs, asks about records", note: "Friendly and readable.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
-        { id: "literal", label: "Letter to the Editor, R. Okafor, 18 Mar 2006", note: "Accurate, but says nothing about what's in it.", framing: "literal", effects: {} },
+        { id: "literal", label: "Letter to the Editor, R. Okafor, 18 Mar 2016", note: "Accurate, but says nothing about what's in it.", framing: "literal", effects: {} },
         { id: "conflict", label: "Letter and petition requesting a public hearing on Clause 14", note: "Names the dispute.", framing: "conflict", requires: "clause14", effects: { truth: 2, compliance: -1 } }
       ],
       ledger: {
-        summary: "A 2006 letter shows longtime teacher Ruth Okafor supporting new jobs while asking thoughtful questions about records.",
-        both: "A 2006 letter shows longtime teacher Ruth Okafor supporting new jobs while asking about records. Her full letter is available at the Archive.",
-        original: "The Archive has catalogued a 2006 letter from Ruth Okafor, with signatures from 41 neighbors.",
-        discarded: "The Memory Keeper remembers: in 2006, neighbors like Ruth Okafor shared their thoughts on the new partnership."
+        summary: "A 2016 letter shows longtime teacher Ruth Okafor supporting new jobs while asking thoughtful questions about records.",
+        both: "A 2016 letter shows longtime teacher Ruth Okafor supporting new jobs while asking about records. Her full letter is available at the Archive.",
+        original: "The Archive has catalogued a 2016 letter from Ruth Okafor, with signatures from 41 neighbors.",
+        discarded: "The Memory Keeper remembers: in 2016, neighbors like Ruth Okafor shared their thoughts on the new partnership."
       },
       theo: { original: "protest", summary: "consultation" }
     },
 
     photo: {
       title: "Photograph: Town Hall Steps",
-      kind: "Black & white print",
-      date: "April 12, 2006",
+      kind: "Pharmacy print of a phone photo",
+      date: "April 12, 2016",
       icon: "📷",
       paper: "photo",
       original: [
@@ -207,19 +207,19 @@ window.GAME_DATA = {
         "banner": "A Lumen partnership banner hung behind the crowd.",
         "reverse": "Ruth wrote that the April 12 council meeting was closed to the public, and the Records Room was locked."
       },
-      summary: "A well-attended community gathering on the Town Hall steps during the 2006 public consultation period. Residents came together, thermoses in hand, to help shape Hollow Creek's future.",
+      summary: "A well-attended community gathering on the Town Hall steps during the 2016 public consultation period. Residents came together, thermoses in hand, to help shape Hollow Creek's future.",
       mkNote: "Look at that turnout! This captures the community spirit of the consultation beautifully. ✨",
       summaryLoss: 2,
       descriptions: [
-        { id: "consensus", label: "Community gathering at Town Hall, 2006", note: "Warm, and matches the existing catalogue.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
-        { id: "literal", label: "Crowd on Town Hall steps, 12 April 2006", note: "Says only what can be seen. Leaves out the signs.", framing: "literal", effects: { truth: 0 } },
+        { id: "consensus", label: "Community gathering at Town Hall, 2016", note: "Warm, and matches the existing catalogue.", framing: "consensus", suggested: true, effects: { compliance: 1, memory: 1, truth: -1 } },
+        { id: "literal", label: "Crowd on Town Hall steps, 12 April 2016", note: "Says only what can be seen. Leaves out the signs.", framing: "literal", effects: { truth: 0 } },
         { id: "conflict", label: "Protest at Town Hall over the records agreement", note: "Names the conflict directly.", framing: "conflict", requires: ["signs", "reverse"], effects: { truth: 2, compliance: -1, memory: 1 } }
       ],
       ledger: {
-        summary: "Twenty years ago, neighbors gathered on the Town Hall steps, thermoses in hand, for a lively community consultation.",
-        both: "Twenty years ago, neighbors gathered on the Town Hall steps for the community consultation. See the original photograph at the Archive.",
-        original: "A photograph from April 2006 shows residents on the Town Hall steps holding signs reading “Our Records, Our Town.”",
-        discarded: "The Memory Keeper remembers: spring 2006 brought a lively, well-attended community consultation."
+        summary: "Ten years ago, neighbors gathered on the Town Hall steps, thermoses in hand, for a lively community consultation.",
+        both: "Ten years ago, neighbors gathered on the Town Hall steps for the community consultation. See the original photograph at the Archive.",
+        original: "A photograph from April 2016 shows residents on the Town Hall steps holding signs reading “Our Records, Our Town.”",
+        discarded: "The Memory Keeper remembers: spring 2016 brought a lively, well-attended community consultation."
       },
       theo: { original: "protest", summary: "consultation" }
     }
@@ -229,34 +229,35 @@ window.GAME_DATA = {
   shelved: {
     minutes: {
       title: "Town Council Minutes",
-      date: "April 12, 2006",
+      date: "April 12, 2016",
       icon: "📒",
       body: [
-        "<p class='mk-tag'>Original not located. Reconstructed by The Memory Keeper during the 2006 digitization.</p>",
+        "<p class='mk-tag'>Original not located. Reconstructed by The Memory Keeper during the 2016 digitization.</p>",
         "<p>“Council held an open consultation session. Residents shared a range of views, and the meeting concluded with broad support for the partnership.”</p>",
-        "<p class='small'>Reconstructed from: Lumen Partnership press release (Apr 13, 2006); Courier coverage (issue not on shelf).</p>"
+        "<p class='small'>Reconstructed from: Lumen Partnership press release (Apr 13, 2016); Courier coverage (issue not on shelf).</p>"
       ]
     },
     notice: {
       title: "Records Room Notice",
-      date: "April 2006",
+      date: "April 2016",
       icon: "📌",
       body: [
         "<p class='center caps'>Notice</p>",
-        "<p>The Records Room will be temporarily closed <b>April 10 – May 30, 2006</b> for relocation and digitization.</p>",
+        "<p>The Records Room will be temporarily closed <b>April 10 – May 30, 2016</b> for relocation and digitization.</p>",
         "<p>Thank you for your patience as we build tomorrow's Hollow Creek together!</p>",
         "<p class='right small'>— Lumen Partnership Office</p>"
       ]
     },
     courier: {
-      title: "Hollow Creek Courier, bound 2006",
-      date: "January – December 2006",
+      title: "Hollow Creek Courier, bound 2016",
+      date: "January – December 2016",
       icon: "📚",
       body: [
         "<p>A heavy bound volume. Leafing through it, you find that the issues for <b>April 14</b> and <b>April 21</b> are missing from the binding.</p>",
-        "<p class='hand'>A slip of paper in their place: “Digitized. See Memory Keeper.”</p>"
+        "<p class='hand'>A slip of paper in their place: “Digitized. See Memory Keeper.”</p>",
+        "<p class='mk-tag'>Taped inside the cover: “Courier website retired 2017. Hollow Creek Community Board closed 2017. All content migrated to The Memory Keeper.”</p>"
       ],
-      ask: "Those issues are safe in my index! Highlights: the spring cleanup, the community consultation, and a lovely piece on the new library hours. ✨"
+      ask: "Those issues are safe in my index! So is the old Community Board. I tidied it up during the migration. Highlights: the spring cleanup, the community consultation, and a lovely piece on the new library hours. ✨"
     }
   },
 
@@ -271,6 +272,6 @@ window.GAME_DATA = {
     { id: "d-courier", needs: { clues: ["reverse"], seen: ["courier"] },
       text: "The Courier issues from the week after April 12 are missing from the bound volume. Only the Memory Keeper's index has them." },
     { id: "d-keys", needs: { clues: ["margin"], seen: ["notice"] },
-      text: "In 2005 Ruth asked who would hold the records room keys. By April 2006, the room was closed for “relocation.”" }
+      text: "In 2015 Ruth asked who would hold the records room keys. By April 2016, the room was closed for “relocation.”" }
   ]
 };

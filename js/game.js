@@ -158,7 +158,7 @@
     });
     const theoTopic = D.visitors.theo.ledgerTopic[S.theo || "none"];
     stories.push({ head: "Student Project Spotlight", body: `Hollow Creek High junior Theo Lin is researching ${theoTopic} for the “Then and Now” anniversary showcase.` });
-    stories.push({ head: "Ferreira's Bakery", body: "Anniversary special: “Twenty Years” honey cake, by the slice or whole.", ad: true });
+    stories.push({ head: "Ferreira's Bakery", body: "Anniversary special: “Ten Years” honey cake, by the slice or whole.", ad: true });
     stories.push({ head: "Weather", body: "Fog on the creek in the morning, clearing by noon.", small: true });
     return ledger("Tuesday Morning Edition", stories);
   }
@@ -269,7 +269,7 @@
       </div>
       <h3 class="shelf-label">Newly filed</h3>
       <div class="shelf">${fileItems.length ? fileItems.join("") : `<p class="empty">Nothing filed yet.</p>`}</div>
-      <h3 class="shelf-label">Spring 2006 shelf</h3>
+      <h3 class="shelf-label">Spring 2016 shelf</h3>
       <div class="shelf">${shelvedItems.join("")}</div>
       <button class="cat" data-act="cat">🐈 <span>Pocket is asleep on the reading table.</span></button>`;
   }
