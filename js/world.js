@@ -5,7 +5,7 @@
   const SPEED = 64; // px per second
   const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   // How far each kind of object visually extends above its footprint (for tapping).
-  const OVERHANG = { stairs: 3, box: 4, metalShelf: 10, dehumidifier: 5, bucket: 7, shelf: 10, catalogue: 8, terminal: 8, lamp: 8, plant: 4, coatrack: 6, ladder: 12, cat: 7, door: 3, lockedDoor: 3, serverDoor: 3, inbox: 6, bell: 3 };
+  const OVERHANG = { rack: 12, cabinet: 10, console: 12, aircon: 6, serverExit: 4, stairs: 3, box: 4, metalShelf: 10, dehumidifier: 5, bucket: 7, shelf: 10, catalogue: 8, terminal: 8, lamp: 8, plant: 4, coatrack: 6, ladder: 12, cat: 7, door: 3, lockedDoor: 3, serverDoor: 3, inbox: 6, bell: 3 };
   const ZOFF = { bulb: 20, puddle: -1, inbox: 0.2, terminal: 0.2, bell: 0.2, cat: 0.2, stool: -1, chair: -1 };
 
   const W = {
@@ -39,7 +39,7 @@
   W.walkable = function (x, y, ignoreNpcs) {
     if (x < 0 || y < 0 || x >= COLS || y >= ROWS) return false;
     const ch = W.room.map[y][x];
-    if (ch !== "." && ch !== "," && ch !== "c") return false;
+    if (".,cs".indexOf(ch) === -1) return false;
     for (const o of W.room.objects) if (o.solid !== false && footprint(o).some(([a, b]) => a === x && b === y)) return false;
     if (!ignoreNpcs) for (const n of W.npcs) if (tileOf(n.x) === x && tileOf(n.y) === y) return false;
     return true;

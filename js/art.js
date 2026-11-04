@@ -123,6 +123,13 @@
       for (let j = 0; j < 4; j++) { r(c, x, y + j * 4 + 3, T, 1, "#5e3226"); r(c, x + ((j % 2) ? 3 : 11), y + j * 4, 1, 3, "#5e3226"); }
       r(c, x, y + 1, T, 2, "#6b6b6b"); r(c, x, y + 1, T, 1, "#8b8b8b"); // pipe
       r(c, x, y + 13, T, 3, "#4a2f1f");
+    } else if (ch === "s") {
+      r(c, x, y, T, T, "#30363a"); r(c, x, y, T, 1, "#3d454a"); r(c, x, y, 1, T, "#3d454a");
+      r(c, x + 7, y + 7, 2, 2, "#262b2e");
+    } else if (ch === "m") {
+      r(c, x, y, T, T, "#4b5359"); r(c, x, y, 1, T, "#3a4146"); r(c, x + 1, y + 2, 1, 1, "#6e777d"); r(c, x + 14, y + 2, 1, 1, "#6e777d");
+      for (let k = 0; k < 3; k++) r(c, x + 4, y + 4 + k * 2, 8, 1, "#3a4146");
+      r(c, x, y + 13, T, 3, "#2b3034");
     } else if (ch === "_") {
       r(c, x, y, T, T, C.cap); r(c, x, y, T, 3, C.capL);
     }
@@ -149,7 +156,7 @@
         r(c, x + 2, y - 2, 12, 18, metal ? C.greyL : o.kind === "lockedDoor" ? C.woodD : C.wood);
         r(c, x + 3, y, 4, 6, metal ? C.grey : C.woodD); r(c, x + 9, y, 4, 6, metal ? C.grey : C.woodD);
         if (metal) {
-          r(c, x + 10, y + 8, 3, 4, C.ink); r(c, x + 11, y + 9, 1, 1, Math.floor(t * 2) % 2 ? C.red : C.greenL);
+          r(c, x + 10, y + 8, 3, 4, C.ink); r(c, x + 11, y + 9, 1, 1, st.serverOpen ? C.greenL : Math.floor(t * 2) % 2 ? C.red : "#5a2a26");
           r(c, x + 4, y + 8, 3, 3, C.teal); r(c, x + 5, y + 9, 1, 1, C.tealL);
         } else {
           r(c, x + 11, y + 9, 2, 2, C.brass);
@@ -184,6 +191,43 @@
       case "puddle": c.globalAlpha = 0.55; r(c, x + 2, y + 5, 12, 6, "#5f7f9a"); r(c, x + 4, y + 4, 8, 8, "#5f7f9a"); c.globalAlpha = 1; r(c, x + 5, y + 6, 3, 1, "#a9c7dc"); if (Math.floor(t * 1.5) % 3 === 0) r(c, x + 8, y + 7, 2, 2, "#cfe2ee"); break;
       case "bucket": r(c, x + 3, y + 3, 10, 11, C.ink); r(c, x + 4, y + 4, 8, 9, "#c7b34a"); r(c, x + 4, y + 4, 8, 2, "#5f7f9a"); r(c, x + 9, y - 6, 1, 10, C.woodD); r(c, x + 7, y - 7, 5, 2, C.greyL); break;
       case "bulb": r(c, x + 7, y - 30, 1, 22, C.ink); r(c, x + 5, y - 9, 5, 5, C.glow); r(c, x + 6, y - 10, 3, 1, C.greyD); break;
+      case "serverExit": {
+        r(c, x + 1, y, 14, T, C.ink); r(c, x + 2, y, 12, 14, C.greyL); r(c, x + 2, y, 12, 2, C.white); r(c, x + 10, y + 6, 2, 3, C.greyD);
+        r(c, x + 2, y - 4, 12, 4, "#2a5a56"); r(c, x + 3, y - 3, 10, 2, C.tealL);
+        break;
+      }
+      case "rack": {
+        const top = y - 12;
+        r(c, x, top, w, h + 12, C.ink);
+        for (let i = 0; i < (o.w || 1); i++) {
+          const rx = x + i * T + 1;
+          r(c, rx, top + 1, 14, h + 10, "#1c2023"); r(c, rx, top + 1, 14, 1, "#3a4146");
+          for (let k = 0; k < 6; k++) {
+            r(c, rx + 2, top + 3 + k * 4, 10, 2, "#2c3236");
+            const on = hash(i + o.x * 3, k + o.y, Math.floor(t * 3 + i + k)) > 0.45;
+            r(c, rx + 10, top + 3 + k * 4, 1, 1, on ? (k % 3 === 0 ? C.amber : C.tealL) : "#24423f");
+          }
+        }
+        break;
+      }
+      case "succulent": r(c, x + 4, y + 6, 8, 8, C.ink); r(c, x + 5, y + 7, 6, 6, C.white); r(c, x + 6, y + 2, 4, 5, C.greenL); r(c, x + 4, y + 4, 3, 3, C.green); r(c, x + 9, y + 4, 3, 3, C.green); r(c, x + 9, y + 9, 4, 3, C.amber); break;
+      case "aircon": r(c, x + 1, y - 6, 14, 20, C.ink); r(c, x + 2, y - 5, 12, 18, C.greyL); for (let k = 0; k < 5; k++) r(c, x + 3, y - 3 + k * 3, 10, 1, C.grey); r(c, x + 3, y - 4, 10, 3, C.amber); break;
+      case "cabinet": {
+        const open = st.found && st.found.indexOf(o.arg) !== -1;
+        r(c, x + 1, y - 10, 14, 25, C.ink); r(c, x + 2, y - 9, 12, 23, C.wood);
+        for (let k = 0; k < 3; k++) { r(c, x + 3, y - 8 + k * 7, 10, 6, open && k === 1 ? "#3a2e26" : C.woodL); r(c, x + 6, y - 6 + k * 7, 4, 1, C.brass); }
+        if (!open && st.glowServer) sparkle(c, x + 13, y - 14, t);
+        break;
+      }
+      case "console": {
+        r(c, x, y - 2, w, h + 2, C.ink); r(c, x + 1, y - 1, w - 2, 9, "#3a4146"); r(c, x + 1, y + 8, w - 2, 6, "#2b3034");
+        r(c, x + 8, y - 12, 16, 12, C.ink); r(c, x + 9, y - 11, 14, 10, C.tealD);
+        for (let k = 0; k < 3; k++) r(c, x + 10, y - 9 + k * 3, 4 + Math.floor(hash(k, Math.floor(t * 2)) * 8), 1, C.tealL);
+        r(c, x + 6, y + 1, 20, 4, "#555d63");
+        const done = st.found && st.found.indexOf(o.arg) !== -1;
+        if (!done) { r(c, x + 25, y + 2, 5, 7, C.paper); if (st.glowServer) sparkle(c, x + w - 3, y - 14, t); }
+        break;
+      }
       case "doorBottom": {
         r(c, x + 1, y, 14, T, C.ink); r(c, x + 2, y, 12, 14, C.wood); r(c, x + 2, y, 12, 2, C.woodH); r(c, x + 11, y + 6, 2, 2, C.brass);
         r(c, x + 2, y - 4, 12, 4, C.rust); r(c, x + 3, y - 3, 10, 2, C.rugB);
@@ -322,6 +366,7 @@
       if (o.kind === "lamp" && st.lampsOn > 0) glow(o.x * T + 8, o.y * T - 4, 34, 0.22);
       if (o.kind === "table" && st.lampsOn > 1) glow(o.x * T + (o.w || 1) * T - 7, o.y * T - 2, 26, 0.2);
       if (o.kind === "bulb") glow(o.x * T + 7, o.y * T - 7, 46, 0.3);
+      if (o.kind === "rack" || o.kind === "console") { c.fillStyle = "rgba(124,196,188,.09)"; c.fillRect(o.x * T - 4, o.y * T - 14, (o.w || 1) * T + 8, T + 22); }
       if (o.kind === "terminal" && st.lampsOn > 0) { c.fillStyle = "rgba(124,196,188,.10)"; c.fillRect(o.x * T - 6, o.y * T - 12, 28, 24); }
     });
     c.restore();
@@ -345,6 +390,8 @@
       case "contract": paper(3, 1, 10, 14); r(c, 5, 3, 6, 1, C.ink); for (let i = 0; i < 4; i++) r(c, 5, 6 + i * 2, 6, 1, C.greyL); r(c, 9, 11, 4, 2, C.hand || "#3b4f8a"); break;
       case "petition": paper(3, 2, 10, 12); r(c, 5, 4, 6, 1, C.ink); r(c, 5, 6, 5, 1, "#3b4f8a"); r(c, 5, 8, 4, 1, "#3b4f8a"); c.globalAlpha = 0.45; r(c, 3, 9, 10, 5, "#5f7f9a"); c.globalAlpha = 1; break;
       case "memo": paper(3, 2, 10, 12); r(c, 4, 3, 8, 2, C.teal); r(c, 5, 7, 6, 1, C.greyL); r(c, 5, 9, 6, 1, C.greyL); r(c, 5, 11, 3, 1, C.greyL); break;
+      case "log": paper(4, 1, 8, 14); for (let i = 0; i < 6; i++) r(c, 5, 3 + i * 2, 3 + (i * 3) % 5, 1, C.teal); for (let i = 1; i < 15; i += 3) { r(c, 2, i, 1, 1, C.greyL); r(c, 13, i, 1, 1, C.greyL); } break;
+      case "poster": r(c, 1, 2, 14, 12, C.ink); r(c, 2, 3, 12, 10, C.paper); r(c, 3, 4, 10, 2, C.rust); r(c, 3, 7, 4, 4, C.amber); r(c, 8, 7, 4, 1, C.blue); r(c, 8, 9, 4, 1, C.blue); r(c, 4, 8, 2, 2, C.glow); break;
       case "key": r(c, 3, 5, 6, 6, C.ink); r(c, 4, 6, 4, 4, C.brass); r(c, 5, 7, 2, 2, C.ink); r(c, 9, 7, 5, 2, C.brass); r(c, 12, 9, 1, 2, C.brass); r(c, 10, 9, 1, 2, C.brass); break;
       case "notebook": r(c, 3, 2, 10, 12, C.ink); r(c, 4, 3, 8, 10, C.rust); r(c, 4, 3, 2, 10, C.woodD); r(c, 7, 6, 4, 1, C.paper); r(c, 7, 8, 4, 1, C.paper); break;
       case "magnifier": r(c, 3, 2, 8, 8, C.ink); r(c, 4, 3, 6, 6, C.sky); r(c, 5, 4, 2, 2, C.white); r(c, 9, 9, 2, 2, C.ink); r(c, 10, 10, 3, 3, C.woodD); r(c, 12, 12, 2, 2, C.woodD); break;
