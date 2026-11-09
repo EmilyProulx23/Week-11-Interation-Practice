@@ -313,7 +313,7 @@
   function hotFor(id, s) {
     return { magnify: s.magnify, found: (c) => L.has(S().clues, c), onTap: (c) => {
       if (!s.magnify) return UI.toast("Turn on the magnifier to look closer.");
-      L.addClue(id, c);
+      if (!L.addClue(id, c)) UI.toast("Already in your notebook: " + D.docs[id].clues[c]);
     } };
   }
   function docEl(id, s, hot) { return { t: "doc", blocks: L.original(id), hot: hot ? hotFor(id, s) : null, card: D.docs[id].paper === "card" }; }
