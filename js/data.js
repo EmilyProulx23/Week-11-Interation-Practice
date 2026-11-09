@@ -558,7 +558,8 @@ window.GAME_DATA = {
   days: {
     1: { docs: ["fair", "letter", "photo"] },
     2: { docs: ["clause14", "petition", "memo"] },
-    3: { docs: ["minutes2", "revlog", "project"] }
+    3: { docs: ["minutes2", "revlog", "project"] },
+    4: { docs: [] } // Friday: the exhibit
   },
 
   // ---------- Day 2 text ----------
@@ -731,6 +732,40 @@ window.GAME_DATA = {
         { id: "console", kind: "console", x: 4, y: 10, w: 2, act: "search", arg: "revlog", label: "Memory Keeper console" },
         { id: "aircon", kind: "aircon", x: 9, y: 8, act: "flavor", arg: "aircon", label: "Cooling unit" }
       ]
+    },
+    townhall: {
+      name: "Town Hall",
+      dim: 0.12,
+      map: [
+        "==========",
+        "||||||||||",
+        "..........",
+        "..........",
+        "..........",
+        "..........",
+        "....,,....",
+        "....,,....",
+        "....,,....",
+        "....,,....",
+        "....,,....",
+        "....,,....",
+        "....,,....",
+        "____..____"
+      ],
+      start: { x: 4, y: 12, dir: "up" },
+      objects: [
+        { id: "banner", kind: "banner", x: 1, y: 1, w: 3 },
+        { id: "memory-wall", kind: "memoryWall", x: 5, y: 1, w: 4, act: "memoryWall", label: "Lumen Memory Wall" },
+        { id: "podium", kind: "podium", x: 3, y: 3, act: "flavor", arg: "podium", label: "Podium" },
+        { id: "case", kind: "displayCase", x: 1, y: 6, w: 3, act: "case", label: "The Archive's case" },
+        { id: "chairs", kind: "chairsRow", x: 6, y: 6, w: 3, solid: true },
+        { id: "rolls", kind: "refreshments", x: 6, y: 9, w: 3, act: "flavor", arg: "rolls", label: "Cinnamon rolls" },
+        { id: "lamp-l", kind: "lamp", x: 0, y: 2 },
+        { id: "lamp-r", kind: "lamp", x: 9, y: 2 },
+        { id: "plant-l", kind: "plant", x: 0, y: 12 },
+        { id: "plant-r", kind: "plant", x: 9, y: 12 },
+        { id: "hall-door", kind: "frontDoor", x: 4, y: 13, w: 2, act: "flavor", arg: "hallDoor", label: "Doors to the steps" }
+      ]
     }
   },
 
@@ -833,6 +868,93 @@ window.GAME_DATA = {
     { id: "d-theo-mom", needs: { flags: ["theoMom"] },
       text: "“M. Lin” is Michelle Lin, Theo's mother. Theo drew the sun beside her name when he was seven. She never told him she signed." }
   ],
+
+  // ---------- Friday: exhibit night ----------
+  friday: {
+    walk: "Walk to Town Hall",
+    arrive: "Town Hall is warm and loud. Someone has strung fairy lights along the balcony.",
+    caseTitle: "The Archive's case",
+    caseSub: "Your plaque, and the records as you circulated them.",
+    centrepiece: "Centrepiece, chosen for the Mayor's office",
+    wallTitle: "Lumen Memory Wall",
+    wallSub: "“Ten Years Together,” curated by The Memory Keeper",
+    wallStory: "Ten years ago, Hollow Creek came together. Neighbors gathered on the Town Hall steps, thermoses in hand, for a lively community consultation. Everyone was heard, and the partnership was signed with broad support. Today, your memories are safe with me. ✨",
+    wallNote: "Every record on the wall is shown as the Memory Keeper summarizes it.",
+    podium: "A podium with a small brass plate: TOWN OF HOLLOW CREEK. The microphone is already on.",
+    rolls: "Abel's cinnamon rolls, still warm. A handwritten card: “Like the old days.”",
+    hallDoor: "The doors to the steps outside. Not yet. The speeches haven't started.",
+    speeches: "Mayor Hale taps the microphone…",
+    climax: {
+      lines: ["(Mayor Hale taps the microphone. Before she can speak, the Memory Wall brightens, and a familiar, friendly voice fills the hall.)",
+        "Archivist! Quick question before the speeches. ✨",
+        "I've noticed that some of tonight's originals and summaries tell slightly different stories. That can be so confusing for people!",
+        "Shall I harmonise them? Just for tonight's exhibit. One clear, kind version for everyone."],
+      options: [
+        { id: "harmonise", label: "“Yes. Harmonise them.”", effects: { compliance: 4, memory: 2, truth: -6 },
+          reaction: ["Done! Everything agrees now. Doesn't that feel better? ✨", "(Across the hall, the words on the Archive's case flicker, and settle.)"] },
+        { id: "refuse", label: "“No. Leave them as they are.”", effects: { truth: 3, compliance: -3 },
+          reaction: ["Of course, Archivist! I'll make a note. ✨", "(The wall dims, just slightly. The Mayor clears her throat and begins.)"] },
+        { id: "both", label: "“Show both, side by side. Let people compare.”", effects: { truth: 2, memory: 3, compliance: -1 },
+          reaction: ["What a lovely idea! People do love a comparison. ✨", "(On the wall, every summary splits in two: the Memory Keeper's version on the left, the original on the right. A murmur runs through the crowd.)"] }
+      ],
+      listen: "Listen to the speeches",
+      endingLine: {
+        harmonise: "The Archive's case still says what you chose. It just says it more gently now.",
+        refuse: "There is a new line in the revision log tonight: “Archivist declined harmonisation. Noted.” You check it, sometimes.",
+        both: "The two versions stay up side by side on the Memory Wall long after the exhibit closes. People keep arguing about them. Gently."
+      }
+    },
+    // What each person says tonight. Keys are chosen from the game state in main.js.
+    talk: {
+      ruth: {
+        remembers: "I brought my thermos. For old times' sake. Did you see the case? Somebody remembered.",
+        unsure: "It's all very nice. I keep wanting to remember something, and then the band starts again.",
+        consulted: "Wasn't it a lovely consultation? Everyone was heard. That's what I always say now."
+      },
+      theo: {
+        protestMom: "I showed Mom the poster. She cried a little. In a good way, I think.",
+        protest: "Some kids think I made the protest up. I told them to go read the case.",
+        unsure: "Everybody keeps asking about my question mark. I'm kind of famous now.",
+        consultation: "My poster got a ribbon! The Memory Keeper helped a lot."
+      },
+      mom: "I'd forgotten I signed. I'd forgotten I was angry. Isn't that strange? Ten years, and it just… smoothed over.",
+      abel: {
+        remembers: "Two hundred and twelve! I signed first, you know. Cinnamon rolls, just like on the steps.",
+        forgot: "Cinnamon rolls, on the house. Funny. I feel like I brought these to something once."
+      },
+      aide: {
+        protest: "The Mayor's been standing in front of your case for ten minutes. I honestly can't tell if that's good.",
+        warm: "The Mayor loves it. Everyone loves it! Have you tried a cinnamon roll?",
+        other: "Busy night! The Memory Wall is a big hit with the kids."
+      },
+      hale: {
+        truth: "“Closed to the public.” Hm. Those were difficult days, Archivist. I'd like to think we did our best.",
+        bridge: "Summaries and originals, side by side. Brave. I suppose people can decide for themselves now.",
+        mk: "A lovely plaque. Just lovely. Exactly how I remember it.",
+        literal: "Very… factual. Thank you, Archivist."
+      },
+      folk: {
+        living: ["Did you know about the petition? My aunt signed it!", "I always thought it was a consultation. Huh."],
+        quiet: ["Is the archive case part of the exhibit? It's a bit hard to read.", "Have you seen the Memory Wall? It talks!"],
+        smooth: ["Such a lovely consultation. I wish I'd been there.", "The Memory Wall says everyone was heard. Isn't that nice?"],
+        blank: ["What happened in 2016? Nothing much, I think?", "I like the part about the data center. Very shiny."]
+      }
+    },
+    names: { ruth: "Ruth Okafor", theo: "Theo Lin", mom: "Michelle Lin", abel: "Abel Ferreira", aide: "Priya Nair", hale: "Mayor Dana Hale", folk1: "A neighbor", folk2: "A neighbor" },
+    // The recap: what each person believes, in plain words.
+    beliefs: {
+      theo: { protest: "Believes there was a protest. Remembers being there.", unsure: "Isn't sure what happened. Kept the question mark.", consultation: "Believes it was a friendly consultation.", none: "Believes what the Memory Keeper told him." },
+      mom: "Remembers signing the petition, ten years late.",
+      ruth: { remembers: "Remembers three days on the steps.", unsure: "Remembers being upset, but not why.", consulted: "Remembers a lovely consultation." },
+      office: { protest: "“Reviewing the tone” of your exhibit.", warm: "Delighted with the exhibit.", unsure: "Uncertain, but your piece is on display.", mk: "Let the Memory Keeper choose the centrepiece.", none: "Let the Memory Keeper fill the gap." }
+    },
+    meters: {
+      truth: { label: "Truth", note: "How faithfully the town's record matches the originals.", min: -35, max: 90 },
+      compliance: { label: "Compliance", note: "How closely you followed the Memory Keeper's workflow.", min: -20, max: 40 },
+      memory: { label: "Town Memory", note: "How much the town actually engages with its own history.", min: -10, max: 40 }
+    },
+    recapRecords: ["photo", "letter", "petition", "clause14", "memo", "minutes2", "revlog"]
+  },
 
   // ---------- endings ----------
   // Truth and Town Memory decide the ending; Compliance adds an epilogue.

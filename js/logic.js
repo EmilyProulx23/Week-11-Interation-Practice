@@ -16,14 +16,14 @@
       pos: { room: "desk", x: start.x, y: start.y, dir: start.dir },
       stats: { truth: 0, compliance: 0, memory: 0 },
       flags: {}, docs, clues: [], seen: [], summaries: [], notes: [],
-      theo: null, ruth: null, exhibit: null, plaque: null, digest: 0
+      theo: null, ruth: null, exhibit: null, plaque: null, climax: null, digest: 0
     };
   }
   // Older saves may be missing newer documents or fields.
   function migrate(s) {
     const f = freshState();
     DOC_ORDER.forEach((id) => { if (!s.docs[id]) s.docs[id] = f.docs[id]; });
-    ["ruth", "exhibit", "plaque"].forEach((k) => { if (!(k in s)) s[k] = null; });
+    ["ruth", "exhibit", "plaque", "climax"].forEach((k) => { if (!(k in s)) s[k] = null; });
     return s;
   }
 
@@ -171,12 +171,44 @@
       L.spend(D.costs.visitor);
       L.save();
     },
+    // ---------- Friday: exhibit night ----------
+    beginFriday() {
+      const start = D.rooms.townhall.start;
+      L.S.day = 4; L.S.time = 18 * 60 + 30; L.S.scene = "world";
+      L.S.pos = { room: "townhall", x: start.x, y: start.y, dir: start.dir };
+      L.save();
+    },
+    sawExhibit(which) { L.S.flags[which] = true; L.save(); },
+    climaxDue: () => L.S.day === 4 && !!L.S.flags.sawCase && !!L.S.flags.sawWall && !L.S.climax,
+    finishClimax(id) {
+      const o = D.friday.climax.options.find((x) => x.id === id);
+      L.S.climax = id;
+      L.fx(o.effects);
+      L.save();
+      return o;
+    },
+    // How each spring-2016 record reads to the town tonight.
+    townAccount() {
+      const harmonised = L.S.climax === "harmonise";
+      return D.friday.recapRecords.map((id) => {
+        const st = L.S.docs[id], d = D.docs[id];
+        if (st.status === "discarded") return { id, head: d.title, text: d.ledger.discarded, tag: "Memory Keeper's index only" };
+        if (st.status !== "kept") return { id, head: d.title, text: "Never found.", tag: "Missing" };
+        const head = L.descOf(id).label;
+        if (harmonised) return { id, head, text: d.summary, tag: "Harmonised tonight" };
+        if (st.circ === "summary") return { id, head, text: d.summary, tag: "Memory Keeper summary" };
+        if (st.circ === "both") return { id, head, text: d.summary + " (The original is beside it.)", tag: "Summary + original" };
+        return { id, head, text: d.ledger.original, tag: "Original" };
+      });
+    },
+
     // The ending: Truth × Town Memory, with a Compliance epilogue.
     ending() {
       const E = D.endings, t = E.thresholds, st = L.S.stats;
       const key = st.truth >= t.truth ? (st.memory >= t.memory ? "living" : "quiet") : (st.memory >= t.memory ? "smooth" : "blank");
       const epi = st.compliance >= t.complianceHigh ? "high" : st.compliance <= t.complianceLow ? "low" : "mid";
-      return { key, title: E[key].title, text: E[key].text, epilogue: E.epilogue[epi], theoMom: L.S.flags.theoMom ? E.theoMom : null };
+      const climax = L.S.climax ? D.friday.climax.endingLine[L.S.climax] : null;
+      return { key, title: E[key].title, text: E[key].text, epilogue: E.epilogue[epi], theoMom: L.S.flags.theoMom ? E.theoMom : null, climax };
     },
     takeKey() { L.S.flags.keyTaken = true; L.save(); L.toast(D.day2.keyToast); },
     findDoc(id) {
@@ -372,6 +404,13 @@
         if (found < 2 && !n) return `Look around the Server Room, through the Stacks (${found} of 2 found).`;
         if (n) return `Sort the documents at the inbox tray (${n} waiting${found < 2 ? `, ${2 - found} still in the Server Room` : ""}).`;
         if (L.canClose()) return "Close up. The exhibit opens tomorrow.";
+      }
+      if (L.S.day === 4) {
+        if (!f.sawCase && !f.sawWall) return "Find the Archive's case and Lumen's Memory Wall. Talk to anyone you like.";
+        if (!f.sawCase) return "Find the Archive's case.";
+        if (!f.sawWall) return "Have a look at Lumen's Memory Wall.";
+        if (!L.S.climax) return "The speeches are about to start…";
+        return "";
       }
       if (L.canClose()) return "Close up for the day at the front door.";
       return "";

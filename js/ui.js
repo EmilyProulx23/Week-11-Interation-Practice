@@ -233,6 +233,20 @@
       }
       case "btn": return button(c, e, x, y, w, draw);
       case "custom": if (draw) e.draw(c, x, y, w); return e.h;
+      case "meter": {
+        const nh = e.note ? text(c, e.note, 0, 0, w, { font: font(18), color: K.soft, line: 19 }, false) : 0, h = 52 + nh;
+        if (draw) {
+          c.font = font(19, true, true); c.fillStyle = K.ink; c.textBaseline = "top"; c.fillText(clean(e.label), x, y);
+          c.font = font(20); c.textAlign = "right"; c.fillText(String(e.value), x + w, y); c.textAlign = "left";
+          const by = y + 24, bw = w, frac = (v) => Math.max(0, Math.min(1, (v - e.min) / (e.max - e.min)));
+          frame(c, x, by, bw, 18, K.paper, K.ink, false);
+          const zx = x + 3 + (bw - 6) * frac(0), vx = x + 3 + (bw - 6) * frac(e.value);
+          c.fillStyle = e.value >= 0 ? K.teal : K.rust; c.fillRect(Math.min(zx, vx), by + 4, Math.max(2, Math.abs(vx - zx)), 10);
+          c.fillStyle = K.ink; c.fillRect(zx - 1, by + 2, 2, 14);
+          if (e.note) text(c, e.note, x, by + 24, w, { font: font(18), color: K.soft, line: 19 }, true);
+        }
+        return h;
+      }
       case "panel": {
         const pad = e.pad || 16, ih = column(c, e.els, 0, 0, w - 2 * pad, false), h = ih + 2 * pad;
         if (draw) frame(c, x, y, w, h, e.fill || K.paper, K.ink, true);

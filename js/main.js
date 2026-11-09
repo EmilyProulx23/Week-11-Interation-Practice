@@ -10,7 +10,7 @@
 
   let W = 0, H = 0, dpr = 1, view = { x: 0, y: 0, w: 0, h: 0, s: 1 };
   let time = 0, last = 0, held = null, saveTimer = 0, hintTimer = 0;
-  const fx = { bellUntil: 0, evening: 0 };
+  const fx = { bellUntil: 0, evening: 0, fadeOut: null, fadeIn: null };
 
   L.on((type, p) => {
     if (type === "toast") UI.toast(p);
@@ -66,12 +66,13 @@
         { t: "btn", label: cont ? "Start over" : "Begin", primary: !cont, onTap: () => { L.newGame(); startScene(); } },
         { t: "text", text: "Three days in the archive · Tap to walk, tap things to use them.", size: 18, align: "center", color: "#a8957a" }];
     } });
-    if (/^ledger[123]$/.test(sc)) {
+    if (/^ledger[1-4]$/.test(sc)) {
       const n = +sc.slice(6);
       const cfg = {
         1: { intro: D.text.ledger1Intro, stories: () => D.ledgerDay1.stories, edition: D.ledgerDay1.edition, label: "Unlock the front door", go: () => beginDay(1) },
         2: { intro: D.text.ledger2Intro, stories: L.ledgerDay2, edition: "Tuesday Morning Edition", label: "Unlock the front door", go: () => beginDay(2) },
-        3: { intro: D.day2.ledgerIntro, stories: L.ledgerDay3, edition: D.day2.ledgerEdition, label: "Unlock the front door", go: () => beginDay(3) }
+        3: { intro: D.day2.ledgerIntro, stories: L.ledgerDay3, edition: D.day2.ledgerEdition, label: "Unlock the front door", go: () => beginDay(3) },
+        4: { intro: D.day3.finaleIntro, stories: L.ledgerFriday, edition: D.day3.finaleEdition, label: D.friday.walk, go: beginFriday }
       }[n];
       UI.open({ id: sc, kind: "full", bg: "#2a201a", build: () => [
         { t: "space", h: 16 },
@@ -80,27 +81,89 @@
         { t: "btn", label: cfg.label, primary: true, onTap: cfg.go },
         { t: "space", h: 20 }] });
     }
-    if (sc === "end") { S().scene = S().day >= 3 ? "finale" : "ledger3"; return openSceneScreen(); } // older saves
-    if (sc === "finale") {
-      const e = L.ending();
-      UI.open({ id: "finale", kind: "full", bg: "#2a201a", build: () => [
-        { t: "space", h: 16 },
-        { t: "text", text: D.day3.finaleIntro, color: "#e8dcc4", align: "center" },
-        { t: "panel", els: ledgerEls(L.ledgerFriday(), D.day3.finaleEdition) },
-        { t: "space", h: 6 },
-        { t: "panel", els: [
-          { t: "text", text: "Ending", size: 17, color: UI.K.rust, align: "center", upper: true, gap: 2 },
-          { t: "head", text: e.title, align: "center", size: 26 },
-          { t: "custom", h: 64, draw: (c, x, y, w) => { UI.sprite(c, Art.person("archivist", "down", 0), x + w / 2 - 54, y, 3); UI.sprite(c, Art.icon("cat"), x + w / 2 + 6, y + 18, 3); } }]
-          .concat(e.text.map((t) => ({ t: "text", text: t })))
-          .concat(e.theoMom ? [{ t: "note", text: e.theoMom }] : [])
-          .concat([{ t: "bubble", text: e.epilogue },
-            DEBUG && { t: "text", text: `Truth ${S().stats.truth} · Compliance ${S().stats.compliance} · Town Memory ${S().stats.memory} · Theo: ${S().theo} · Ruth: ${S().ruth} · Exhibit: ${S().exhibit && S().exhibit.tone} · Plaque: ${S().plaque}`, size: 18, color: UI.K.teal, align: "center" },
-            { t: "btn", label: "Open notebook", icon: icon("notebook"), onTap: openNotebook },
-            { t: "btn", label: "Play again from Day 1", primary: true, onTap: () => { L.newGame(); startScene(); } }]) },
-        { t: "space", h: 20 }] });
+    if (sc === "end" || sc === "finale") { S().scene = S().day >= 3 ? "ledger4" : "ledger3"; return openSceneScreen(); } // older saves
+    if (sc === "recap") UI.open({ id: "recap", kind: "full", bg: "#1f1813", build: recapEls });
+    if (sc === "ending") {
+      const opened = time;
+      UI.open({ id: "ending", kind: "full", bg: "#1f1813", build: () => endingEls(opened) });
     }
   }
+
+  // ---------- recap: what Hollow Creek remembers ----------
+  function recapEls() {
+    const F = D.friday, st = S();
+    const theoKey = st.theo === "protest" || st.theo === "unsure" || st.theo === "consultation" ? st.theo : "none";
+    const plaque = D.visitors.plaque.options.find((o) => o.id === st.plaque);
+    const people = [
+      { t: "note", text: `Theo Lin: ${F.beliefs.theo[theoKey]}` },
+      st.flags.theoMom && { t: "note", text: `Michelle Lin: ${F.beliefs.mom}` },
+      { t: "note", text: `Ruth Okafor: ${F.beliefs.ruth[st.ruth || "unsure"]}` },
+      { t: "note", text: `The Mayor's office: ${F.beliefs.office[(st.exhibit && st.exhibit.tone) || "none"]}` },
+      plaque && { t: "note", text: `Your plaque: “${plaque.text}”` }
+    ];
+    const meters = ["truth", "compliance", "memory"].map((k) => Object.assign({ t: "meter", value: st.stats[k] }, F.meters[k]));
+    return [{ t: "space", h: 16 },
+      { t: "text", text: "Friday night. The speeches end, the band starts, and the town goes home with a story.", color: "#e8dcc4", align: "center" },
+      { t: "panel", els: [{ t: "head", text: "What Hollow Creek remembers", align: "center" },
+        { t: "text", text: st.climax === "harmonise" ? "Spring 2016, as the town reads it tonight. Harmonised by the Memory Keeper:" : "Spring 2016, as the town reads it tonight:", size: 19, color: UI.K.soft }]
+        .concat(L.townAccount().map((a) => ({ t: "card", icon: icon(D.docs[a.id].icon), tag: a.tag, tagColor: /Original/.test(a.tag) ? UI.K.rust : UI.K.teal, label: a.head, note: a.text }))) },
+      { t: "panel", els: [{ t: "head", text: "Who believes what", align: "center" }].concat(people) },
+      { t: "panel", els: [{ t: "head", text: "What the game was keeping track of", align: "center" },
+        { t: "text", text: "Three quiet measures, hidden until now. None of them is a score to win.", size: 19, color: UI.K.soft }]
+        .concat(meters)
+        .concat([{ t: "text", text: `You noticed ${st.notes.length} of ${D.discrepancies.length} things that didn't line up.`, size: 19 }]) },
+      { t: "btn", label: "See how it ends", primary: true, onTap: () => fadeTo(() => setScene("ending")) },
+      { t: "space", h: 20 }];
+  }
+
+  // ---------- ending, with a pixel tableau of exhibit night ----------
+  const tableauCache = {};
+  function tableau(key) {
+    const cacheKey = key + S().climax;
+    if (tableauCache[cacheKey]) return tableauCache[cacheKey];
+    const room = D.rooms.townhall, cv2 = document.createElement("canvas"); cv2.width = 160; cv2.height = 160;
+    const c = cv2.getContext("2d");
+    for (let j = 0; j < 10; j++) [...room.map[j]].forEach((ch, i) => Art.tile(c, ch, i, j, room.map));
+    const st = { t: 1, caseEmpty: key === "blank", harmonised: S().climax === "harmonise", splitWall: S().climax === "both", lampsOn: 2, daylight: 0 };
+    const crowd = {
+      living: [["ruth", 2, 7, "up"], ["theo", 1, 7, "up"], [S().flags.theoMom ? "mom" : "folk1", 3, 7, "up"], ["folk2", 0, 6, "right"], ["archivist", 4, 7, "left"], ["abel", 7, 8, "down"], ["hale", 3, 4, "down"]],
+      quiet: [["archivist", 2, 7, "up"], ["folk1", 5, 2, "up"], ["folk2", 6, 3, "up"], ["theo", 7, 2, "up"], ["abel", 8, 3, "up"], ["hale", 3, 4, "down"]],
+      smooth: [["ruth", 5, 3, "up"], ["theo", 6, 2, "up"], ["folk1", 7, 3, "up"], ["folk2", 8, 2, "up"], ["hale", 6, 4, "up"], ["abel", 7, 8, "down"], ["archivist", 2, 7, "up"]],
+      blank: [["archivist", 2, 7, "up"], ["folk1", 6, 3, "up"], ["theo", 4, 9, "down"], ["folk2", 8, 5, "left"]]
+    }[key];
+    const items = room.objects.filter((o) => o.y <= 9).map((o) => ({ z: (o.y + (o.h || 1)) * 16, draw: () => Art.drawObject(c, o, st) }))
+      .concat(crowd.map(([n, x, y, d]) => ({ z: y * 16 + 16.5, draw: () => c.drawImage(Art.person(n, d, 0), x * 16 - 1, y * 16 - 4) })));
+    items.sort((a, b) => a.z - b.z).forEach((it) => it.draw());
+    c.fillStyle = `rgba(20,14,24,${key === "blank" ? 0.35 : key === "quiet" ? 0.22 : 0.1})`; c.fillRect(0, 0, 160, 160);
+    Art.light(c, room, st);
+    return (tableauCache[cacheKey] = cv2);
+  }
+
+  function endingEls(opened) {
+    const e = L.ending(), st = S();
+    const fade = Math.min(1, (time - opened) / 1.6);
+    return [{ t: "space", h: 16 },
+      { t: "panel", els: [
+        { t: "text", text: "Ending", size: 17, color: UI.K.rust, align: "center", upper: true, gap: 2 },
+        { t: "head", text: e.title, align: "center", size: 26 },
+        { t: "custom", h: 160 * Math.max(1, Math.floor(Math.min(W - 64, 420) / 160)), draw: (c, x, y, w) => {
+          const k = Math.max(1, Math.floor(Math.min(w, 420) / 160));
+          c.fillStyle = "#1f1813"; c.fillRect(x + (w - 160 * k) / 2, y, 160 * k, 160 * k);
+          c.globalAlpha = fade; UI.sprite(c, tableau(e.key), x + (w - 160 * k) / 2, y, k); c.globalAlpha = 1;
+        } }]
+        .concat(e.text.map((t) => ({ t: "text", text: t })))
+        .concat(e.climax ? [{ t: "note", text: e.climax }] : [])
+        .concat(e.theoMom ? [{ t: "note", text: e.theoMom }] : [])
+        .concat([{ t: "bubble", text: e.epilogue },
+          DEBUG && { t: "text", text: `Truth ${st.stats.truth} · Compliance ${st.stats.compliance} · Town Memory ${st.stats.memory} · Climax: ${st.climax} · Plaque: ${st.plaque}`, size: 18, color: UI.K.teal, align: "center" },
+          { t: "btn", label: "What the town remembers", onTap: () => setScene("recap") },
+          { t: "btn", label: "Open notebook", icon: icon("notebook"), onTap: openNotebook },
+          { t: "btn", label: "Play again from Day 1", primary: true, onTap: () => { L.newGame(); startScene(); } }]) },
+      { t: "space", h: 20 }];
+  }
+
+  // A full-screen fade to black, then run fn.
+  function fadeTo(fn) { fx.fadeOut = { t0: time, fn }; }
 
   function ledgerEls(stories, edition) {
     return [{ t: "masthead", title: "The Hollow Creek Ledger", sub: edition + " · Est. 1898" }]
@@ -116,11 +179,27 @@
   function beginDay(n) { L.beginDay(n); UI.clear(); enterWorld(); }
 
   // ---------- world ----------
+  function beginFriday() { L.beginFriday(); UI.clear(); enterWorld(); UI.toast(D.friday.arrive); }
+
+  // Where everyone stands on exhibit night depends on what they came to believe.
+  function placeCrowd() {
+    const st = S(), caseSlots = [[2, 7, "up"], [3, 7, "up"], [1, 7, "up"], [0, 6, "right"], [4, 6, "left"]], wallSlots = [[5, 3, "up"], [7, 3, "up"], [8, 4, "up"], [6, 4, "up"], [9, 4, "left"]];
+    const put = (name, nearCase) => { const sl = (nearCase ? caseSlots : wallSlots).shift(); if (sl) World.addNpc(name, sl[0], sl[1], sl[2]); };
+    const theoCase = st.theo === "protest" || st.theo === "unsure";
+    put("ruth", st.ruth === "remembers");
+    put("theo", theoCase);
+    if (st.flags.theoMom) put("mom", theoCase);
+    const k = L.ending().key, folkCase = k === "living";
+    put("folk1", folkCase); put("folk2", folkCase);
+    World.addNpc("hale", 3, 4, "down"); World.addNpc("abel", 7, 8, "down"); World.addNpc("aide", 8, 11, "left");
+  }
+
   function enterWorld() {
     const p = S().pos;
     World.npcs = [];
     World.load(p.room, p.x, p.y, p.dir);
     if (S().scene === "evening") { fx.evening = 0; openEvening(); return; }
+    if (p.room === "townhall") { placeCrowd(); if (L.climaxDue()) maybeClimax(); return; }
     checkVisitor(false);
   }
 
@@ -141,6 +220,7 @@
   }
   function talkTo(who) {
     if (who === "june") return S().flags.juneDone ? null : juneDialog();
+    if (S().day === 4) return fridayTalk(who);
     if (L.visitorDue() !== who) return;
     if (S().day === 3) return ({ theo: theo3Dialog, aide: plaqueDialog })[who]();
     ({ theo: theoDialog, ruth: ruthDialog, aide: aideDialog })[who]();
@@ -158,7 +238,9 @@
         else UI.toast(o.arg === "basement" ? D.text.basementLocked : D.text.serverLocked);
         break;
       case "search": if (!L.findDoc(o.arg)) UI.toast(D.flavor[{ cabinet: "cabinetEmpty", console: "consoleDone" }[o.kind] || "boxEmpty"]); break;
-      case "flavor": UI.toast(D.flavor[o.arg]); break;
+      case "flavor": UI.toast(D.flavor[o.arg] || D.friday[o.arg]); break;
+      case "case": openCase(); break;
+      case "memoryWall": openWall(); break;
       case "cat": UI.toast(D.text.catLines[Math.floor(Math.random() * D.text.catLines.length)]); break;
       case "inbox":
         if (S().day === 2 && !S().flags.keyTaken) envelopeDialog();
@@ -280,6 +362,56 @@
     dialog("plaque", v.name, portrait("aide"), [{ lines: v.intro, choices }]);
   }
 
+  // ---------- exhibit night ----------
+  function fridayTalk(name) {
+    const T = D.friday.talk, st = S();
+    let line;
+    if (name === "ruth") line = T.ruth[st.ruth || "unsure"];
+    else if (name === "theo") line = T.theo[st.theo === "protest" ? (st.flags.theoMom ? "protestMom" : "protest") : st.theo === "unsure" ? "unsure" : "consultation"];
+    else if (name === "mom") line = T.mom;
+    else if (name === "abel") line = T.abel[st.docs.petition.status === "kept" && L.tone("petition") !== "consultation" ? "remembers" : "forgot"];
+    else if (name === "aide") { const tone = st.exhibit && st.exhibit.tone; line = T.aide[tone === "protest" ? "protest" : tone === "warm" || tone === "mk" ? "warm" : "other"]; }
+    else if (name === "hale") line = T.hale[st.plaque || "mk"];
+    else line = T.folk[L.ending().key][name === "folk1" ? 0 : 1];
+    dialog("talk:" + name, D.friday.names[name], portrait(name), [{ lines: [line], choices: [{ label: "Back to the party", fn: () => UI.close() }] }]);
+  }
+
+  function openCase() {
+    L.sawExhibit("sawCase");
+    const st = S(), plaque = D.visitors.plaque.options.find((o) => o.id === st.plaque) || D.visitors.plaque.options[0];
+    const harmonised = st.climax === "harmonise";
+    const s = panel("case", D.friday.caseTitle, D.friday.caseSub, null, () => [
+      { t: "doc", blocks: [{ s: "caps", t: "The Hollow Creek Archive" }, { s: "p", t: plaque.text }].concat(harmonised ? [{ s: "tag", t: "Harmonised by the Memory Keeper tonight." }] : []) }]
+      .concat(L.publicDocs().map((id) => ({ t: "card", icon: docIcon(id), label: L.descOf(id).label,
+        tag: st.exhibit && st.exhibit.id === id ? D.friday.centrepiece : null, tagColor: UI.K.rust,
+        note: harmonised ? "Summary (harmonised)" : { summary: "Summary", both: "Summary + original", original: "Original" }[st.docs[id].circ],
+        onTap: () => openPublic(id) }))));
+    s.onClose = () => setTimeout(maybeClimax, 500);
+  }
+
+  function openWall() {
+    L.sawExhibit("sawWall");
+    const s = panel("wall", D.friday.wallTitle, D.friday.wallSub, icon("mk"), () => [
+      { t: "bubble", text: D.friday.wallStory }, { t: "text", text: D.friday.wallNote, size: 19, color: UI.K.soft }]
+      .concat(D.friday.recapRecords.filter((id) => S().docs[id].status !== "unreceived").map((id) => ({ t: "note", text: D.docs[id].title + ": " + D.docs[id].summary }))));
+    s.onClose = () => setTimeout(maybeClimax, 500);
+  }
+
+  function maybeClimax() {
+    if (!L.climaxDue() || UI.top() || World.roomId !== "townhall") return;
+    UI.toast(D.friday.speeches);
+    setTimeout(() => { if (L.climaxDue() && !UI.top()) climaxDialog(); }, 1400);
+  }
+
+  function climaxDialog() {
+    const C = D.friday.climax;
+    dialog("climax", "The Memory Keeper", Art.icon("mk"), [{ lines: C.lines, choices: C.options.map((o) => ({ label: o.label, fn: (s) => {
+      const r = L.finishClimax(o.id);
+      s.nodes.push({ lines: r.reaction, choices: [{ label: C.listen, fn: () => { UI.close(); fadeTo(() => setScene("recap")); } }] });
+      s.at = s.nodes.length - 1; s.scroll = 0;
+    } })) }]);
+  }
+
   function closeUpDialog() {
     dialog("closeup", "Front door", Art.icon("notebook"), [{ lines: [D.flavor.closePrompt], choices: [
       { label: "Switch off the lamps and lock up", fn: () => { UI.close(); S().scene = "evening"; savePos(true); fx.evening = 0; openEvening(); } },
@@ -294,7 +426,7 @@
     setTimeout(() => {
       const s = { id: "evening", kind: "dialog", title: "Evening", portrait: Art.icon("cat"), closable: false };
       s.build = () => [{ t: "line", text: "(" + D.text.eveningIntro + ")" }, { t: "text", text: summary }, { t: "bubble", text: mk },
-        { t: "btn", label: "Go home for the night", primary: true, onTap: () => setScene(S().day >= 3 ? "finale" : "ledger" + (S().day + 1)) }];
+        { t: "btn", label: "Go home for the night", primary: true, onTap: () => setScene("ledger" + (S().day + 1)) }];
       UI.open(s);
     }, 1800);
   }
@@ -445,7 +577,7 @@
     c.fillStyle = "#4a2f1f"; c.fillRect(0, HUD_H - 3, W, 3);
     const room = World.room ? World.room.name : "";
     UI.text(c, room, 14, 8, W - 120, { font: UI.font(19, true, true), color: UI.K.paper, line: 20 }, true);
-    UI.text(c, `Day ${S().day} · ${L.clock(S().time)}`, 14, 29, W - 120, { font: UI.font(20), color: "#c9b48f", line: 20 }, true);
+    UI.text(c, `${S().day === 4 ? "Friday" : "Day " + S().day} · ${L.clock(S().time)}`, 14, 29, W - 120, { font: UI.font(20), color: "#c9b48f", line: 20 }, true);
     // notebook button
     const bx = W - 56, by = 6;
     UI.frame(c, bx, by, 46, 44, UI.K.paper, UI.K.ink, false);
@@ -485,7 +617,8 @@
         bellRinging: time < fx.bellUntil, newCount: Math.min(4, L.filed().length), glowShelf: false,
         basementOpen: !!S().flags.keyTaken, serverOpen: !!S().flags.serverOpen, glowServer: S().day === 3 && !!S().flags.serverOpen, found: L.foundToday(), glowBoxes: S().day === 2 && !!S().flags.keyTaken,
         lampsOn: sc === "evening" ? (fx.evening < 0.6 ? 2 : fx.evening < 1.2 ? 1 : 0) : 2,
-        daylight: sc === "evening" ? 0 : 1,
+        daylight: sc === "evening" || S().day === 4 ? 0 : 1,
+        harmonised: S().climax === "harmonise", splitWall: S().climax === "both", glowCase: S().day === 4 && !S().flags.sawCase,
         dark: sc === "evening" ? Math.min(0.55, fx.evening * 0.35) : 0
       };
       World.render(wctx, time, st);
@@ -497,6 +630,15 @@
     UI.draw(ctx, W, H, time);
     const top = UI.top(), inPanel = top && top.kind === "panel";
     UI.drawToasts(ctx, W, (sc === "world" || sc === "evening") ? HUD_H + 6 : 8, dt, inPanel ? H - (top.footer && top.footer() ? 96 : 24) : 0);
+    // Scene fades: fade to black before a change, and back in after.
+    if (fx.fadeOut) {
+      const a = Math.min(1, (time - fx.fadeOut.t0) / 1.2);
+      ctx.fillStyle = `rgba(16,11,8,${a})`; ctx.fillRect(0, 0, W, H);
+      if (a >= 1) { const fn = fx.fadeOut.fn; fx.fadeOut = null; fx.fadeIn = time; fn(); }
+    } else if (fx.fadeIn != null) {
+      const a = 1 - (time - fx.fadeIn) / 0.8;
+      if (a <= 0) fx.fadeIn = null; else { ctx.fillStyle = `rgba(16,11,8,${a})`; ctx.fillRect(0, 0, W, H); }
+    }
     requestAnimationFrame(frame);
   }
 

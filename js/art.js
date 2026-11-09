@@ -53,6 +53,11 @@
       } },
     june:      { glasses: false, pal: { h: "#1e1a1a", s: "#8d5a3b", u: "#4f6b4a", U: "#3a5038", z: "#b5443a", n: "#3a3340", k: C.ink } },
     ruth:      { glasses: true,  pal: { h: "#cfc8bf", s: "#6b4430", u: "#7a4b6b", U: "#5c3752", z: "#f3e6c8", n: "#4a4040", k: C.ink } },
+    mom:       { glasses: false, pal: { h: "#2b2320", s: "#e2b58e", u: "#6f8f6a", U: "#56704f", z: "#f3e6c8", n: "#3a3340", k: C.ink } },
+    abel:      { glasses: false, pal: { h: "#8b8378", s: "#c08a63", u: "#efe6d2", U: "#d3c6a8", z: "#b5443a", n: "#3a3340", k: C.ink } },
+    hale:      { glasses: true,  pal: { h: "#cfc8bf", s: "#e3b892", u: "#2f3b5c", U: "#24304b", z: "#fffaf0", n: "#2a2a35", k: C.ink } },
+    folk1:     { glasses: false, pal: { h: "#8a4b2a", s: "#d9a27a", u: "#5c7a3a", U: "#3e5426", z: "#f3e6c8", n: "#4a3b4f", k: C.ink } },
+    folk2:     { glasses: false, pal: { h: "#1e1a1a", s: "#7a4e34", u: "#a8572f", U: "#7d3f22", z: "#f3e6c8", n: "#2a3c5e", k: C.ink } },
     aide:      { glasses: false, pal: { h: "#1e1a1a", s: "#b07a52", u: "#7c2e3a", U: "#5a1f29", z: "#f3e6c8", n: "#2a2a35", k: C.ink } },
     theo:      { glasses: false, pal: { h: "#6b4a2e", s: "#e8c09a", u: "#5b6d8f", U: "#3f4d68", z: "#3f4d68", n: "#3e5a8a", k: C.ink } }
   };
@@ -228,6 +233,39 @@
         if (!done) { r(c, x + 25, y + 2, 5, 7, C.paper); if (st.glowServer) sparkle(c, x + w - 3, y - 14, t); }
         break;
       }
+      case "banner": {
+        r(c, x + 2, y + 1, w - 4, 9, C.ink); r(c, x + 3, y + 2, w - 6, 7, C.rust);
+        for (let i = 0; i < w - 10; i += 3) r(c, x + 5 + i, y + 4 + (i % 2), 2, 2, C.amber);
+        r(c, x + 3, y + 9, 3, 3, C.rust); r(c, x + w - 6, y + 9, 3, 3, C.rust);
+        break;
+      }
+      case "memoryWall": {
+        r(c, x + 1, y - 2, w - 2, 15, C.ink); r(c, x + 2, y - 1, w - 4, 13, st.harmonised ? "#2a6e69" : C.tealD);
+        if (st.splitWall) r(c, x + w / 2 - 1, y - 1, 2, 13, C.ink);
+        for (let k = 0; k < 4; k++) {
+          const len = 8 + Math.floor(hash(k, Math.floor(t * 1.5)) * (w / 2 - 14));
+          r(c, x + 5, y + 1 + k * 3, len, 1, C.tealL);
+          if (st.splitWall) r(c, x + w / 2 + 3, y + 1 + k * 3, 6 + Math.floor(hash(k + 9, 3) * (w / 2 - 12)), 1, C.paper);
+        }
+        sparkle(c, x + w - 8, y + 1, t);
+        break;
+      }
+      case "podium": r(c, x + 3, y - 2, 10, 16, C.ink); r(c, x + 4, y - 1, 8, 14, C.wood); r(c, x + 4, y - 1, 8, 2, C.woodH); r(c, x + 6, y + 4, 4, 3, C.brass); r(c, x + 7, y - 6, 1, 5, C.greyD); r(c, x + 6, y - 7, 3, 2, C.ink); break;
+      case "displayCase": {
+        r(c, x, y - 6, w, h + 6, C.ink); r(c, x + 1, y - 5, w - 2, 12, "rgba(169,211,232,.55)"); r(c, x + 1, y + 7, w - 2, 8, C.woodD);
+        r(c, x + 2, y - 4, w - 4, 1, "rgba(255,255,255,.6)");
+        if (!st.caseEmpty) for (let i = 0; i < (o.w || 1) * 2; i++) { r(c, x + 3 + i * 7, y - 2 + (i % 2), 5, 6, i % 3 === 0 ? C.paperS : C.paper); r(c, x + 4 + i * 7, y + (i % 2), 3, 1, C.greyL); }
+        r(c, x + w / 2 - 6, y + 9, 12, 4, C.brass); r(c, x + w / 2 - 5, y + 10, 10, 2, C.paper);
+        if (st.glowCase) sparkle(c, x + w - 3, y - 10, t);
+        break;
+      }
+      case "chairsRow": for (let i = 0; i < (o.w || 1); i++) { r(c, x + i * T + 3, y + 2, 10, 10, C.ink); r(c, x + i * T + 4, y + 3, 8, 8, C.red); r(c, x + i * T + 4, y + 3, 8, 2, "#c96a5e"); } break;
+      case "refreshments": {
+        r(c, x, y - 2, w, h + 2, C.ink); r(c, x + 1, y - 1, w - 2, 9, C.paper); r(c, x + 1, y + 8, w - 2, 6, C.paperS);
+        for (let i = 0; i < 6; i++) { r(c, x + 4 + i * 7, y + 1, 5, 4, "#c9873e"); r(c, x + 5 + i * 7, y + 2, 2, 1, "#f0d9a8"); }
+        r(c, x + w - 9, y - 4, 5, 6, C.white); r(c, x + w - 8, y - 3, 3, 1, C.teal);
+        break;
+      }
       case "doorBottom": {
         r(c, x + 1, y, 14, T, C.ink); r(c, x + 2, y, 12, 14, C.wood); r(c, x + 2, y, 12, 2, C.woodH); r(c, x + 11, y + 6, 2, 2, C.brass);
         r(c, x + 2, y - 4, 12, 4, C.rust); r(c, x + 3, y - 3, 10, 2, C.rugB);
@@ -366,6 +404,7 @@
       if (o.kind === "lamp" && st.lampsOn > 0) glow(o.x * T + 8, o.y * T - 4, 34, 0.22);
       if (o.kind === "table" && st.lampsOn > 1) glow(o.x * T + (o.w || 1) * T - 7, o.y * T - 2, 26, 0.2);
       if (o.kind === "bulb") glow(o.x * T + 7, o.y * T - 7, 46, 0.3);
+      if (o.kind === "memoryWall") { c.fillStyle = "rgba(124,196,188,.16)"; c.beginPath(); c.moveTo(o.x * T, (o.y + 1) * T); c.lineTo((o.x + o.w) * T, (o.y + 1) * T); c.lineTo((o.x + o.w) * T + 10, (o.y + 4) * T); c.lineTo(o.x * T - 10, (o.y + 4) * T); c.fill(); }
       if (o.kind === "rack" || o.kind === "console") { c.fillStyle = "rgba(124,196,188,.09)"; c.fillRect(o.x * T - 4, o.y * T - 14, (o.w || 1) * T + 8, T + 22); }
       if (o.kind === "terminal" && st.lampsOn > 0) { c.fillStyle = "rgba(124,196,188,.10)"; c.fillRect(o.x * T - 6, o.y * T - 12, 28, 24); }
     });
