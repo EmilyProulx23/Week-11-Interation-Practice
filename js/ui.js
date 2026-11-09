@@ -56,7 +56,7 @@
         spaceBefore = / $/.test(seg);
       });
       // A hotspot's text doesn't carry the surrounding spaces; trust the markup boundaries.
-      if (m) spaceBefore = false;
+      if (m) { spaceBefore = false; for (let k = out.length - 1; k >= 0; k--) if (out[k].clue === clue && !out[k].br) { out[k].last = true; break; } }
     });
     return out;
   }
@@ -86,12 +86,19 @@
           if (j && tk.space) lx += ln.sp;
           if (tk.clue && opts.hot) {
             const found = opts.hot.found(tk.clue);
-            if (opts.hot.magnify || found) {
-              c.fillStyle = found ? "rgba(168,87,47,.20)" : "rgba(242,193,78,.45)";
-              c.fillRect(lx - 1, ly + 1, tk.ww + 2 + (j < ln.words.length - 1 && ln.words[j + 1].clue === tk.clue && ln.words[j + 1].space ? ln.sp : 0), lh - 2);
+            const next = ln.words[j + 1], joined = next && next.clue === tk.clue && next.space ? ln.sp : 0;
+            const flashing = U.flash && U.flash.clue === tk.clue && performance.now() < U.flash.until;
+            if (opts.hot.magnify || found || flashing) {
+              c.fillStyle = flashing ? "rgba(168,87,47,.5)" : found ? "rgba(63,127,122,.22)" : "rgba(242,193,78,.45)";
+              c.fillRect(lx - 1, ly + 1, tk.ww + 2 + joined, lh - 2);
             }
-            if (found) { c.fillStyle = K.rust; c.fillRect(lx, ly + lh - 3, tk.ww + (j < ln.words.length - 1 && ln.words[j + 1].clue === tk.clue && ln.words[j + 1].space ? ln.sp : 0), 2); }
-            U.hit(lx - 2, ly, tk.ww + 4, lh, () => opts.hot.onTap(tk.clue), "clue:" + tk.clue);
+            if (found) {
+              c.fillStyle = K.teal; c.fillRect(lx, ly + lh - 3, tk.ww + joined, 2);
+              // a small check mark after the clue's last word
+              if (tk.last) { const cx = lx + tk.ww + 3, cy = ly + lh / 2; [[0, 2], [1, 3], [2, 4], [3, 3], [4, 2], [5, 1], [6, 0]].forEach(([dx, dy]) => c.fillRect(cx + dx, cy - 2 + dy, 2, 2)); }
+            }
+            // The tap target covers the gap to the next word of the same clue, and a little extra height.
+            U.hit(lx - 3, ly - 2, tk.ww + 6 + joined, lh + 4, () => { U.flash = { clue: tk.clue, until: performance.now() + 700 }; opts.hot.onTap(tk.clue); }, "clue:" + tk.clue);
           }
           c.fillStyle = opts.color || K.ink;
           c.fillText(tk.w, lx, ly + 1);
