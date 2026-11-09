@@ -5,7 +5,7 @@
   const SPEED = 64; // px per second
   const DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   // How far each kind of object visually extends above its footprint (for tapping).
-  const OVERHANG = { rack: 12, cabinet: 10, console: 12, aircon: 6, serverExit: 4, stairs: 3, box: 4, metalShelf: 10, dehumidifier: 5, bucket: 7, shelf: 10, catalogue: 8, terminal: 8, lamp: 8, plant: 4, coatrack: 6, ladder: 12, cat: 7, door: 3, lockedDoor: 3, serverDoor: 3, inbox: 6, bell: 3 };
+  const OVERHANG = { memoryWall: 2, displayCase: 6, podium: 6, refreshments: 4, rack: 12, cabinet: 10, console: 12, aircon: 6, serverExit: 4, stairs: 3, box: 4, metalShelf: 10, dehumidifier: 5, bucket: 7, shelf: 10, catalogue: 8, terminal: 8, lamp: 8, plant: 4, coatrack: 6, ladder: 12, cat: 7, door: 3, lockedDoor: 3, serverDoor: 3, inbox: 6, bell: 3 };
   const ZOFF = { bulb: 20, puddle: -1, inbox: 0.2, terminal: 0.2, bell: 0.2, cat: 0.2, stool: -1, chair: -1 };
 
   const W = {
@@ -141,6 +141,11 @@
     const rest = W.findPathFor(cur, [[s.x, s.y]], n) || [];
     n.path = path.concat(rest);
     return n;
+  };
+  // Place a character at a fixed tile (used for the crowd on exhibit night).
+  W.addNpc = function (name, x, y, dir) {
+    const n = { npc: true, name, room: W.roomId, x: x * T, y: y * T, dir: dir || "down", path: [], frame: 0, anim: 0, bubble: false, talk: true };
+    W.npcs.push(n); return n;
   };
   W.placeNpc = function (name) {
     const s = W.room.visitorSpot;

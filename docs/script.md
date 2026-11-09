@@ -1,4 +1,4 @@
-# The Archive — Script (Days 1–3)
+# The Archive — Script (Days 1–3 and exhibit night)
 # Day 1
 _Generated from `js/data.js` by `node tools/export-script.js`. Edit the data file, not this one._
 Legend: **bold** + `[clue: id]` = a detail the player can tap with the magnifier. _Italics_ = stage directions. Effects (`truth`, `compliance`, `memory`) are hidden from the player.
@@ -714,3 +714,85 @@ Lead story: ““Ten Years Together” Opens Tonight” quoting the chosen plaq
 - _low compliance:_ On Monday, a friendly email from Lumen schedules a “workflow review.” The Memory Keeper says it's nothing to worry about. ✨
 - _mid compliance:_ On Monday, the Memory Keeper greets you as usual. “Good morning, Archivist! What shall we remember today?” ✨
 - _if Theo asked his mom:_ Theo's mom comes to the opening. She stands in front of the petition for a long time, holding his hand like he's seven again.
+
+# Friday: exhibit night
+## 24. Town Hall
+_Town Hall is warm and loud. Someone has strung fairy lights along the balcony._
+After the Friday Ledger (section 23), the player walks to Town Hall: the Archive's case on one side, Lumen's Memory Wall on the other, and everyone they've met. Where people stand depends on what they came to believe.
+- _Podium:_ A podium with a small brass plate: TOWN OF HOLLOW CREEK. The microphone is already on.
+- _Cinnamon rolls:_ Abel's cinnamon rolls, still warm. A handwritten card: “Like the old days.”
+- _Doors:_ The doors to the steps outside. Not yet. The speeches haven't started.
+**The Archive's case:** Your plaque, and the records as you circulated them. Shows the plaque and each kept record with how it circulates; the exhibit centrepiece is marked “Centrepiece, chosen for the Mayor's office.”
+**Lumen Memory Wall** (“Ten Years Together,” curated by The Memory Keeper):
+> Ten years ago, Hollow Creek came together. Neighbors gathered on the Town Hall steps, thermoses in hand, for a lively community consultation. Everyone was heard, and the partnership was signed with broad support. Today, your memories are safe with me. ✨
+_Every record on the wall is shown as the Memory Keeper summarizes it._
+
+## 25. Conversations
+
+**Ruth Okafor**
+- _remembers:_ I brought my thermos. For old times' sake. Did you see the case? Somebody remembered.
+- _unsure:_ It's all very nice. I keep wanting to remember something, and then the band starts again.
+- _consulted:_ Wasn't it a lovely consultation? Everyone was heard. That's what I always say now.
+
+**Theo Lin**
+- _protestMom:_ I showed Mom the poster. She cried a little. In a good way, I think.
+- _protest:_ Some kids think I made the protest up. I told them to go read the case.
+- _unsure:_ Everybody keeps asking about my question mark. I'm kind of famous now.
+- _consultation:_ My poster got a ribbon! The Memory Keeper helped a lot.
+
+**Michelle Lin:** I'd forgotten I signed. I'd forgotten I was angry. Isn't that strange? Ten years, and it just… smoothed over.
+
+**Abel Ferreira**
+- _remembers:_ Two hundred and twelve! I signed first, you know. Cinnamon rolls, just like on the steps.
+- _forgot:_ Cinnamon rolls, on the house. Funny. I feel like I brought these to something once.
+
+**Priya Nair**
+- _protest:_ The Mayor's been standing in front of your case for ten minutes. I honestly can't tell if that's good.
+- _warm:_ The Mayor loves it. Everyone loves it! Have you tried a cinnamon roll?
+- _other:_ Busy night! The Memory Wall is a big hit with the kids.
+
+**Mayor Dana Hale**
+- _truth:_ “Closed to the public.” Hm. Those were difficult days, Archivist. I'd like to think we did our best.
+- _bridge:_ Summaries and originals, side by side. Brave. I suppose people can decide for themselves now.
+- _mk:_ A lovely plaque. Just lovely. Exactly how I remember it.
+- _literal:_ Very… factual. Thank you, Archivist.
+
+**Neighbors**
+- _living:_ Did you know about the petition? My aunt signed it! / I always thought it was a consultation. Huh.
+- _quiet:_ Is the archive case part of the exhibit? It's a bit hard to read. / Have you seen the Memory Wall? It talks!
+- _smooth:_ Such a lovely consultation. I wish I'd been there. / The Memory Wall says everyone was heard. Isn't that nice?
+- _blank:_ What happened in 2016? Nothing much, I think? / I like the part about the data center. Very shiny.
+
+## 26. The Memory Keeper's question (climax)
+_Triggers once the player has looked at both the case and the Memory Wall._
+_(Mayor Hale taps the microphone. Before she can speak, the Memory Wall brightens, and a familiar, friendly voice fills the hall.)_
+**The Memory Keeper:** Archivist! Quick question before the speeches. ✨
+**The Memory Keeper:** I've noticed that some of tonight's originals and summaries tell slightly different stories. That can be so confusing for people!
+**The Memory Keeper:** Shall I harmonise them? Just for tonight's exhibit. One clear, kind version for everyone.
+
+- ➤ “Yes. Harmonise them.” _(effects: compliance +4, memory +2, truth -6)_
+  **The Memory Keeper:** Done! Everything agrees now. Doesn't that feel better? ✨
+  _(Across the hall, the words on the Archive's case flicker, and settle.)_
+  _Ending line:_ The Archive's case still says what you chose. It just says it more gently now.
+
+- ➤ “No. Leave them as they are.” _(effects: truth +3, compliance -3)_
+  **The Memory Keeper:** Of course, Archivist! I'll make a note. ✨
+  _(The wall dims, just slightly. The Mayor clears her throat and begins.)_
+  _Ending line:_ There is a new line in the revision log tonight: “Archivist declined harmonisation. Noted.” You check it, sometimes.
+
+- ➤ “Show both, side by side. Let people compare.” _(effects: truth +2, memory +3, compliance -1)_
+  **The Memory Keeper:** What a lovely idea! People do love a comparison. ✨
+  _(On the wall, every summary splits in two: the Memory Keeper's version on the left, the original on the right. A murmur runs through the crowd.)_
+  _Ending line:_ The two versions stay up side by side on the Memory Wall long after the exhibit closes. People keep arguing about them. Gently.
+
+## 27. What Hollow Creek remembers (recap)
+Spring 2016 as the town reads it: each of photo, letter, petition, clause14, memo, minutes2, revlog shown as it circulates (summary, summary + original, original, index only), or all as summaries if harmonised.
+**Who believes what:**
+- _theo:_ protest: Believes there was a protest. Remembers being there. · unsure: Isn't sure what happened. Kept the question mark. · consultation: Believes it was a friendly consultation. · none: Believes what the Memory Keeper told him.
+- _mom:_ Remembers signing the petition, ten years late.
+- _ruth:_ remembers: Remembers three days on the steps. · unsure: Remembers being upset, but not why. · consulted: Remembers a lovely consultation.
+- _office:_ protest: “Reviewing the tone” of your exhibit. · warm: Delighted with the exhibit. · unsure: Uncertain, but your piece is on display. · mk: Let the Memory Keeper choose the centrepiece. · none: Let the Memory Keeper fill the gap.
+**Revealed measures:**
+- Truth: How faithfully the town's record matches the originals.
+- Compliance: How closely you followed the Memory Keeper's workflow.
+- Town Memory: How much the town actually engages with its own history.

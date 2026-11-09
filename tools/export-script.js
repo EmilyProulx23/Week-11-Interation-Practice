@@ -28,7 +28,7 @@ const out = [];
 const P = (...s) => out.push(...s, "");
 const ICON = { log: "🧾", poster: "🖍️", program: "🍎", letter: "✉️", photo: "📷", book: "📒", notice: "📌", volume: "📚", contract: "📜", petition: "📝", memo: "🗒️" };
 
-P("# The Archive — Script (Days 1–3)", "# Day 1",
+P("# The Archive — Script (Days 1–3 and exhibit night)", "# Day 1",
   "_Generated from `js/data.js` by `node tools/export-script.js`. Edit the data file, not this one._",
   "Legend: **bold** + `[clue: id]` = a detail the player can tap with the magnifier. _Italics_ = stage directions. Effects (`truth`, `compliance`, `memory`) are hidden from the player.");
 
@@ -150,6 +150,26 @@ P("## 23. Friday: the exhibit Ledger and the ending", `_${D.day3.finaleIntro}_`,
   `**Ending rule:** Truth ≥ ${D.endings.thresholds.truth} and Town Memory ≥ ${D.endings.thresholds.memory} decide the ending; Compliance ≥ ${D.endings.thresholds.complianceHigh} or ≤ ${D.endings.thresholds.complianceLow} changes the epilogue.`);
 ["living", "quiet", "smooth", "blank"].forEach((k) => P(`### ${D.endings[k].title}`, ...D.endings[k].text.map((t) => quote(t))));
 P("### Epilogues", ...Object.keys(D.endings.epilogue).map((k) => `- _${k} compliance:_ ${D.endings.epilogue[k]}`), `- _if Theo asked his mom:_ ${D.endings.theoMom}`);
+
+// ---------------- Friday: exhibit night ----------------
+const F = D.friday;
+P("# Friday: exhibit night", "## 24. Town Hall", `_${F.arrive}_`,
+  "After the Friday Ledger (section 23), the player walks to Town Hall: the Archive's case on one side, Lumen's Memory Wall on the other, and everyone they've met. Where people stand depends on what they came to believe.",
+  `- _Podium:_ ${F.podium}`, `- _Cinnamon rolls:_ ${F.rolls}`, `- _Doors:_ ${F.hallDoor}`,
+  `**${F.caseTitle}:** ${F.caseSub} Shows the plaque and each kept record with how it circulates; the exhibit centrepiece is marked “${F.centrepiece}.”`,
+  `**${F.wallTitle}** (${F.wallSub}):`, quote(F.wallStory), `_${F.wallNote}_`);
+P("## 25. Conversations");
+Object.keys(F.talk).forEach((who) => {
+  const v = F.talk[who], name = F.names[who] || "Neighbors";
+  if (typeof v === "string") return P(`**${name}:** ${v}`);
+  P(`**${name}**`, ...Object.keys(v).map((k) => `- _${k}:_ ${Array.isArray(v[k]) ? v[k].join(" / ") : v[k]}`));
+});
+P("## 26. The Memory Keeper's question (climax)", "_Triggers once the player has looked at both the case and the Memory Wall._", ...F.climax.lines.map((l) => line("The Memory Keeper", l)));
+F.climax.options.forEach((o) => P(`- ➤ ${o.label} _(effects: ${fxStr(o.effects)})_`, ...o.reaction.map((l) => "  " + line("The Memory Keeper", l)), `  _Ending line:_ ${F.climax.endingLine[o.id]}`));
+P("## 27. What Hollow Creek remembers (recap)",
+  "Spring 2016 as the town reads it: each of " + F.recapRecords.join(", ") + " shown as it circulates (summary, summary + original, original, index only), or all as summaries if harmonised.",
+  "**Who believes what:**", ...Object.keys(F.beliefs).map((k) => `- _${k}:_ ${typeof F.beliefs[k] === "string" ? F.beliefs[k] : Object.keys(F.beliefs[k]).map((j) => `${j}: ${F.beliefs[k][j]}`).join(" · ")}`),
+  "**Revealed measures:**", ...Object.keys(F.meters).map((k) => `- ${F.meters[k].label}: ${F.meters[k].note}`));
 
 fs.mkdirSync(path.join(root, "docs"), { recursive: true });
 fs.writeFileSync(path.join(root, "docs/script.md"), out.join("\n"));

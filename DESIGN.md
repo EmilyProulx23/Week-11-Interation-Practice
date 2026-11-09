@@ -134,6 +134,13 @@ Compliance acts as a modifier rather than a judgment. High Compliance gets you i
 - **Priya returns for the plaque.** Four options: the Memory Keeper's draft; a literal label; "what the papers say" (needs the minutes or petition evidence); and "both, side by side" (summaries, originals and the revision log on display; needs the log evidence).
 - **Friday:** a special-edition Ledger quoting the plaque, then the ending.
 
+### Friday: exhibit night *(playable)*
+- After the Friday Ledger, **walk to Town Hall** (a new room, at night): the Archive's case (your plaque and records as they circulate, the centrepiece marked) on one side, **Lumen's Memory Wall** (the Memory Keeper's version of everything) on the other.
+- **Everyone is there**, standing where their beliefs put them (by the case or by the wall): Ruth, Theo (and his mom Michelle, if he asked her), Abel with cinnamon rolls, Priya, Mayor Dana Hale, and two neighbors. Each has a line that reflects your choices.
+- **Climax:** once you've looked at both the case and the wall, the Memory Keeper speaks through the wall before the speeches and asks, warmly, whether to **harmonise** tonight's summaries and originals into "one clear, kind version." Yes / no / show both side by side. The wall and the case change to match, and the choice adds a line to the ending.
+- **"What Hollow Creek remembers":** the town's account of spring 2016, built from what you circulated (or harmonised); who believes what (Theo, Michelle, Ruth, the Mayor's office, your plaque); and the three hidden measures revealed with plain explanations.
+- **The ending** fades in with a pixel illustration of exhibit night that differs for each ending (crowd at the case, crowd at the wall, you alone at the case, an empty case).
+
 ### Endings
 Truth ≥ 15 and Town Memory ≥ 18 (tunable in `js/data.js`) select one of four endings: **The Living Archive** (both high), **The Quiet Record** (truth without readers), **The Smooth Story** (readers without truth), **The Blank Season** (neither). Compliance ≥ 15 / ≤ 0 adds an epilogue: Lumen invites you to co-author next year's digest, or schedules a gentle "workflow review"; otherwise the Memory Keeper simply asks, "What shall we remember today?" If Theo asked his mom, she comes to the opening.
 
@@ -160,6 +167,6 @@ Tested routes: linking originals beside summaries → Living Archive; originals 
 
 ## 11. MVP Scope
 
-**In:** All three days playable as a top-down pixel game: 4 walkable rooms (Front Desk, Stacks, Basement, Server Room), 9 documents, 4 visitors (6 visits), card catalogue, 16 notebook discrepancies, generated Ledgers for Days 2, 3 and Friday, the plaque, four endings with epilogues, save/resume.
+**In:** All three days playable as a top-down pixel game: 4 walkable rooms (Front Desk, Stacks, Basement, Server Room), 9 documents, 4 visitors (6 visits), card catalogue, 16 notebook discrepancies, generated Ledgers for Days 2, 3 and Friday, the plaque, playable exhibit night with the Memory Keeper's final question, a "What Hollow Creek remembers" recap, four illustrated endings with epilogues, save/resume.
 **Next:** playtesting and tuning, writing polish, art and audio passes.
 **Out (later):** richer art and animation, audio, free-text descriptions, room drafting.
